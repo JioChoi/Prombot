@@ -81,19 +81,19 @@ export default function Options() {
                         </Select>
                         
                         <div className="flex items-center">
-                            <Input className="w-[70px] text-center" type="number"
+                            <Input className="w-[65px] text-center" type="number"
                                 value={config.width}
                                 onChange={(e) => {dispatch(configSlice.setValue({key: "width", value: e.target.valueAsNumber }))}}
                                 step="64"
                                 onBlur={() => dispatch(configSlice.setValue({key: "width", value: Math.max(64, Math.round(config.width / 64.0) * 64) }))}
                             ></Input>
-                            <span className="x p-1 w-6 select-none hover:cursor-pointer"
+                            <span className="x p-0.5 w-5 select-none hover:cursor-pointer"
                                 onClick={(e) => {
                                     dispatch(configSlice.setValue({key: "width", value: config.height }));
                                     dispatch(configSlice.setValue({key: "height", value: config.width }));
                                 }}
                             ></span>
-                            <Input className="w-[70px] text-center" type="number"
+                            <Input className="w-[65px] text-center" type="number"
                                 value={config.height}
                                 onChange={(e) => dispatch(configSlice.setValue({key: "height", value: e.target.valueAsNumber }))}
                             ></Input>

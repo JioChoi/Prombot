@@ -12,7 +12,7 @@ export default function Sidebar() {
         <div className="flex flex-col shadow-black shadow-sm z-40 h-[100%]">
 
             <div className={`
-                w-screen fixed bottom-[95px] left-0 transition-height duration-400
+                w-screen fixed bottom-[95px] left-0 transition-height duration-400 bg-zinc-800
                 lg:w-[450px] lg:h-[calc(100vh-126px)] lg:static lg:transition-none
                 ${hidden ? "h-[38px]" : "h-[70%]"}
             `}>
