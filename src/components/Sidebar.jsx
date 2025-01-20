@@ -6,10 +6,10 @@ import Icon from "./ui/icon"
 import { useState } from "react"
 
 export default function Sidebar() {
-    const [hidden, setHidden] = useState(false);
+    const [hidden, setHidden] = useState(true);
 
     return (
-        <div className="flex flex-col shadow-black shadow-sm z-40">
+        <div className="flex flex-col shadow-black shadow-sm z-40 h-[100%]">
 
             <div className={`
                 w-screen fixed bottom-[95px] left-0 transition-height duration-400
