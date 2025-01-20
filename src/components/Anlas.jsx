@@ -5,7 +5,7 @@ export default function Anlas() {
 
     return (
         <>
-        <div className="text-[#f5f3ce] font-bold text-sm flex items-center justify-center gap-1 px-2.5 py-2 fixed top-3 right-3 bg-zinc-800 rounded-lg shadow-lg hover:cursor-pointer"
+        <div className="text-[#f5f3ce] font-bold text-sm flex items-center justify-center gap-1 px-2.5 py-2 fixed top-[44px] z-10 right-3 bg-zinc-800 rounded-lg shadow-lg hover:cursor-pointer"
             onClick={() => {
                 localStorage.removeItem('token');
                 window.location.reload();

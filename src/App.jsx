@@ -4,6 +4,7 @@ import Result from './components/Result'
 import Sidebar from './components/Sidebar'
 import Popup from './components/Popup'
 import Error  from "./components/Error"
+import Tab from "@/components/ui/tab"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
 
@@ -49,18 +50,41 @@ function App() {
 		})();
 	}, []);
 
+	const [tab, setTab] = useState(0);
+
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<div className="
-				flex flex-col-reverse 
-				lg:flex-row
-			">
-				<Error />
-				<Popup />
-				<Sidebar />
-				<Result />
-				<Anlas />
+			<Popup />
+			<Error />
+
+			<div className="w-full h-8 bg-neutral-950 z-40 relative flex flex-row">
+				<Tab title="Generator" selected={tab == 0} color='zinc-800' onClick={() => {setTab(0)}}/>
+				<Tab title="History" selected={tab == 1} color='zinc-900' onClick={() => {setTab(1)}}/>
 			</div>
+
+			{
+				tab == 0 ?
+				<>
+					<Anlas />
+					<div className="
+						flex flex-col-reverse 
+						lg:flex-row
+					">
+						<Sidebar />
+						<Result />
+					</div>
+				</> : ""
+			}
+			{
+				tab == 1 ?
+				<>
+					<div className="bg-zinc-900 w-full h-full">
+
+					</div>
+				</> : ""
+			}
+
+			
 		</ThemeProvider>
 	)
 }

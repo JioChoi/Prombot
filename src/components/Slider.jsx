@@ -5,7 +5,7 @@ import { useContext, useId } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
 
-export default function Slider({label, keyname, min, max, step}) {
+export default function Slider({label, keyname, min, max, step, unit=""}) {
     const config = useSelector((state) => state.config);
     const dispatch = useDispatch();
     const id = useId();
@@ -13,7 +13,7 @@ export default function Slider({label, keyname, min, max, step}) {
     return (
         <>
             <div className="hover:cursor-pointer">
-                <Label htmlFor={id}>{label}{config[keyname]}</Label>
+                <Label htmlFor={id}>{label}{config[keyname]} {unit}</Label>
                 <ui.Slider min={min} max={max} step={step} id={id}
                     value={[config[keyname]]}
                     onValueChange={(value)=>{

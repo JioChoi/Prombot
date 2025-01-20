@@ -31,6 +31,11 @@ const configSlice = createSlice({
         DYN: false,
         variety: false,
         decrisp: false,
+
+        // Automation
+        delay: 3,
+        enable_automation: false,
+        automatically_download: false,
     },
     reducers: {
         setValue: (state, action) => {

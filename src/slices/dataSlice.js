@@ -10,6 +10,7 @@ const dataSlice = createSlice({
         anlas: 0,
         current_image: "",
         generating: false,
+        delay: -1,
     },
     reducers: {
         setValue: (state, action) => {
