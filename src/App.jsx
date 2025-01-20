@@ -28,6 +28,11 @@ function App() {
 			dispatch(dataSlice.setValue({key: "datasets_loaded", value: true}));
 		});
 		dispatch(configSlice.loadPreset());
+
+		document.body.style.height = window.innerHeight + 'px';
+		window.addEventListener('resize', () => {
+			document.body.style.height = window.innerHeight + 'px';
+		});
 		
 		(async () => {
 			let token = localStorage.getItem('token');
