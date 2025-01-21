@@ -3,6 +3,7 @@ import { blake2b } from 'blakejs';
 import { Buffer } from 'buffer';
 import argon2 from 'argon2-browser/dist/argon2-bundled.min.js';
 import { unzip } from 'unzipit';
+import { sha256 } from 'js-sha256';
 
 const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
@@ -161,6 +162,10 @@ export async function downloadDatasets(onProgress, onFinish) {
             }
         }, 100);
     });
+}
+
+export function loadPresets() {
+    
 }
 
 async function downloadFile(url) {
@@ -489,6 +494,7 @@ export async function login(id, pw) {
         let token = await getAccessToken(id, pw);
         await testAccessToken(token);
         localStorage.setItem('token', token);
+        localStorage.setItem('uid', await sha256(id));
 
         return token;
     } catch (e) {

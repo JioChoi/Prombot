@@ -11,6 +11,7 @@ const dataSlice = createSlice({
         current_image: "",
         generating: false,
         delay: -1,
+        uid: "",
     },
     reducers: {
         setValue: (state, action) => {

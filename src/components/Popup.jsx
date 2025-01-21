@@ -55,7 +55,7 @@ export default function Popup() {
                         else {
                             let anlas = await loadAnlas(token);
                             dispatch(dataSlice.setValue({key: "anlas", value: anlas}));
-                            
+                            dispatch(dataSlice.setValue({key: "uid", value: localStorage.getItem("uid")}));
                             dispatch(dataSlice.setValue({key: "token", value: token}));
                             dispatch(dataSlice.setValue({key: "login_popup", value: false}));
                             id.current.value = "";

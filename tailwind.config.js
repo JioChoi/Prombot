@@ -5,10 +5,14 @@ export default {
   theme: {
   	extend: {
 		transitionProperty: {
-			'height': 'height'
+			'height': 'height',
+			'left': 'left'
 		},
 		transitionDuration: {
 			'400': '400ms'
+		},
+		boxShadow: {
+			'sr': '0px 0px 20px rgba(0, 0, 0, 0.4)'
 		},
   		borderRadius: {
   			lg: 'var(--radius)',

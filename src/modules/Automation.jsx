@@ -13,7 +13,7 @@ export default function Automation() {
         <>
             <h1 className="text-2xl text-primary font-bold mb-5 mt-6">Automation</h1>
 
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-5">
                 <Slider label="Delay: " keyname="delay" min={1} max={30} step={1} unit="seconds" />
 
                 <div className="flex items-center space-x-5">

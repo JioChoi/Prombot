@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar'
 import Popup from './components/Popup'
 import Error  from "./components/Error"
 import Tab from "@/components/ui/tab"
+import Presets from "./components/Presets"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
 
@@ -41,6 +42,7 @@ function App() {
 			try {
 				await NAI.testAccessToken(token);
 				dispatch(dataSlice.setValue({key: "token", value: token}));
+				dispatch(dataSlice.setValue({key: "uid", value: localStorage.getItem("uid")}));
 
 				let anlas = await NAI.loadAnlas(token);
 				dispatch(dataSlice.setValue({key: "anlas", value: anlas}));
@@ -52,6 +54,30 @@ function App() {
 
 	const [tab, setTab] = useState(0);
 
+	let container = "";
+	switch(tab) {
+		case 0:
+			container =
+			<>
+				<Presets />
+				<Anlas />
+				<div className="
+					flex flex-col-reverse 
+					lg:flex-row
+				">
+					<Sidebar />
+					<Result />
+				</div>
+			</>;
+			break;
+		case 1:
+			container = 
+			<div className="bg-zinc-900 w-full h-full">
+
+			</div>;
+			break
+	}
+
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 			<Popup />
@@ -62,28 +88,7 @@ function App() {
 				<Tab title="History" selected={tab == 1} color='zinc-900' onClick={() => {setTab(1)}}/>
 			</div>
 
-			{
-				tab == 0 ?
-				<>
-					<Anlas />
-					<div className="
-						flex flex-col-reverse 
-						lg:flex-row
-					">
-						<Sidebar />
-						<Result />
-					</div>
-				</> : ""
-			}
-			{
-				tab == 1 ?
-				<>
-					<div className="bg-zinc-900 w-full h-full">
-
-					</div>
-				</> : ""
-			}
-
+			{container}
 			
 		</ThemeProvider>
 	)
