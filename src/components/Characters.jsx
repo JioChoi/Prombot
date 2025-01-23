@@ -199,7 +199,7 @@ export default function Characters() {
                             ele = <>
                                 <div className="w-full h-full rounded-lg bg-no-repeat bg-center bg-contain" style={{backgroundImage: `url('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/${folders[folder]}/${data[id].img}.webp')`}}></div>
                                 <div
-                                    className={`absolute w-full min-h-8 bg-zinc-950 text-lg text-center align-middle bg-opacity-80 px-4 py-1
+                                    className={`absolute w-full min-h-8 bg-zinc-950 text-md text-center align-middle bg-opacity-80 px-4 py-1
                                         bottom-0
                                     `}
                                 >
