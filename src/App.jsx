@@ -42,7 +42,11 @@ function App() {
 			try {
 				await NAI.testAccessToken(token);
 				dispatch(dataSlice.setValue({key: "token", value: token}));
-				dispatch(dataSlice.setValue({key: "uid", value: localStorage.getItem("uid")}));
+				let uid = localStorage.getItem("uid");
+				dispatch(dataSlice.setValue({key: "uid", value: uid}));
+
+				let presets = await NAI.loadPresets(uid);
+				dispatch(dataSlice.setValue({key: "presets", value: presets}));
 
 				let anlas = await NAI.loadAnlas(token);
 				dispatch(dataSlice.setValue({key: "anlas", value: anlas}));

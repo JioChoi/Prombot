@@ -164,10 +164,6 @@ export async function downloadDatasets(onProgress, onFinish) {
     });
 }
 
-export function loadPresets() {
-    
-}
-
 async function downloadFile(url) {
     let res = await axios.get(url, {
         responseType: 'text'
@@ -415,6 +411,14 @@ async function getPromptAt(pos) {
 
     let prompt = res.data.substring(0, res.data.indexOf('\n'));
     return prompt;
+}
+
+export async function loadPresets(uid) {
+    let res = await axios.post(`${host}/getPresets`, {
+        uid: uid
+    });
+
+    return res.data;
 }
 
 async function getPositionsOfTag(tag) {

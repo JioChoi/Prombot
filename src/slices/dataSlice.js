@@ -12,6 +12,7 @@ const dataSlice = createSlice({
         generating: false,
         delay: -1,
         uid: "",
+        presets: [],
     },
     reducers: {
         setValue: (state, action) => {
