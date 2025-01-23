@@ -67,11 +67,11 @@ export async function generate(token, config, onProgress, onGenerate) {
     return res;
 }
 
-let datasets = {};
+export let datasets = {};
 export async function downloadDatasets(onProgress, onFinish) {
     let progress = 0;
 
-    const numfiles = 9;
+    const numfiles = 11;
     let downloaded = 0;
 
     /* KEY.DAT */
@@ -146,6 +146,21 @@ export async function downloadDatasets(onProgress, onFinish) {
             res[i] = res[i].split(',');
         }
         datasets.whitelist = res;
+
+        downloaded++;
+    });
+
+    /* Characters/Characters.json */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/characters.json').then((res) => {
+        res = JSON.parse(res);
+        datasets.characters_characters = res;
+
+        downloaded++;
+    });
+    /* Characters/Copyright.json */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/copyright.json').then((res) => {
+        res = JSON.parse(res);
+        datasets.characters_copyright = res;
 
         downloaded++;
     });

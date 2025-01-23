@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useSelector } from 'react-redux';
 
 export default function Presets() {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const presets = useSelector((state) => state.data.presets);
 

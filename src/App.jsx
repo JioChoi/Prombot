@@ -6,6 +6,7 @@ import Popup from './components/Popup'
 import Error  from "./components/Error"
 import Tab from "@/components/ui/tab"
 import Presets from "./components/Presets"
+import Characters from "./components/Characters"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
 
@@ -20,6 +21,7 @@ const Data = createContext(null);
 
 function App() {
 	const dispatch = useDispatch();
+	const data = useSelector((state) => state.data);
 
 	// On load
     useEffect(() => {
@@ -56,13 +58,20 @@ function App() {
 		})();
 	}, []);
 
-	const [tab, setTab] = useState(0);
+	const [tab, setTab] = useState(2);
 
-	let container = "";
-	switch(tab) {
-		case 0:
-			container =
-			<>
+	return (
+		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+			<Popup />
+			<Error />
+
+			<div className="w-full h-8 bg-neutral-950 z-40 relative flex flex-row">
+				<Tab title="Generator" selected={tab == 0} brighter={true} onClick={() => {setTab(0)}}/>
+				<Tab title="History" selected={tab == 1} brighter={false} onClick={() => {setTab(1)}}/>
+				<Tab title="Characters" selected={tab == 2} brighter={true} onClick={() => {setTab(2)}}/>
+			</div>
+
+			<div style={{display: tab != 0 ? "none" : "block"}} className="w-full h-full">
 				<Presets />
 				<Anlas />
 				<div className="
@@ -72,28 +81,19 @@ function App() {
 					<Sidebar />
 					<Result />
 				</div>
-			</>;
-			break;
-		case 1:
-			container = 
-			<div className="bg-zinc-900 w-full h-full">
-
-			</div>;
-			break
-	}
-
-	return (
-		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<Popup />
-			<Error />
-
-			<div className="w-full h-8 bg-neutral-950 z-40 relative flex flex-row">
-				<Tab title="Generator" selected={tab == 0} color='zinc-800' onClick={() => {setTab(0)}}/>
-				<Tab title="History" selected={tab == 1} color='zinc-900' onClick={() => {setTab(1)}}/>
 			</div>
 
-			{container}
-			
+			<div style={{display: tab != 1 ? "none" : "block"}} className="w-full h-full">
+				<div className="bg-zinc-900 w-full h-full">
+
+				</div>
+			</div>
+
+			<div style={{display: tab != 2 ? "none" : "block"}} className="w-full h-full">
+				<div className="bg-zinc-900 w-full h-full">
+					{data.datasets_loaded ? <Characters /> : ""}
+				</div>
+			</div>			
 		</ThemeProvider>
 	)
 }
