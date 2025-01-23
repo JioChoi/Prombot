@@ -58,7 +58,7 @@ function App() {
 		})();
 	}, []);
 
-	const [tab, setTab] = useState(2);
+	const [tab, setTab] = useState(0);
 
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
