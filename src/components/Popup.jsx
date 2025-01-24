@@ -38,65 +38,68 @@ export default function Popup() {
 
     return (
         <div className={`${styles} fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center duration-300 transition-opacity`} >
-            <Card className="w-[400px]">
-                <CardHeader>
-                    <CardTitle>Login</CardTitle>
-                    <CardDescription>Login with Novel AI Account</CardDescription>
-                </CardHeader>
-                <form onSubmit={
-                    async (e)=>{
-                        e.preventDefault();
-                        setChecking(true);
-                        
-                        let token = await login(id.current.value, pw.current.value);
-                        if (token == null) {
-                            setErrorMsg("Invalid email or password.");
-                        }
-                        else {
-                            let anlas = await loadAnlas(token);
-                            dispatch(dataSlice.setValue({key: "anlas", value: anlas}));
-                            dispatch(dataSlice.setValue({key: "uid", value: localStorage.getItem("uid")}));
-                            dispatch(dataSlice.setValue({key: "token", value: token}));
-                            dispatch(dataSlice.setValue({key: "login_popup", value: false}));
-                            id.current.value = "";
-                            pw.current.value = "";
-                        }
-
-                        setChecking(false);
-                    }}
-                >
-                    <CardContent className="flex flex-col gap-3">
-                        {
-                            error_msg === "" ? null : 
-                            <Alert className="text-red-500 border-red-500">
-                                <AlertTitle>Error</AlertTitle>
-                                <AlertDescription>{error_msg}</AlertDescription>
-                            </Alert>
-                        }
-                            <div>
-                                <Label htmlFor="email">Email</Label>
-                                <Input id="email" ref={id} type="email" placeholder="Email" />
-                            </div>
+            {
+                data.login_popup ?
+                <Card className="w-[400px]">
+                    <CardHeader>
+                        <CardTitle>Login</CardTitle>
+                        <CardDescription>Login with Novel AI Account</CardDescription>
+                    </CardHeader>
+                    <form onSubmit={
+                        async (e)=>{
+                            e.preventDefault();
+                            setChecking(true);
                             
-                            <div>
-                                <Label htmlFor="password">Password</Label>
-                                <Input id="password" ref={pw} type="password" placeholder="Password" />
-                            </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-end gap-3">
-                        <Button className=""
-                                type="submit"
-                                disabled={checking}
-                                >Login</Button>
-                        <Button className="" variant="outline" type="button"
-                            onClick={()=>{
+                            let token = await login(id.current.value, pw.current.value);
+                            if (token == null) {
+                                setErrorMsg("Invalid email or password.");
+                            }
+                            else {
+                                let anlas = await loadAnlas(token);
+                                dispatch(dataSlice.setValue({key: "anlas", value: anlas}));
+                                dispatch(dataSlice.setValue({key: "uid", value: localStorage.getItem("uid")}));
+                                dispatch(dataSlice.setValue({key: "token", value: token}));
                                 dispatch(dataSlice.setValue({key: "login_popup", value: false}));
-                            }}
-                            disabled={checking}
-                            >Cancel</Button>
-                    </CardFooter>
-                </form>
-            </Card>
+                                id.current.value = "";
+                                pw.current.value = "";
+                            }
+
+                            setChecking(false);
+                        }}
+                    >
+                        <CardContent className="flex flex-col gap-3">
+                            {
+                                error_msg === "" ? null : 
+                                <Alert className="text-red-500 border-red-500">
+                                    <AlertTitle>Error</AlertTitle>
+                                    <AlertDescription>{error_msg}</AlertDescription>
+                                </Alert>
+                            }
+                                <div>
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input id="email" ref={id} type="email" placeholder="Email" />
+                                </div>
+                                
+                                <div>
+                                    <Label htmlFor="password">Password</Label>
+                                    <Input id="password" ref={pw} type="password" placeholder="Password" />
+                                </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-end gap-3">
+                            <Button className=""
+                                    type="submit"
+                                    disabled={checking}
+                                    >Login</Button>
+                            <Button className="" variant="outline" type="button"
+                                onClick={()=>{
+                                    dispatch(dataSlice.setValue({key: "login_popup", value: false}));
+                                }}
+                                disabled={checking}
+                                >Cancel</Button>
+                        </CardFooter>
+                    </form>
+                </Card> : null
+            }
         </div>
     )
 }

@@ -58,7 +58,7 @@ function App() {
 		})();
 	}, []);
 
-	const [tab, setTab] = useState(0);
+	const [tab, setTab] = useState(2);
 
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -90,7 +90,7 @@ function App() {
 			</div>
 
 			<div style={{display: tab != 2 ? "none" : "block"}} className="w-full h-full">
-				<div className="bg-zinc-900 w-full h-full">
+				<div className="bg-zinc-900 w-full h-full relative top-0">
 					{data.datasets_loaded ? <Characters /> : ""}
 				</div>
 			</div>			
