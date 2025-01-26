@@ -107,7 +107,7 @@ export default function Characters() {
                     >
                     </img>
                     <div
-                        className={`absolute w-full min-h-8 bg-zinc-950 text-md text-center align-middle bg-opacity-80 px-4 py-1
+                        className={`absolute w-full min-h-4 bg-zinc-950 text-sm text-center align-middle bg-opacity-80 px-4 py-1
                             bottom-0
                         `}
                     >
@@ -224,7 +224,7 @@ export default function Characters() {
                     copyright != -1 ?
                     <Icon name="left-line" className="text-3xl px-3"/> :
                     <input
-                        className="outline-none w-full h-full bg-zinc-800 text-white px-4 text-lg"
+                        className="outline-none w-full h-full bg-zinc-800 text-white px-4 text-md"
                         placeholder="Search for the copyright, character, or tags"
                         onChange={(e) => {
                             dispatchSearch(e.target.value);
