@@ -100,14 +100,14 @@ export default function Characters() {
                 >
                     {
                         temp.type == "character" ?
-                        <div className="absolute top-1 left-1 w-[32px] h-[32px] bg-black flex align-middle justify-center rounded-full"><Icon name="user-3-fill" className="text-2xl text-white"/></div> : ""
+                        <div className="absolute top-1 left-1 w-[28px] h-[28px] bg-black flex align-middle justify-center rounded-full"><Icon name="user-3-fill" className="text-lg text-white"/></div> : ""
                     }
                     <img className={"w-full h-full pointer-events-none " + imgStyle} loading="lazy"
                         src={`https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/${folder}/${temp.img}.webp`}
                     >
                     </img>
                     <div
-                        className={`absolute w-full min-h-4 bg-zinc-950 text-sm text-center align-middle bg-opacity-80 px-4 py-1
+                        className={`absolute w-full min-h-2 bg-zinc-950 text-sm text-center align-middle bg-opacity-80 px-4 py-1
                             bottom-0
                         `}
                     >
