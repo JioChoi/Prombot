@@ -16,7 +16,7 @@ import { Button } from "./ui/button"
 import { Data } from "@/App"
 import { useRef, useState } from "react"
 
-import { login, loadAnlas } from "@/lib/NAI"
+import { login, loadAnlas, loadPresets } from "@/lib/NAI"
 
 import { useDispatch, useSelector } from "react-redux";
 import * as dataSlice from "@/slices/dataSlice";
@@ -60,8 +60,9 @@ export default function Popup() {
                                 dispatch(dataSlice.setValue({key: "uid", value: localStorage.getItem("uid")}));
                                 dispatch(dataSlice.setValue({key: "token", value: token}));
                                 dispatch(dataSlice.setValue({key: "login_popup", value: false}));
-                                id.current.value = "";
-                                pw.current.value = "";
+
+                                let presets = await loadPresets(localStorage.getItem("uid"));
+                                dispatch(dataSlice.setValue({key: "presets", value: presets}));
                             }
 
                             setChecking(false);

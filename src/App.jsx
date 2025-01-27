@@ -31,6 +31,7 @@ function App() {
 			dispatch(dataSlice.setValue({key: "generate_button_text", value: ""}));
 			dispatch(dataSlice.setValue({key: "datasets_loaded", value: true}));
 		});
+
 		dispatch(configSlice.loadPreset());
 
 		document.body.style.height = window.innerHeight + 'px';
@@ -58,7 +59,7 @@ function App() {
 		})();
 	}, []);
 
-	const [tab, setTab] = useState(2);
+	const [tab, setTab] = useState(0);
 
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -77,6 +78,7 @@ function App() {
 				<div className="
 					flex flex-col-reverse 
 					lg:flex-row
+					h-[calc(100%-32px)]
 				">
 					<Sidebar />
 					<Result />

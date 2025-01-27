@@ -13,7 +13,7 @@ const dataSlice = createSlice({
         delay: -1,
         uid: "",
         presets: [],
-
+        hide_sidebar: true,
         datasets: [],
     },
     reducers: {

@@ -5,11 +5,12 @@ import argon2 from 'argon2-browser/dist/argon2-bundled.min.js';
 import { unzip } from 'unzipit';
 import { sha256 } from 'js-sha256';
 
-const host = 'https://jio7-prombot.hf.space';
+export const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
 
 /* MAIN GENERATION LOGIC */
 export async function generate(token, config, onProgress, onGenerate) {
+    console.log(config);
     onProgress('Processing prompt...');
     let prompt = await processPrompt(config, onProgress);
     console.log(prompt);
@@ -65,6 +66,38 @@ export async function generate(token, config, onProgress, onGenerate) {
 
     let res = await generateImage(token, prompt, model, 'generate', params);
     return res;
+}
+
+export const config = {
+    // Prompt Randomizer
+    prompt_beg: "1girl, {{kirisame marisa}}, [fu-ta], {{gsusart}}",
+    prompt_search: "1girl, ~speech bubble, ~blood, ~gun, ~guro, ~bdsm, ~shibari, ~butt plug, ~object insertion, ~pregnant",
+    prompt_end: "{{{volumetric lighting, depth of field, best quality, amazing quality, very aesthetic, highres, incredibly absurdres}}}",
+    negative: "{{{worst quality, bad quality}}}, text, error, extra digit, fewer digits, jpeg artifacts, signature, watermark, username, reference, unfinished, unclear fingertips, twist, Squiggly, Grumpy, incomplete, {{Imperfect Fingers}}, Cheesy, very displeasing}}, {{mess}}, {{Approximate}}, {{Sloppiness}}, Glazed eyes, watermark, username, text, signature, fat, sagged breasts",
+    remove_artist: true,
+    remove_character: true,
+    remove_characteristic: false,
+    remove_attire: false,
+    remove_nsfw: true,
+    remove_copyright: true,
+
+    // Options
+    width: 832,
+    height: 1216,
+    steps: 28,
+    prompt_guidance: 5,
+    prompt_guidance_rescale: 0,
+    seed: -1,
+    sampler: "k_euler_ancestral",
+    SMEA: true,
+    DYN: false,
+    variety: false,
+    decrisp: false,
+
+    // Automation
+    delay: 3,
+    enable_automation: false,
+    automatically_download: false,
 }
 
 export let datasets = {};
@@ -246,10 +279,60 @@ export async function loadAnlas(token) {
     return res.data.subscription.trainingStepsLeft.fixedTrainingStepsLeft + res.data.subscription.trainingStepsLeft.purchasedTrainingSteps;
 }
 
+function processDynamicPrompt(prompt) {
+    let bcount = 0;
+    let buffer = "";
+    let data = [];
+
+    let start = 0;
+
+    for (let i = 0; i < prompt.length; i++) {
+        if (prompt[i] == '<') {
+            bcount++;
+            if (bcount == 1) {
+                start = i;
+                buffer = "";
+                continue;
+            }
+        }
+        else if (prompt[i] == '>') {
+            bcount--;
+            if (bcount == 0) {
+                data.push(buffer);
+                buffer = "";
+
+                console.log(data);
+                let selected = data[Math.floor(Math.random() * data.length)];
+                prompt = prompt.substring(0, start) + selected + prompt.substring(i+1);
+                console.log(start)
+                i = start - 1;
+                data = [];
+                continue;
+            }
+        }
+        else if (prompt[i] == '|') {
+            if (bcount == 1) {
+                console.log(buffer);
+                data.push(buffer);
+                buffer = "";
+                continue;
+            }
+        }
+        
+        buffer += prompt[i];
+    }
+
+    return prompt;
+}
+
 async function processPrompt(config, onProgress) {
     let prompt_beg = config.prompt_beg.replaceAll('\n', ',');
     let prompt_end = config.prompt_end.replaceAll('\n', ',');
     let negative = config.negative.replaceAll('\n', ',');
+
+    // Process dynamic prompt
+    prompt_beg = processDynamicPrompt(prompt_beg);
+    prompt_end = processDynamicPrompt(prompt_end);
 
     let prompt_search = processPromptSearch(config);
 
@@ -335,6 +418,9 @@ function removeArray(arr, remove) {
 let previousSearchTags = null;
 let positions = null;
 async function getRandomPrompt(including, excluding, onProgress) {
+    if (including.length == 0 && excluding.length == 0) {
+        return "";
+    }
     if (including.length == 0 && excluding.length != 0) {
         throw new Error('Cannot only exclude tags from Search Tags');
     }
