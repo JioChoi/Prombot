@@ -380,6 +380,7 @@ async function processPrompt(config, onProgress) {
     prompt_end = processDynamicPrompt(prompt_end);
 
     let prompt_search = processPromptSearch(config);
+    prompt_search = processDynamicPrompt(prompt_search);
 
     // Prompt to array
     prompt_beg = toArray(prompt_beg);
