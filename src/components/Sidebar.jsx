@@ -2,6 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import SidebarItems from "./SidebarItems"
 import Generate from "./Generate"
 import Icon from "./ui/icon"
+import Autocomplete from "./Autocomplete"
 
 import { useState } from "react"
 
@@ -24,7 +25,8 @@ export default function Sidebar() {
                     <Icon name="up_small_fill" className={`text-5xl ${hide_sidebar ? "" : "rotate-180"}`} />
                 </div>
 
-                <div className="bg-zinc-800 overflow-y-auto w-auto h-[calc(100%-40px)] lg:h-full">
+                <div className="bg-zinc-800 overflow-y-auto w-auto h-[calc(100%-40px)] lg:h-full relative">
+                    <Autocomplete />
                     <SidebarItems />
                 </div>
             </div>

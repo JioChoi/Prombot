@@ -24,6 +24,22 @@ export default function Generate() {
         
         console.log(config);
 
+        if (config.automatically_download) {
+            let date = new Date();
+            date =  (date.getFullYear() % 2000).toString() + 
+                    (date.getMonth() < 10 ? '0' : '') + date.getMonth().toString() +
+                    (date.getDate() < 10 ? '0' : '') + date.getDate().toString() +
+                    '_' +
+                    (date.getHours() < 10 ? '0' : '') + date.getHours().toString() +
+                    (date.getMinutes() < 10 ? '0' : '') + date.getMinutes().toString() +
+                    (date.getSeconds() < 10 ? '0' : '') + date.getSeconds().toString();
+
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `${date}.png`;
+            a.click();
+        }
+
         if (config.enable_automation) {
             dispatch(dataSlice.setValue({ key: "delay", value: config.delay * 1000 }));
         }

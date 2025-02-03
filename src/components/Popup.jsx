@@ -37,7 +37,7 @@ export default function Popup() {
     let pw = useRef();
 
     return (
-        <div className={`${styles} fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center duration-300 transition-opacity`} >
+        <div className={`${styles} fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-[100] flex items-center justify-center duration-300 transition-opacity`} >
             {
                 data.login_popup ?
                 <Card className="w-[400px]">

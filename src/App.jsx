@@ -7,6 +7,7 @@ import Error  from "./components/Error"
 import Tab from "@/components/ui/tab"
 import Presets from "./components/Presets"
 import Characters from "./components/Characters"
+import Autocomplete from "./components/Autocomplete"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
 

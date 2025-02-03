@@ -10,7 +10,6 @@ const model = 'nai-diffusion-3';
 
 /* MAIN GENERATION LOGIC */
 export async function generate(token, config, onProgress, onGenerate) {
-    console.log(config);
     onProgress('Processing prompt...');
     let prompt = await processPrompt(config, onProgress);
     console.log(prompt);
@@ -76,7 +75,7 @@ export const config = {
     negative: "{{{worst quality, bad quality}}}, text, error, extra digit, fewer digits, jpeg artifacts, signature, watermark, username, reference, unfinished, unclear fingertips, twist, Squiggly, Grumpy, incomplete, {{Imperfect Fingers}}, Cheesy, very displeasing}}, {{mess}}, {{Approximate}}, {{Sloppiness}}, Glazed eyes, watermark, username, text, signature, fat, sagged breasts",
     remove_artist: true,
     remove_character: true,
-    remove_characteristic: false,
+    remove_characteristic: true,
     remove_attire: false,
     remove_nsfw: true,
     remove_copyright: true,
@@ -98,13 +97,33 @@ export const config = {
     delay: 3,
     enable_automation: false,
     automatically_download: false,
+
+    // Extras
+    reorder: true,
+    naistandard: true,
 }
 
+/**
+DATASETS (14)
+- key: Dictionary of tags and their positions
+- artist: List of artists
+- character: List of characters
+- characteristic: List of characteristics
+- clothes: List of clothes
+- censor: List of censored tags
+- meme: List of meme tags
+- whitelist: List of tags and their weights
+- characters_characters: JSON of characters and their tags
+- characters_copyright: JSON of characters and their copyright
+- bad: List of bad tags
+- count: List of tags and their counts
+- quality: List of quality tags
+ */
 export let datasets = {};
 export async function downloadDatasets(onProgress, onFinish) {
     let progress = 0;
 
-    const numfiles = 11;
+    const numfiles = 14;
     let downloaded = 0;
 
     /* KEY.DAT */
@@ -197,6 +216,27 @@ export async function downloadDatasets(onProgress, onFinish) {
 
         downloaded++;
     });
+    /* Bad list */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/bad.dat').then((res) => {
+        res = res.split('\n');
+        datasets.bad = res;
+
+        downloaded++;
+    });
+    /* Count list */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/count.dat').then((res) => {
+        res = res.split('\n');
+        datasets.count = res;
+
+        downloaded++;
+    });
+    /* Quality list */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/quality_list.txt').then((res) => {
+        res = res.split('\n');
+        datasets.quality = res;
+
+        downloaded++;
+    });
 
     return new Promise((resolve, reject) => {
         const interval = setInterval(() => {
@@ -213,10 +253,15 @@ export async function downloadDatasets(onProgress, onFinish) {
 }
 
 async function downloadFile(url) {
-    let res = await axios.get(url, {
-        responseType: 'text'
-    });
-    return res.data;
+    try {
+        let res = await axios.get(url, {
+            responseType: 'text'
+        });
+        return res.data;
+    }
+    catch (e) {
+        return await downloadFile(url);
+    }
 }
 
 export function countRandomPrompt(config) {
@@ -364,6 +409,9 @@ async function processPrompt(config, onProgress) {
     // Process random prompt
     let randomPrompt = await getRandomPrompt(including, excluding, onProgress);
     randomPrompt = randomPrompt.split(',');
+    randomPrompt = randomPrompt.filter((el) => {
+        return datasets.whitelist.find((v) => v[0] == el) != undefined;
+    });
 
     // Remove artist
     if (config.remove_artist) {
@@ -390,6 +438,8 @@ async function processPrompt(config, onProgress) {
         randomPrompt = removeArray(randomPrompt, datasets.copyright);
     }
 
+    // Remove bad tags
+    randomPrompt = removeArray(randomPrompt, datasets.bad);
 
     /* CONFY FEATURES */
     let prompt = [];
@@ -403,10 +453,178 @@ async function processPrompt(config, onProgress) {
         randomPrompt = removeArray(randomPrompt, datasets.censor);
     }
 
+    randomPrompt = removeArray(randomPrompt, ["rating:g", "rating:q", "rating:e", "rating:s"]);
+
     // Combine prompts
     prompt = prompt.concat(prompt_beg, randomPrompt, prompt_end);
 
+    prompt = prompt.filter((el) => {
+        if (el == "") {
+            return false;
+        }
+        return true;
+    });
+
+    prompt = prompt.join(', ');
+    prompt = prompt.replaceAll('_', ' '); 
+
+    if (config.reorder) {
+        prompt = await reorderPrompt(prompt);
+    }
+    if (config.naistandard) {
+        prompt = await naistandard(prompt);
+    }
+
+    return prompt;
+}
+
+async function naistandard(prompt) {
+    const replace = {
+        'v': 'peace sign',
+        'double v': 'double peace',
+        '| |': 'bar eyes',
+        '\| |/': 'open \m/',
+        ':|': 'neutral face',
+        ';|': 'neutral face',
+        'eyepatch bikini': 'square bikini',
+        'tachi-e': 'character image' 
+    }
+    prompt = prompt.split(', ');
+    for (let i = 0; i < prompt.length; i++) {
+        prompt[i] = prompt[i].trim();
+        let data = prompt[i].replaceAll('{','').replaceAll('}','').replaceAll('[','').replaceAll(']','').trim();
+        
+        if (datasets.artist.includes(data)) {
+            prompt[i] = prompt[i].replace(data, `artist:${data}`);
+        }
+
+        if (replace.hasOwnProperty(data)) {
+            prompt[i] = prompt[i].replace(data, replace[data]);
+        }
+    }
+
     return prompt.join(', ');
+}
+
+async function reorderPrompt(prompt) {
+    let data = [];
+    let weight = 0;
+    let buffer = '';
+    for (let i = 0; i <= prompt.length; i++) {
+        if (i == prompt.length || prompt[i] == '{' || prompt[i] == '[' || prompt[i] == '}' || prompt[i] == ']' || prompt[i] == ',') {
+            buffer = buffer.trim();
+
+            if (buffer != '') {
+                data.push([weight, buffer]);
+            }
+            buffer = '';
+        } else {
+            buffer += prompt[i];
+        }
+
+        if (i < prompt.length) {
+            if (prompt[i] == '{') {
+                weight++;
+            } else if (prompt[i] == '}') {
+                weight--;
+            } else if (prompt[i] == '[') {
+                weight--;
+            } else if (prompt[i] == ']') {
+                weight++;
+            }
+        }
+    }
+
+    let result = [];
+
+    // Count
+    await extractList(data, datasets.count).then((res) => {
+        result = result.concat(res[0]);
+        data = res[1];
+    });
+
+    // Character
+    await extractList(data, datasets.character).then((res) => {
+        result = result.concat(res[0]);
+        data = res[1];
+    });
+    
+    // Copyright
+    await extractList(data, datasets.copyright).then((res) => {
+        result = result.concat(res[0]);
+        data = res[1];
+    });
+
+    // Artist
+    await extractList(data, datasets.artist).then((res) => {
+        result = result.concat(res[0]);
+        data = res[1];
+    });
+
+    // Quality
+    await extractList(data, datasets.quality).then((res) => {
+        result = result.concat(res[1], res[0]);
+    });
+
+    result.push([0, '']);
+
+    let str = '';
+    weight = 0;
+    for (let i = 0; i < result.length; i++) {
+        if (weight != result[i][0]) {
+            str = str.substring(0, str.length - 2);
+
+            if (weight < result[i][0]) {
+                for (let j = weight; j < result[i][0]; j++) {
+                    if (j < 0) {
+                        str += ']';
+                        if (j == result[i][0] - 1 && i != result.length - 1) str += ', ';
+                    } else {
+                        if (str.at(-1) != '{') str += ', ';
+                        str += '{';
+                    }
+                }
+            } else {
+                for (let j = weight; j > result[i][0]; j--) {
+                    if (j <= 0) {
+                        if (str.at(-1) != '[') str += ', ';
+                        str += '[';
+                    } else {
+                        str += '}';
+                        if (j == result[i][0] + 1 && i != result.length - 1) str += ', ';
+                    }
+                }
+            }
+
+            weight = result[i][0];
+        }
+
+        str += result[i][1];
+        if (i < result.length - 1) {
+            str += ', ';
+        }
+    }
+
+    if (str.substring(str.length - 2) == ', ') {
+        str = str.substring(0, str.length - 2);
+    }
+
+    return str;
+}
+
+async function extractList(original, extractList) {
+    let extracted = [];
+    let removed = [];
+    for (let i = 0; i < original.length; i++) {
+        if (extractList.includes(original[i][1])) {
+            extracted.push(original[i]);
+        }
+        else {
+            removed.push(original[i]);
+        }
+    }
+
+    return [extracted, removed];
 }
 
 function removeArray(arr, remove) {
@@ -423,6 +641,18 @@ async function getRandomPrompt(including, excluding, onProgress) {
     }
     if (including.length == 0 && excluding.length != 0) {
         throw new Error('Cannot only exclude tags from Search Tags');
+    }
+
+    // Check including and excluding tags
+    for(let i = 0; i < including.length; i++) {
+        if (!datasets.key.hasOwnProperty(including[i])) {
+            throw new Error(`Tag "${including[i]}" not found`);
+        }
+    }
+    for(let i = 0; i < excluding.length; i++) {
+        if (!datasets.key.hasOwnProperty(excluding[i])) {
+            throw new Error(`Tag "${excluding[i]}" not found`);
+        }
     }
 
     let str = including.join(',') + '|' + excluding.join(',');
@@ -491,7 +721,6 @@ async function getRandomPrompt(including, excluding, onProgress) {
         positions = Array.from(positions);
     }
 
-    console.log(positions.length);
     // Random prompt
     if (positions.length == 0) {
         throw new Error('No prompts found');

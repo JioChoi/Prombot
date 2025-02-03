@@ -63,6 +63,7 @@ const configSlice = createSlice({
             state["width"] = Number(state["width"]);
             state["height"] = Number(state["height"]);
             state["delay"] = Number(state["delay"]);
+            state["reorder"] = state["reorderTags"];
 
             _savePreset(state);
         },
