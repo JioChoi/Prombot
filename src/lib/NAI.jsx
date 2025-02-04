@@ -104,7 +104,7 @@ export const config = {
 }
 
 /**
-DATASETS (14)
+DATASETS (17)
 - key: Dictionary of tags and their positions
 - artist: List of artists
 - character: List of characters
@@ -118,12 +118,15 @@ DATASETS (14)
 - bad: List of bad tags
 - count: List of tags and their counts
 - quality: List of quality tags
+- character_data_index: index of JSON of character data
+- ornament: List of ornaments
+- clothes_actions_json: json categorization of clothes actions
  */
 export let datasets = {};
 export async function downloadDatasets(onProgress, onFinish) {
     let progress = 0;
 
-    const numfiles = 14;
+    const numfiles = 17;
     let downloaded = 0;
 
     /* KEY.DAT */
@@ -173,6 +176,13 @@ export async function downloadDatasets(onProgress, onFinish) {
     downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/clothes.dat').then((res) => {
         res = res.split('\n');
         datasets.clothes = res;
+
+        downloaded++;
+    });
+    /* ornament.DAT */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/ornament.dat').then((res) => {
+        res = res.split('\n');
+        datasets.ornament = res;
 
         downloaded++;
     });
@@ -238,6 +248,32 @@ export async function downloadDatasets(onProgress, onFinish) {
         downloaded++;
     });
 
+    /* Character data index */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/character_data_index.dat').then((res) => {
+        res = res.split('\n');
+        
+        datasets.character_data_index = {};
+
+        for (let i = 0; i < res.length; i++) {
+            let temp = res[i].split('|');
+            
+            datasets.character_data_index[temp[0]] = {
+                start: parseInt(temp[1]),
+                size: parseInt(temp[2])
+            };
+        }
+
+        downloaded++;
+    });
+
+    /* Clothes Actions JSON */
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/clothes_actions.json').then((res) => {
+        res = JSON.parse(res);
+        datasets.clothes_actions_json = res;
+
+        downloaded++;
+    });
+
     return new Promise((resolve, reject) => {
         const interval = setInterval(() => {
             progress = Math.floor((downloaded / numfiles) * 100);
@@ -262,6 +298,24 @@ async function downloadFile(url) {
     catch (e) {
         return await downloadFile(url);
     }
+}
+
+async function getCharacterTags(name) {
+    let data = datasets.character_data_index[name];
+
+    if (data == undefined) {
+        return [];
+    }
+
+    let res = await axios.get('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/character_data.json', {
+        headers: {
+            Range: `bytes=${data.start}-${data.start+data.size-2}`
+        }
+    });
+
+    res = res.data;
+
+    return res;
 }
 
 export function countRandomPrompt(config) {
@@ -346,10 +400,8 @@ function processDynamicPrompt(prompt) {
                 data.push(buffer);
                 buffer = "";
 
-                console.log(data);
                 let selected = data[Math.floor(Math.random() * data.length)];
                 prompt = prompt.substring(0, start) + selected + prompt.substring(i+1);
-                console.log(start)
                 i = start - 1;
                 data = [];
                 continue;
@@ -357,7 +409,6 @@ function processDynamicPrompt(prompt) {
         }
         else if (prompt[i] == '|') {
             if (bcount == 1) {
-                console.log(buffer);
                 data.push(buffer);
                 buffer = "";
                 continue;
@@ -456,6 +507,12 @@ async function processPrompt(config, onProgress) {
 
     randomPrompt = removeArray(randomPrompt, ["rating:g", "rating:q", "rating:e", "rating:s"]);
 
+    // Character Data
+    let characterData = await processCharacterData(prompt_beg, randomPrompt, prompt_end);
+
+    // Remove clothes actions of clothes that's not wearing
+    randomPrompt = await removeClothesActions(randomPrompt, characterData, prompt_beg, prompt_end);
+
     // Combine prompts
     prompt = prompt.concat(prompt_beg, randomPrompt, prompt_end);
 
@@ -477,6 +534,59 @@ async function processPrompt(config, onProgress) {
     }
 
     return prompt;
+}
+
+async function processCharacterData(prompt_beg, randomPrompt, prompt_end) {
+    let characters = (await extractList(prompt_beg.concat(randomPrompt, prompt_end), datasets.character, true))[0];
+    let result = [];
+
+    for (let character of characters) {
+        let tags = await getCharacterTags(character);
+        if (tags.length != 0) {
+            result.push(tags);
+        }
+    }
+
+    return result;
+}
+
+async function removeClothesActions(randomPrompt, characterData, prompt_beg, prompt_end) {
+    let clothes = [];
+
+    // girl must have panties and bra
+    if (prompt_beg.includes('1girl') || randomPrompt.includes('1girl') || prompt_end.includes('1girl')) {
+        clothes.push('panties');
+        clothes.push('bra');
+    }
+
+    // character tags to prompt
+    let characterTags = [];
+    for (let data of characterData) {
+        for (let tag of data.tags) {
+            characterTags.push(tag[0]);
+        }
+    }
+
+    // find clothes (keys)
+    for (let tag of Array.from(new Set(prompt_beg.concat((await extractList(randomPrompt, datasets.clothes, true))[0], prompt_end, characterTags)))) {
+        for(let spl of tag.split(' ')) {
+            if (datasets.clothes_actions_json.hasOwnProperty(spl)) {
+                clothes = clothes.concat(spl);
+            }
+        }
+    }
+
+    // get disallowed clothes
+    let disallowedClothes = [];
+    for (let key of Object.keys(datasets.clothes_actions_json)) {
+        if (!clothes.includes(key)) {
+            disallowedClothes = disallowedClothes.concat(datasets.clothes_actions_json[key]);
+        }
+    }
+
+    randomPrompt = removeArray(randomPrompt, disallowedClothes);
+
+    return randomPrompt;
 }
 
 async function naistandard(prompt) {
@@ -613,11 +723,11 @@ async function reorderPrompt(prompt) {
     return str;
 }
 
-async function extractList(original, extractList) {
+async function extractList(original, extractList, justcmp = false) {
     let extracted = [];
     let removed = [];
     for (let i = 0; i < original.length; i++) {
-        if (extractList.includes(original[i][1])) {
+        if (justcmp && extractList.includes(original[i]) || extractList.includes(original[i][1])) {
             extracted.push(original[i]);
         }
         else {
