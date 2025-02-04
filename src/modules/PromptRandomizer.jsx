@@ -59,6 +59,13 @@ export default function PromptRandomizer() {
                     <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_nsfw" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="body-line" x={true} sel={config.remove_nsfw}/>Remove<br/>NSFW</div></ToggleGroupItem>
                 </ToggleGroup>
                 
+                <ToggleGroup type="multiple" className="justify-between"
+                    onValueChange={(value) => dispatch(configSlice.setToggle({key: ["remove_ornament"], value: value}))}
+                    value={getToggleValue(["remove_ornament"])}
+                >
+                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_ornament" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="diamond_2_line" x={true} sel={config.remove_ornament}/>Remove<br/>Ornament</div></ToggleGroupItem>
+                </ToggleGroup>
+
                 <div>
                     <Label htmlFor="prompt_end">End Prompt</Label>
                     <Textarea className="h-20 min-h-20" placeholder="Tags to put at the end" id="prompt_end"

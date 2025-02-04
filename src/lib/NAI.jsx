@@ -79,6 +79,7 @@ export const config = {
     remove_attire: false,
     remove_nsfw: true,
     remove_copyright: true,
+    remove_ornament: true,
 
     // Options
     width: 832,
@@ -101,7 +102,10 @@ export const config = {
     // Extras
     reorder: true,
     naistandard: true,
-    strengthen_characteristics: true
+    strengthen_characteristic: true,
+    auto_copyright: true,
+    strengthen_attire: false,
+    strengthen_ornament: false,
 }
 
 /**
@@ -491,6 +495,11 @@ async function processPrompt(config, onProgress) {
         randomPrompt = removeArray(randomPrompt, datasets.copyright);
     }
 
+    // Remove ornament
+    if (config.remove_ornament) {
+        randomPrompt = removeArray(randomPrompt, datasets.ornament);
+    }
+
     // Remove bad tags
     randomPrompt = removeArray(randomPrompt, datasets.bad);
 
@@ -511,17 +520,40 @@ async function processPrompt(config, onProgress) {
     // Character Data
     let characterData = await processCharacterData(prompt_beg, randomPrompt, prompt_end);
 
-    // Strengthen Characteristics
-    if (config.strengthen_characteristics) {
-        let characteristics = [];
+    // Add copyright
+    if (config.auto_copyright) {
+        let copyrights = [];
         for (let data of characterData) {
             for (let copyright of data.copyright) {
                 if (datasets.copyright.includes(copyright[0])) {
-                    characteristics.push(copyright[0]);
+                    copyrights.push(copyright[0]);
                 }
             }
+        }
+
+        prompt_beg = prompt_beg.concat(copyrights);
+    }
+
+    // Strengthen Characteristics
+    if (config.strengthen_characteristic) {
+        let characteristics = [];
+        for (let data of characterData) {
             for (let tag of data.tags) {
-                if (datasets.characteristic.includes(tag[0]) || datasets.clothes.includes(tag[0]) || datasets.ornament.includes(tag[0])) {
+                if (datasets.characteristic.includes(tag[0])) {
+                    characteristics.push(tag[0]);
+                }
+            }
+        }
+
+        prompt_beg = prompt_beg.concat(characteristics);
+    }
+
+    // Strengthen Attire
+    if (config.strengthen_attire) {
+        let characteristics = [];
+        for (let data of characterData) {
+            for (let tag of data.tags) {
+                if (datasets.clothes.includes(tag[0])) {
                     characteristics.push(tag[0]);
                 }
             }
@@ -533,6 +565,20 @@ async function processPrompt(config, onProgress) {
             }
             return true;
         });
+
+        prompt_beg = prompt_beg.concat(characteristics);
+    }
+
+    // Strengthen Ornament
+    if (config.strengthen_ornament) {
+        let characteristics = [];
+        for (let data of characterData) {
+            for (let tag of data.tags) {
+                if (datasets.ornament.includes(tag[0])) {
+                    characteristics.push(tag[0]);
+                }
+            }
+        }
 
         prompt_beg = prompt_beg.concat(characteristics);
     }
