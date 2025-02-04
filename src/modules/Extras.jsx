@@ -34,6 +34,17 @@ export default function Extras() {
                         <Label htmlFor="naistandard" className="m-0">Reformat to NAI standard</Label>
                     </div>
                 </div>
+                <div className="flex items-center space-x-5">
+                    <div className="flex items-center space-x-1">
+                        <Checkbox id="strengthen_characteristics" 
+                            checked={ config.strengthen_characteristics }
+                            onCheckedChange={(checked) => {
+                                dispatch(configSlice.setValue({ key: 'strengthen_characteristics', value: checked }));
+                            }}
+                        />
+                        <Label htmlFor="strengthen_characteristics" className="m-0">Strengthen Characteristics</Label>
+                    </div>
+                </div>
             </div>
         </>
     )

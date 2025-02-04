@@ -101,6 +101,7 @@ export const config = {
     // Extras
     reorder: true,
     naistandard: true,
+    strengthen_characteristics: true
 }
 
 /**
@@ -510,6 +511,32 @@ async function processPrompt(config, onProgress) {
     // Character Data
     let characterData = await processCharacterData(prompt_beg, randomPrompt, prompt_end);
 
+    // Strengthen Characteristics
+    if (config.strengthen_characteristics) {
+        let characteristics = [];
+        for (let data of characterData) {
+            for (let copyright of data.copyright) {
+                if (datasets.copyright.includes(copyright[0])) {
+                    characteristics.push(copyright[0]);
+                }
+            }
+            for (let tag of data.tags) {
+                if (datasets.characteristic.includes(tag[0]) || datasets.clothes.includes(tag[0]) || datasets.ornament.includes(tag[0])) {
+                    characteristics.push(tag[0]);
+                }
+            }
+        }
+
+        characteristics = characteristics.filter((el) => {
+            if (el.includes("panties") || el.includes("bra") || el.includes("panty") || el.includes("underwear")) {
+                return false;
+            }
+            return true;
+        });
+
+        prompt_beg = prompt_beg.concat(characteristics);
+    }
+
     // Remove clothes actions of clothes that's not wearing
     randomPrompt = await removeClothesActions(randomPrompt, characterData, prompt_beg, prompt_end);
 
@@ -568,7 +595,7 @@ async function removeClothesActions(randomPrompt, characterData, prompt_beg, pro
     }
 
     // find clothes (keys)
-    for (let tag of Array.from(new Set(prompt_beg.concat((await extractList(randomPrompt, datasets.clothes, true))[0], prompt_end, characterTags)))) {
+    for (let tag of Array.from(new Set(prompt_beg.concat((await extractList(randomPrompt, datasets.clothes.concat(datasets.ornament), true))[0], prompt_end, characterTags)))) {
         for(let spl of tag.split(' ')) {
             if (datasets.clothes_actions_json.hasOwnProperty(spl)) {
                 clothes = clothes.concat(spl);
