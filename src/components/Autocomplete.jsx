@@ -47,6 +47,25 @@ function shortenNumber(num) {
     return {text: (num / 1000000).toFixed(1) + "m", unit: 2};
 }
 
+function search(str) {
+    let temp = [];
+    let exact = datasets.whitelist.find((v) => v[0] === str);
+    if (exact) {
+        temp.push(exact);
+    }
+
+    for (let i = 0; i < datasets.whitelist.length; i++) {
+        if (datasets.whitelist[i][0].includes(str) && datasets.whitelist[i][0] != str) {
+            temp.push(datasets.whitelist[i]);
+            if (temp.length >= 5) {
+                break;
+            }
+        }
+    }
+
+    return temp;
+}
+
 export default function Autocomplete() {
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState({x: 0, y: 0});
@@ -55,9 +74,7 @@ export default function Autocomplete() {
     const [range, setRange] = useState({start: 0, end: 0});
     const element = useRef(null);
 
-    const cursor = useRef({x: 0, y: 0});
-
-    const textInput = useRef(false);
+    const cursorPos = useRef(0);
 
     function setTextareaValue(val) {
         const valueSetter = Object.getOwnPropertyDescriptor(element.current, 'value').set;
@@ -87,18 +104,14 @@ export default function Autocomplete() {
     }
 
     useEffect(() => {
-        document.addEventListener('mousemove', (e) => {
-            cursor.current = {x: e.clientX, y: e.clientY};
-        });
-    }, [])
-    useEffect(() => {
         function inputFn(e) {
-            if (e.target.tagName === 'TEXTAREA') {
-                textInput.current = true;
-
+            if (e.target.getAttribute('autocomplete') == "on") {
                 let value = e.target.value;
                 let start = e.target.selectionStart;
 
+                cursorPos.current = start;
+
+                // String beg to cursor
                 let str = value.substring(0, start);
                 let last = Math.max(str.lastIndexOf('\n'), str.lastIndexOf(','), str.lastIndexOf('{'), str.lastIndexOf('['), str.lastIndexOf('<'), str.lastIndexOf('|'));
 
@@ -123,36 +136,7 @@ export default function Autocomplete() {
                 setPosition({x: rect.x, y: e.target.offsetTop + rect.height - 2});
                 setSelected(0);
 
-                let temp = [];
-                let exact = datasets.whitelist.find((v) => v[0] === str);
-                if (exact) {
-                    temp.push(exact);
-                }
-
-                for (let i = 0; i < datasets.whitelist.length; i++) {
-                    if (datasets.whitelist[i][0].includes(str) && datasets.whitelist[i][0] != str) {
-                        temp.push(datasets.whitelist[i]);
-                        if (temp.length >= 5) {
-                            break;
-                        }
-                    }
-                }
-
-                // for (let i = 0; i < temp.length; i++) {
-                //     let type = 0;
-
-                //     if (datasets.character.includes(temp[i][0])) {
-                //         type = 1;
-                //     }
-                //     else if (datasets.copyright.includes(temp[i][0])) {
-                //         type = 2;
-                //     }
-                //     else if (datasets.artist.includes(temp[i][0])) {
-                //         type = 3;
-                //     }
-
-                //     temp[i] = {value: temp[i], type: type};
-                // }
+                let temp = search(str);
 
                 setValue(temp);
             }
@@ -160,11 +144,9 @@ export default function Autocomplete() {
 
         function selectionChangeFn(e) {
             if (e.target.tagName === 'TEXTAREA') {
-                if (!textInput.current) {
+                if (cursorPos.current != e.target.selectionStart) {
                     setVisible(false);
                 }
-                
-                textInput.current = false;
             }
         }
         function keydownFn(e) {
@@ -179,28 +161,28 @@ export default function Autocomplete() {
                 }
                 if (e.key == 'Enter' || e.key == 'Tab') {
                     e.preventDefault();
-                    setVisible(false);
                     putValue(selected);
+                    setVisible(false);
                 }
             }
         }
-        function focusOutFn(e) {
-            if (!checkParents(document.elementFromPoint(cursor.current.x, cursor.current.y), "autocomplete")) {
+
+        function click(e) {
+            if (!checkParents(e.target, "autocomplete")) {
                 setVisible(false);
             }
         }
 
-
         document.addEventListener('input', inputFn);
         document.addEventListener('selectionchange', selectionChangeFn);
         document.addEventListener('keydown', keydownFn);
-        document.addEventListener('focusout', focusOutFn);
+        document.addEventListener('click', click);
 
         return () => {
             document.removeEventListener('input', inputFn);
             document.removeEventListener('selectionchange', selectionChangeFn);
             document.removeEventListener('keydown', keydownFn);
-            document.removeEventListener('focusout', focusOutFn);
+            document.removeEventListener('click', click);
         }
     }, [visible, selected, value]);
 
@@ -216,10 +198,11 @@ export default function Autocomplete() {
                             ${selected == i ? "border-[1px] border-zinc-400 border-dotted" : "border-[1px] border-transparent"}`}
                             onClick={(e) => {
                                 putValue(i);
+                                setVisible(false);
                             }
                         }>
                             <div key={i} className={`w-[calc(100%-30px)] text-sm`}>{v[0]}</div>
-                            <div className={`text-[10px] w-[30px] align-middle ${unitColor[shorten.unit]}`}>{shorten.text}</div>
+                            <div className={`text-[10px] w-[30px] align-middle text-right ${unitColor[shorten.unit]}`}>{shorten.text}</div>
                         </div>
                     );
                 })}

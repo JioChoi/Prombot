@@ -27,7 +27,7 @@ export default function PromptRandomizer() {
             <div className="flex flex-col space-y-4">
                 <div>
                     <Label htmlFor="prompt_beg">Beginning Prompt</Label>
-                    <Textarea className="h-28 min-h-20" placeholder="Tags to put at the beginning" id="prompt_beg"
+                    <Textarea className="h-28 min-h-20" placeholder="Tags to put at the beginning" id="prompt_beg" autocomplete="on"
                         onChange={(e) => dispatch(configSlice.setValue({ key: "prompt_beg", value: e.target.value }))}
                         value={config.prompt_beg}
                     />
@@ -35,7 +35,7 @@ export default function PromptRandomizer() {
 
                 <div>
                     <Label htmlFor="prompt_search">Search Tags</Label>
-                    <Textarea className="h-20 min-h-20" placeholder="Tags to search for the prompt randomization" id="prompt_search"
+                    <Textarea className="h-20 min-h-20" placeholder="Tags to search for the prompt randomization" id="prompt_search" autocomplete="on"
                         onChange={(e) => dispatch(configSlice.setValue({ key: "prompt_search", value: e.target.value }))}
                         value={config.prompt_search}
                     />                       
@@ -68,7 +68,7 @@ export default function PromptRandomizer() {
 
                 <div>
                     <Label htmlFor="prompt_end">End Prompt</Label>
-                    <Textarea className="h-20 min-h-20" placeholder="Tags to put at the end" id="prompt_end"
+                    <Textarea className="h-20 min-h-20" placeholder="Tags to put at the end" id="prompt_end" autocomplete="on"
                         onChange={(e) => dispatch(configSlice.setValue({ key: "prompt_end", value: e.target.value }))}
                         value={config.prompt_end}
                     />
@@ -76,7 +76,7 @@ export default function PromptRandomizer() {
 
                 <div>
                     <Label htmlFor="negative">Negative Prompt</Label>
-                    <Textarea className="h-28 min-h-20" placeholder="Tags to not include" id="negative"
+                    <Textarea className="h-28 min-h-20" placeholder="Tags to not include" id="negative" autocomplete="on"
                         onChange={(e) => dispatch(configSlice.setValue({ key: "negative", value: e.target.value }))}
                         value={config.negative}
                     />
