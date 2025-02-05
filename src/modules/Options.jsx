@@ -1,18 +1,17 @@
-import { Select, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import Checkbox from "@/components/elements/Checkbox"
-import { useContext } from "react";
-import ModuleTitle from "@/components/elements/ModuleTitle";
-import ModuleBody from "@/components/elements/ModuleBody";
-
-import Slider from '@/components/elements/Slider';
+import ModuleTitle from '@/components/elements/ModuleTitle';
+import ModuleBody from '@/components/elements/ModuleBody';
 
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
-import CheckboxGroup from "@/components/elements/CheckboxGroup";
 
+import { Label } from "@/components/ui/label";
+
+import Input from "@/components/elements/input";
+import CheckboxGroup from "@/components/elements/CheckboxGroup";
 import Dropdown from "@/components/elements/Dropdown";
+import Checkbox from "@/components/elements/Checkbox"
+import Slider from '@/components/elements/Slider';
+
 
 export default function Options() {
     const config = useSelector((state) => state.config);
@@ -36,11 +35,6 @@ export default function Options() {
         
         if(!reslist.includes(res)) return "custom";
         return res;
-    }
-
-    function getSeed() {
-        if(config.seed === -1) return "";
-        return config.seed;
     }
 
     return (
@@ -77,22 +71,16 @@ export default function Options() {
                         ]} />
                         
                         <div className="flex items-center">
-                            <Input className="w-[65px] text-center" type="number"
-                                value={config.width}
-                                onChange={(e) => {dispatch(configSlice.setValue({key: "width", value: e.target.valueAsNumber }))}}
-                                step="64"
-                                onBlur={() => dispatch(configSlice.setValue({key: "width", value: Math.max(64, Math.round(config.width / 64.0) * 64) }))}
-                            ></Input>
+                            <Input width="60px" configKey="width" type="number" step="64" center="true"/>
+
                             <span className="x p-0.5 w-5 select-none hover:cursor-pointer"
                                 onClick={(e) => {
                                     dispatch(configSlice.setValue({key: "width", value: config.height }));
                                     dispatch(configSlice.setValue({key: "height", value: config.width }));
                                 }}
                             ></span>
-                            <Input className="w-[65px] text-center" type="number"
-                                value={config.height}
-                                onChange={(e) => dispatch(configSlice.setValue({key: "height", value: e.target.valueAsNumber }))}
-                            ></Input>
+
+                            <Input width="60px" configKey="height" type="number" step="64" center="true"/>
                         </div>
                     </div>
                 </div>
@@ -102,14 +90,11 @@ export default function Options() {
                 <Slider label="Prompt Guidance Rescale: " configKey="prompt_guidance_rescale" min={0} max={1} step={0.01} />
 
                 <div className="flex items-start justify-between">
-                    <div className="w-36">
-                        <Label htmlFor="seed">Seed</Label>
-                        <Input id="seed" type="number" placeholder="Random"
-                            value={getSeed()}
-                            onChange={(e) => dispatch(configSlice.setValue({ key: "seed", value: e.target.value == "" ? -1 : e.target.valueAsNumber }))}
-                            onBlur={(e) => dispatch(configSlice.setValue({ key: "seed", value: e.target.value == "" ? -1 : Math.floor(e.target.valueAsNumber) }))}
-                        ></Input>
-                    </div>
+                    <Input label="Seed" configKey="seed" width="126px" type="number" placeholder="Random"
+                        value={config.seed == -1 ? "" : config.seed}
+                        onChange={(e) => dispatch(configSlice.setValue({ key: "seed", value: e.target.value == "" ? -1 : Math.max(e.target.valueAsNumber, -1) }))}
+                        onBlur={(e) => dispatch(configSlice.setValue({ key: "seed", value: e.target.value == "" ? -1 : Math.max(Math.floor(e.target.valueAsNumber), -1) }))}
+                    />
                     <div>
                         <Dropdown configKey="sampler" label="Sampler" items={[
                             { value: "", label: "RECOMMENDED" },

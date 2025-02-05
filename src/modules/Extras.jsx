@@ -1,17 +1,11 @@
-import Checkbox from '@/components/elements/Checkbox';
-import { Label } from '@/components/ui/label';
-import Slider from '@/components/elements/Slider';
-import { useDispatch, useSelector } from 'react-redux';
-import * as configSlice from '@/slices/configSlice';
 import ModuleTitle from '@/components/elements/ModuleTitle';
 import ModuleBody from '@/components/elements/ModuleBody';
+
+import Checkbox from '@/components/elements/Checkbox';
 import CheckboxGroup from '@/components/elements/CheckboxGroup';
 
 
 export default function Extras() {
-    const dispatch = useDispatch();
-    const config = useSelector(state => state.config);
-
     return (
         <div>
             <ModuleTitle label="Extras" />

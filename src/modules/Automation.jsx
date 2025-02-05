@@ -1,18 +1,11 @@
-import { Label } from '@/components/ui/label';
-import Slider from '@/components/elements/Slider';
 import ModuleTitle from '@/components/elements/ModuleTitle';
-
-import { useDispatch, useSelector } from 'react-redux';
-import * as configSlice from '@/slices/configSlice';
-
-import CheckboxGroup from '@/components/elements/CheckboxGroup';
-import Checkbox from '@/components/elements/Checkbox';
 import ModuleBody from '@/components/elements/ModuleBody';
 
-export default function Automation() {
-    const dispatch = useDispatch();
-    const config = useSelector(state => state.config);
+import Slider from '@/components/elements/Slider';
+import CheckboxGroup from '@/components/elements/CheckboxGroup';
+import Checkbox from '@/components/elements/Checkbox';
 
+export default function Automation() {
     return (
         <div>
             <ModuleTitle label="Automation" />

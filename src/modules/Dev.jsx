@@ -1,8 +1,6 @@
-import Slider from '@/components/elements/Slider';
 import ModuleTitle from '@/components/elements/ModuleTitle';
 import ModuleBody from '@/components/elements/ModuleBody';
-import CheckboxGroup from '@/components/elements/CheckboxGroup';
-import Checkbox from '@/components/elements/Checkbox';
+
 import Dropdown from '@/components/elements/Dropdown';
 
 

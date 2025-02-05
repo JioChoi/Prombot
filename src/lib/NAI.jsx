@@ -201,7 +201,7 @@ export async function downloadDatasets(onProgress, onFinish) {
 
         downloaded++;
     });
-    /* ornament.DAT */
+    /* ORNAMENT.DAT */
     downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/ornament.dat').then((res) => {
         res = res.split('\n');
         datasets.ornament = res;
@@ -218,7 +218,7 @@ export async function downloadDatasets(onProgress, onFinish) {
     /* MEME.DAT */
     downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/meme.dat').then((res) => {
         res = res.split('\n');
-        datasets.censor = res;
+        datasets.meme = res;
 
         downloaded++;
     });

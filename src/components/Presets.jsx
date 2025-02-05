@@ -103,7 +103,7 @@ export default function Presets() {
                     })
                 }
             </div>
-            <div className="w-full h-[48px] flex justify-center items-center bg-zinc-800 hover:brightness-90 hover:cursor-pointer"
+            <div className="w-full h-[48px] flex justify-center items-center bg-zinc-800 hover:brightness-90 hover:cursor-pointer border-t-2"
                 onClick={() => {
                     let name = prompt("Enter the name of the preset");
                     setOpen(false);

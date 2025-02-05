@@ -1,27 +1,10 @@
-import Textarea from "@/components/elements/Textarea";
-import { Label } from "@/components/ui/label";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import Icon from "@/components/ui/icon";
-
-import { useDispatch, useSelector } from "react-redux";
-import * as configSlice from "@/slices/configSlice";
 import ModuleTitle from "@/components/elements/ModuleTitle";
 import ModuleBody from "@/components/elements/ModuleBody";
 
+import Textarea from "@/components/elements/Textarea";
+import Toggles from "@/components/elements/Toggles";
+
 export default function PromptRandomizer() {
-    const config = useSelector((state) => state.config);
-    const dispatch = useDispatch();
-
-    function getToggleValue(keys) {
-        let values = [];
-        for (let key of keys) {
-            if (config[key]) {
-                values.push(key);
-            }
-        }
-        return values;
-    }
-
     return (
         <div>
             <ModuleTitle label="Prompt Randomizer" />
@@ -30,30 +13,21 @@ export default function PromptRandomizer() {
                 <Textarea configKey="prompt_beg" label="Begining Prompt" placeholder="Tags to put at the beginning" autocomplete="on" height="20"/>
                 <Textarea configKey="prompt_search" label="Search Tags" placeholder="Tags to search for the prompt randomization" autocomplete="on" height="28"/>
                 
-                <ToggleGroup type="multiple" className="justify-between"
-                    onValueChange={(value) => dispatch(configSlice.setToggle({key: ["remove_artist", "remove_copyright", "remove_character"], value: value}))}
-                    value={getToggleValue(["remove_artist", "remove_copyright", "remove_character"])}
-                >
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_artist" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="paint-brush-fill" x={true} sel={config.remove_artist}/>Remove<br/>Artist</div></ToggleGroupItem>
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_copyright" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="book-4-fill" x={true} sel={config.remove_copyright}/>Remove<br/>Copyright</div></ToggleGroupItem>
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_character" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="user-3-fill" x={true}  sel={config.remove_character}/>Remove<br/>Character</div></ToggleGroupItem>
-                </ToggleGroup>
-                
-                <ToggleGroup type="multiple" className="justify-between"
-                    onValueChange={(value) => dispatch(configSlice.setToggle({key: ["remove_characteristic", "remove_attire", "remove_nsfw"], value: value}))}
-                    value={getToggleValue(["remove_characteristic", "remove_attire", "remove_nsfw"])}
-                >
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_characteristic" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="bear-fill" x={true} sel={config.remove_characteristic}/>Remove<br/>Characteristic</div></ToggleGroupItem>
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_attire" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="hat-fill" x={true} sel={config.remove_attire}/>Remove<br/>Attire</div></ToggleGroupItem>
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_nsfw" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="body-line" x={true} sel={config.remove_nsfw}/>Remove<br/>NSFW</div></ToggleGroupItem>
-                </ToggleGroup>
-                
-                <ToggleGroup type="multiple" className="justify-between"
-                    onValueChange={(value) => dispatch(configSlice.setToggle({key: ["remove_ornament"], value: value}))}
-                    value={getToggleValue(["remove_ornament"])}
-                >
-                    <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_ornament" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="diamond_2_line" x={true} sel={config.remove_ornament}/>Remove<br/>Ornament</div></ToggleGroupItem>
-                </ToggleGroup>
+                <Toggles items={[
+                    { key: "remove_artist", icon: "paint-brush-fill", x: true, label: "Remove\nArtist" },
+                    { key: "remove_copyright", icon: "book-4-fill", x: true, label: "Remove\nCopyright" },
+                    { key: "remove_character", icon: "user-3-fill", x: true, label: "Remove\nCharacter" }
+                ]}/>
+
+                <Toggles items={[
+                    { key: "remove_characteristic", icon: "bear-fill", x: true, label: "Remove\nCharacteristic" },
+                    { key: "remove_attire", icon: "hat-fill", x: true, label: "Remove\nAttire" },
+                    { key: "remove_nsfw", icon: "body-line", x: true, label: "Remove\nNSFW" }
+                ]}/>
+
+                <Toggles items={[
+                    { key: "remove_ornament", icon: "diamond_2_line", x: true, label: "Remove\nOrnament" }
+                ]}/>
 
                 <Textarea configKey="prompt_end" label="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="20"/>
                 <Textarea configKey="negative" label="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="28"/>
