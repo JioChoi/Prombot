@@ -1,4 +1,4 @@
-import { Textarea } from "@/components/ui/textarea";
+import Textarea from "@/components/elements/textarea";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Icon from "@/components/ui/icon";
@@ -25,21 +25,8 @@ export default function PromptRandomizer() {
             <h1 className="text-2xl text-primary font-bold mb-5">Prompt Randomizer</h1>
 
             <div className="flex flex-col space-y-4">
-                <div>
-                    <Label htmlFor="prompt_beg">Beginning Prompt</Label>
-                    <Textarea className="h-28 min-h-20" placeholder="Tags to put at the beginning" id="prompt_beg" autocomplete="on"
-                        onChange={(e) => dispatch(configSlice.setValue({ key: "prompt_beg", value: e.target.value }))}
-                        value={config.prompt_beg}
-                    />
-                </div>
-
-                <div>
-                    <Label htmlFor="prompt_search">Search Tags</Label>
-                    <Textarea className="h-20 min-h-20" placeholder="Tags to search for the prompt randomization" id="prompt_search" autocomplete="on"
-                        onChange={(e) => dispatch(configSlice.setValue({ key: "prompt_search", value: e.target.value }))}
-                        value={config.prompt_search}
-                    />                       
-                </div>
+                <Textarea configKey="prompt_beg" title="Begining Prompt" placeholder="Tags to put at the beginning" autocomplete="on" height="20"/>
+                <Textarea configKey="prompt_search" title="Search Tags" placeholder="Tags to search for the prompt randomization" autocomplete="on" height="28"/>
                 
                 <ToggleGroup type="multiple" className="justify-between"
                     onValueChange={(value) => dispatch(configSlice.setToggle({key: ["remove_artist", "remove_copyright", "remove_character"], value: value}))}
@@ -66,22 +53,8 @@ export default function PromptRandomizer() {
                     <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_ornament" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="diamond_2_line" x={true} sel={config.remove_ornament}/>Remove<br/>Ornament</div></ToggleGroupItem>
                 </ToggleGroup>
 
-                <div>
-                    <Label htmlFor="prompt_end">End Prompt</Label>
-                    <Textarea className="h-20 min-h-20" placeholder="Tags to put at the end" id="prompt_end" autocomplete="on"
-                        onChange={(e) => dispatch(configSlice.setValue({ key: "prompt_end", value: e.target.value }))}
-                        value={config.prompt_end}
-                    />
-                </div>
-
-                <div>
-                    <Label htmlFor="negative">Negative Prompt</Label>
-                    <Textarea className="h-28 min-h-20" placeholder="Tags to not include" id="negative" autocomplete="on"
-                        onChange={(e) => dispatch(configSlice.setValue({ key: "negative", value: e.target.value }))}
-                        value={config.negative}
-                    />
-                </div>
-                
+                <Textarea configKey="prompt_end" title="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="20"/>
+                <Textarea configKey="negative" title="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="28"/>
             </div>
         </>
     );

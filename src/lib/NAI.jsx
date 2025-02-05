@@ -63,7 +63,7 @@ export async function generate(token, config, onProgress, onGenerate) {
         prefer_brownian: true
     }
 
-    let res = await generateImage(token, prompt, model, 'generate', params);
+    let res = await generateImage(token, prompt, config.model, 'generate', params);
     return res;
 }
 
@@ -106,6 +106,8 @@ export const config = {
     auto_copyright: true,
     strengthen_attire: false,
     strengthen_ornament: false,
+
+    DEV_MODEL: "nai-diffusion-3",
 }
 
 /**

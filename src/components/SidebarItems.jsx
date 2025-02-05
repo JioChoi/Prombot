@@ -3,6 +3,7 @@ import Options from '../modules/Options';
 import Automation from '../modules/Automation';
 import TEMPLATE from '@/modules/00-TEMPLATE';
 import Extras from '@/modules/Extras';
+import Dev from '@/modules/Dev';
 
 function SidebarItems(data) {
     return (
@@ -11,6 +12,7 @@ function SidebarItems(data) {
             <Options />
             <Automation />
             <Extras />
+            <Dev />
         </div>
     );
 }
