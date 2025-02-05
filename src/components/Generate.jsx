@@ -88,7 +88,7 @@ export default function Generate() {
     }
 
     return (
-        <div className="bg-zinc-800 flex items-center justify-center outline-zinc-800 outline-2 z-50 w-screen h-[95px] fixed bottom-0 left-0
+        <div className="bg-zinc-800 flex items-center justify-center outline-zinc-800 outline-2 z-[35] lg:z-40 w-screen h-[95px] fixed bottom-0 left-0
             lg:w-[450px] lg:h-[126px] lg:border-t-2 lg:border-border lg:outline-none lg:static
         ">
             {button}
