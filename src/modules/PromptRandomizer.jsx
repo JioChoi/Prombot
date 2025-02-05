@@ -5,6 +5,8 @@ import Icon from "@/components/ui/icon";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
+import ModuleTitle from "@/components/elements/ModuleTitle";
+import ModuleBody from "@/components/elements/ModuleBody";
 
 export default function PromptRandomizer() {
     const config = useSelector((state) => state.config);
@@ -22,11 +24,11 @@ export default function PromptRandomizer() {
 
     return (
         <>
-            <h1 className="text-2xl text-primary font-bold mb-5">Prompt Randomizer</h1>
+            <ModuleTitle label="Prompt Randomizer" />
 
-            <div className="flex flex-col space-y-4">
-                <Textarea configKey="prompt_beg" title="Begining Prompt" placeholder="Tags to put at the beginning" autocomplete="on" height="20"/>
-                <Textarea configKey="prompt_search" title="Search Tags" placeholder="Tags to search for the prompt randomization" autocomplete="on" height="28"/>
+            <ModuleBody>
+                <Textarea configKey="prompt_beg" label="Begining Prompt" placeholder="Tags to put at the beginning" autocomplete="on" height="20"/>
+                <Textarea configKey="prompt_search" label="Search Tags" placeholder="Tags to search for the prompt randomization" autocomplete="on" height="28"/>
                 
                 <ToggleGroup type="multiple" className="justify-between"
                     onValueChange={(value) => dispatch(configSlice.setToggle({key: ["remove_artist", "remove_copyright", "remove_character"], value: value}))}
@@ -53,9 +55,9 @@ export default function PromptRandomizer() {
                     <ToggleGroupItem className="w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none" value="remove_ornament" variant="outline"><div className="flex flex-col items-center gap-1"><Icon className="text-5xl" name="diamond_2_line" x={true} sel={config.remove_ornament}/>Remove<br/>Ornament</div></ToggleGroupItem>
                 </ToggleGroup>
 
-                <Textarea configKey="prompt_end" title="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="20"/>
-                <Textarea configKey="negative" title="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="28"/>
-            </div>
+                <Textarea configKey="prompt_end" label="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="20"/>
+                <Textarea configKey="negative" label="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="28"/>
+            </ModuleBody>
         </>
     );
 }

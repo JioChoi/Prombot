@@ -1,13 +1,18 @@
 import { Select, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox"
+import Checkbox from "@/components/elements/checkbox"
 import { useContext } from "react";
+import ModuleTitle from "@/components/elements/ModuleTitle";
+import ModuleBody from "@/components/elements/ModuleBody";
 
-import Slider from '@/components/Slider';
+import Slider from '@/components/elements/Slider';
 
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
+import CheckboxGroup from "@/components/elements/CheckboxGroup";
+
+import Dropdown from "@/components/elements/Dropdown";
 
 export default function Options() {
     const config = useSelector((state) => state.config);
@@ -40,45 +45,36 @@ export default function Options() {
 
     return (
         <>
-            <h1 className="text-2xl text-primary font-bold mb-5 mt-6">Options</h1>
+            <ModuleTitle label="Options" />
 
-            <div className="flex flex-col space-y-4">
+            <ModuleBody>
                 <div>
                     <Label htmlFor="resolution">Image Size</Label>
                     <div className="flex items-center justify-between">
-                        <Select id="resolution" 
-                            value={getResolution()}
-                            onValueChange={setResolution}
-                        >
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue/>
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">NORMAL</SelectLabel>
-                                    <SelectItem value="832x1216">Portrait (832x1216)</SelectItem>
-                                    <SelectItem value="1216x832">Landscape (1216x832)</SelectItem>
-                                    <SelectItem value="832x832">Square (1024x1024)</SelectItem>
+                        <Dropdown configKey="resolution" value={getResolution()} onValueChange={setResolution}
+                        items={[
+                            { value: "", label: "NORMAL" },
+                            { value: "832x1216", label: "Portrait (832x1216)" },
+                            { value: "1216x832", label: "Landscape (1216x832)" },
+                            { value: "832x832", label: "Square (1024x1024)" },
 
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">LARGE</SelectLabel>
-                                    <SelectItem value="1024x1536">Portrait (1024x1536)</SelectItem>
-                                    <SelectItem value="1536x1024">Landscape (1536x1024)</SelectItem>
-                                    <SelectItem value="1472x1472">Square (1472x1472)</SelectItem>
+                            { value: "", label: "LARGE" },
+                            { value: "1024x1536", label: "Portrait (1024x1536)" },
+                            { value: "1536x1024", label: "Landscape (1536x1024)" },
+                            { value: "1472x1472", label: "Square (1472x1472)" },
 
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">WALLPAPER</SelectLabel>
-                                    <SelectItem value="1088x1920">Portrait (1088x1920)</SelectItem>
-                                    <SelectItem value="1920x1088">Landscape (1920x1088)</SelectItem>
+                            { value: "", label: "WALLPAPER" },
+                            { value: "1088x1920", label: "Portrait (1088x1920)" },
+                            { value: "1920x1088", label: "Landscape (1920x1088)" },
 
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">SMALL</SelectLabel>
-                                    <SelectItem value="512x768">Portrait (512x768)</SelectItem>
-                                    <SelectItem value="768x512">Landscape (768x512)</SelectItem>
-                                    <SelectItem value="640x640">Square (640x640)</SelectItem>
+                            { value: "", label: "SMALL" },
+                            { value: "512x768", label: "Portrait (512x768)" },
+                            { value: "768x512", label: "Landscape (768x512)" },
+                            { value: "640x640", label: "Square (640x640)" },
 
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">CUSTOM</SelectLabel>
-                                    <SelectItem value="custom">Custom</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                            { value: "", label: "CUSTOM" },
+                            { value: "custom", label: "Custom" } 
+                        ]} />
                         
                         <div className="flex items-center">
                             <Input className="w-[65px] text-center" type="number"
@@ -101,9 +97,9 @@ export default function Options() {
                     </div>
                 </div>
 
-                <Slider label="Steps: " keyname="steps" min={1} max={50} step={1} />
-                <Slider label="Prompt Guidance: " keyname="prompt_guidance" min={0} max={10} step={0.1} />
-                <Slider label="Prompt Guidance Rescale: " keyname="prompt_guidance_rescale" min={0} max={1} step={0.01} />
+                <Slider label="Steps: " configKey="steps" min={1} max={50} step={1} />
+                <Slider label="Prompt Guidance: " configKey="prompt_guidance" min={0} max={10} step={0.1} />
+                <Slider label="Prompt Guidance Rescale: " configKey="prompt_guidance_rescale" min={0} max={1} step={0.01} />
 
                 <div className="flex items-start justify-between">
                     <div className="w-36">
@@ -114,54 +110,19 @@ export default function Options() {
                             onBlur={(e) => dispatch(configSlice.setValue({ key: "seed", value: e.target.value == "" ? -1 : Math.floor(e.target.valueAsNumber) }))}
                         ></Input>
                     </div>
-                    <div>
-                        <Label htmlFor="sampler">Sampler</Label>
-                        <Select id="sampler" value={config.sampler}
-                            onValueChange={(value) => dispatch(configSlice.setValue({ key: "sampler", value: value }))}
-                        >
-                            <SelectTrigger className="w-48">
-                                <SelectValue/>
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">RECOMMENDED</SelectLabel>
-                                    <SelectItem value="k_euler">Euler</SelectItem>
-                                    <SelectItem value="k_euler_ancestral">Euler Ancestral</SelectItem>
-                                    <SelectItem value="k_dpmpp_2s_ancestral">DPM++ 2S Ancestral</SelectItem>
-                                    <SelectItem value="k_dpmpp_2m_sde">DPM++ 2M SDE</SelectItem>
-
-                                    <SelectLabel className="text-xs text-zinc-400 pt-5">OTHER</SelectLabel>
-                                    <SelectItem value="k_dpmpp_2m">DPM++ 2M</SelectItem>
-                                    <SelectItem value="k_dpmpp_sde">DPM++ SDE</SelectItem>
-                                    <SelectItem value="ddim_v3">DDIM</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                        
-                        <div className="flex items-center align-middle space-x-3 mt-3">
-                            <div className="flex items-center space-x-1">
-                                <Checkbox id="SMEA" 
-                                    checked={config.SMEA}
-                                    onCheckedChange={(checked) => {
-                                        dispatch(configSlice.setValue({ key: "SMEA", value: checked }))
-                                        if(!checked) dispatch(configSlice.setValue({ key: "DYN", value: false }))
-                                    }}
-                                />
-                                <Label htmlFor="SMEA" className="m-0">SMEA</Label>
-                            </div>
-                            
-                            <div className="flex items-center space-x-1">
-                                <Checkbox id="DYN"
-                                    checked={config.DYN}
-                                    onCheckedChange={(checked) => dispatch(configSlice.setValue({ key: "DYN", value: checked }))}
-                                    disabled={!config.SMEA}
-                                />
-                                <Label htmlFor="DYN" className="m-0">DYN</Label>
-                            </div>
-                        </div>
-                    </div>
+                    <Dropdown configKey="sampler" label="Sampler" items={[
+                        { value: "", label: "RECOMMENDED" },
+                        { value: "k_euler", label: "Euler" },
+                        { value: "k_euler_ancestral", label: "Euler Ancestral" },
+                        { value: "k_dpmpp_2s_ancestral", label: "DPM++ 2S Ancestral" },
+                        { value: "k_dpmpp_2m_sde", label: "DPM++ 2M SDE" },
+                        { value: "", label: "OTHER" },
+                        { value: "k_dpmpp_2m", label: "DPM++ 2M" },
+                        { value: "k_dpmpp_sde", label: "DPM++ SDE" },
+                        { value: "ddim_v3", label: "DDIM" }
+                    ]} />
                 </div>
-            </div>
+            </ModuleBody>
         </>
     );
 }

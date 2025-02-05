@@ -1,19 +1,19 @@
-import * as UI from "@/components/ui/textarea";
+import { Textarea as _Textarea }from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
 import { useRef } from "react";
 
-export default function Textarea(props) {
+export default function Textarea({label, configKey, placeholder, autocomplete, height}) {
     const dispatch = useDispatch();
     const config = useSelector((state) => state.config);
 
     return (
         <div>
-            <Label htmlFor={props.configKey}>{props.title}</Label>
-            <UI.Textarea id={props.configKey} className={`h-${props.height} min-h-20`} placeholder={props.placeholder} autocomplete={props.autocomplete}
-                onChange={(e) => dispatch(configSlice.setValue({ key: props.configKey, value: e.target.value }))}
-                value={config[props.configKey]}
+            <Label htmlFor={configKey}>{label}</Label>
+            <_Textarea id={configKey} className={`h-${height} min-h-20`} placeholder={placeholder} autocomplete={autocomplete}
+                onChange={(e) => dispatch(configSlice.setValue({ key: configKey, value: e.target.value }))}
+                value={config[configKey]}
             />
         </div>
     )
