@@ -6,7 +6,7 @@ import * as configSlice from "@/slices/configSlice";
 
 import { Label } from "@/components/ui/label";
 
-import Input from "@/components/elements/input";
+import Input from "@/components/elements/Input";
 import CheckboxGroup from "@/components/elements/CheckboxGroup";
 import Dropdown from "@/components/elements/Dropdown";
 import Checkbox from "@/components/elements/Checkbox"
