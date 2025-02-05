@@ -85,7 +85,7 @@ export default function Characters() {
             let folder = Math.floor(temp.img / 10000);
 
             return (
-                <div className={`relative rounded-lg aspect-square bg-zinc-800 overflow-hidden hover:cursor-pointer hover:brightness-90
+                <div key={i} className={`relative rounded-lg aspect-square bg-zinc-800 overflow-hidden hover:cursor-pointer hover:brightness-90
                 `}
                     onClick={() => {
                         if (temp.type == "copyright") {

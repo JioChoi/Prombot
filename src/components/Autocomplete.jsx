@@ -194,7 +194,7 @@ export default function Autocomplete() {
                 {value.map((v, i) => {
                     let shorten = shortenNumber(v[1]);
                     return (
-                        <div className={`odd:bg-[#2b2b2e] even:bg-zinc-800 w-[100%] px-2 py-[6px] hover:bg-zinc-700 hover:cursor-pointer flex flex-row justify-between items-center
+                        <div key={i} className={`odd:bg-[#2b2b2e] even:bg-zinc-800 w-[100%] px-2 py-[6px] hover:bg-zinc-700 hover:cursor-pointer flex flex-row justify-between items-center
                             ${selected == i ? "border-[1px] border-zinc-400 border-dotted" : "border-[1px] border-transparent"}`}
                             onClick={(e) => {
                                 putValue(i);

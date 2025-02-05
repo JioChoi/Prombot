@@ -21,7 +21,7 @@ export default function Dropdown({label="", configKey, items, value=null, onValu
                     <SelectGroup>
                         {items.map((item, i) => {
                             if (item.value == "") {
-                                return <SelectLabel key={i} className="text-xs text-zinc-400 pt-5">{item.label}</SelectLabel>;
+                                return <SelectLabel key={i} className={`text-xs text-zinc-400 ${i == 0 ? null : 'pt-5'}`}>{item.label}</SelectLabel>;
                             }
                             else {
                                 return <SelectItem key={i} value={item.value} className="hover:cursor-pointer">{item.label}</SelectItem>;

@@ -63,7 +63,22 @@ export async function generate(token, config, onProgress, onGenerate) {
         prefer_brownian: true
     }
 
-    let res = await generateImage(token, prompt, config.model, 'generate', params);
+    if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview') {
+        params.v4_negative_prompt = {
+            caption: {
+                base_caption: config.negative,
+                char_captions: []
+            }
+        };
+        params.v4_prompt = {
+            caption: {
+                base_caption: prompt,
+                char_captions: []
+            }
+        }
+    }
+
+    let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params);
     return res;
 }
 

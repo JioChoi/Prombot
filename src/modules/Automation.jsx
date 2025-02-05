@@ -14,7 +14,7 @@ export default function Automation() {
     const config = useSelector(state => state.config);
 
     return (
-        <>
+        <div>
             <ModuleTitle label="Automation" />
 
             <ModuleBody>
@@ -25,6 +25,6 @@ export default function Automation() {
                     <Checkbox configKey="automatically_download" label="Automatically Download" />
                 </CheckboxGroup>
             </ModuleBody>
-        </>
+        </div>
     )
 };

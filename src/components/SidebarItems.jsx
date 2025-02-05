@@ -6,7 +6,7 @@ import Dev from '@/modules/Dev';
 
 function SidebarItems(data) {
     return (
-        <div className="m-6">
+        <div className="m-6 space-y-6">
             <PromptRandomizer />
             <Options />
             <Automation />

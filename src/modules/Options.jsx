@@ -44,7 +44,7 @@ export default function Options() {
     }
 
     return (
-        <>
+        <div>
             <ModuleTitle label="Options" />
 
             <ModuleBody>
@@ -129,6 +129,6 @@ export default function Options() {
                     </div>
                 </div>
             </ModuleBody>
-        </>
+        </div>
     );
 }

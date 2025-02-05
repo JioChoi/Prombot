@@ -23,7 +23,7 @@ export default function PromptRandomizer() {
     }
 
     return (
-        <>
+        <div>
             <ModuleTitle label="Prompt Randomizer" />
 
             <ModuleBody>
@@ -58,6 +58,6 @@ export default function PromptRandomizer() {
                 <Textarea configKey="prompt_end" label="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="20"/>
                 <Textarea configKey="negative" label="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="28"/>
             </ModuleBody>
-        </>
+        </div>
     );
 }

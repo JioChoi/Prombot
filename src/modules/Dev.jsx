@@ -1,24 +1,22 @@
-import { Label } from '@/components/ui/label';
 import Slider from '@/components/elements/Slider';
 import ModuleTitle from '@/components/elements/ModuleTitle';
 import ModuleBody from '@/components/elements/ModuleBody';
 import CheckboxGroup from '@/components/elements/CheckboxGroup';
 import Checkbox from '@/components/elements/Checkbox';
+import Dropdown from '@/components/elements/Dropdown';
 
 
 export default function Dev() {
     return (
-        <>
-            <ModuleTitle label="Developer Feautres" />
+        <div>
+            <ModuleTitle label="Development Feautres" />
 
             <ModuleBody>
-                <Slider label="Test: " configKey="test" min={1} max={50} step={1} />
-
-                <CheckboxGroup>
-                    <Checkbox configKey="a" label="TESTA" />
-                    <Checkbox configKey="b" label="TESTB" />
-                </CheckboxGroup>
+                <Dropdown label="Model " configKey="DEV_MODEL" items={[
+                    { value: 'nai-diffusion-3', label: 'NAI Diffusion V3' },
+                    { value: 'nai-diffusion-4-curated-preview', label: 'NAI Diffusion V4 Preview' },
+                ]} />
             </ModuleBody>
-        </>
+        </div>
     )
 };

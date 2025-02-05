@@ -13,7 +13,7 @@ export default function Extras() {
     const config = useSelector(state => state.config);
 
     return (
-        <>
+        <div>
             <ModuleTitle label="Extras" />
 
             <ModuleBody>
@@ -30,6 +30,6 @@ export default function Extras() {
                     <Checkbox configKey="strengthen_ornament" label="Strengthen Ornament" />
                 </CheckboxGroup>
             </ModuleBody>
-        </>
+        </div>
     )
 };
