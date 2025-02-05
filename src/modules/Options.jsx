@@ -1,7 +1,7 @@
 import { Select, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import Checkbox from "@/components/elements/checkbox"
+import Checkbox from "@/components/elements/Checkbox"
 import { useContext } from "react";
 import ModuleTitle from "@/components/elements/ModuleTitle";
 import ModuleBody from "@/components/elements/ModuleBody";
@@ -110,17 +110,23 @@ export default function Options() {
                             onBlur={(e) => dispatch(configSlice.setValue({ key: "seed", value: e.target.value == "" ? -1 : Math.floor(e.target.valueAsNumber) }))}
                         ></Input>
                     </div>
-                    <Dropdown configKey="sampler" label="Sampler" items={[
-                        { value: "", label: "RECOMMENDED" },
-                        { value: "k_euler", label: "Euler" },
-                        { value: "k_euler_ancestral", label: "Euler Ancestral" },
-                        { value: "k_dpmpp_2s_ancestral", label: "DPM++ 2S Ancestral" },
-                        { value: "k_dpmpp_2m_sde", label: "DPM++ 2M SDE" },
-                        { value: "", label: "OTHER" },
-                        { value: "k_dpmpp_2m", label: "DPM++ 2M" },
-                        { value: "k_dpmpp_sde", label: "DPM++ SDE" },
-                        { value: "ddim_v3", label: "DDIM" }
-                    ]} />
+                    <div>
+                        <Dropdown configKey="sampler" label="Sampler" items={[
+                            { value: "", label: "RECOMMENDED" },
+                            { value: "k_euler", label: "Euler" },
+                            { value: "k_euler_ancestral", label: "Euler Ancestral" },
+                            { value: "k_dpmpp_2s_ancestral", label: "DPM++ 2S Ancestral" },
+                            { value: "k_dpmpp_2m_sde", label: "DPM++ 2M SDE" },
+                            { value: "", label: "OTHER" },
+                            { value: "k_dpmpp_2m", label: "DPM++ 2M" },
+                            { value: "k_dpmpp_sde", label: "DPM++ SDE" },
+                            { value: "ddim_v3", label: "DDIM" }
+                        ]} />
+                        <CheckboxGroup>
+                            <Checkbox configKey="SMEA" label="SMEA" uncheckTogether="DYN" />
+                            <Checkbox configKey="DYN" label="DYN" disabled={!config.SMEA} />
+                        </CheckboxGroup>
+                    </div>
                 </div>
             </ModuleBody>
         </>
