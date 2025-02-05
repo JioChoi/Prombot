@@ -1,7 +1,7 @@
-import * as UI from "../ui/textarea";
-import { Label } from "../ui/label";
+import * as UI from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
-import * as configSlice from "../../slices/configSlice";
+import * as configSlice from "@/slices/configSlice";
 import { useRef } from "react";
 
 export default function Textarea(props) {
