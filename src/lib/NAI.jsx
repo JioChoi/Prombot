@@ -15,6 +15,13 @@ export async function generate(token, config, onProgress, onGenerate) {
     console.log(prompt);
 
     onGenerate();
+    // await new Promise((resolve, reject) => {
+    //     setTimeout(() => {
+    //         resolve();
+    //     }, 10000);
+    // });
+
+    // return;
 
     onProgress('Generating image...');
     let seed = config.seed;

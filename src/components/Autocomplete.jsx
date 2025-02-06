@@ -133,7 +133,7 @@ export default function Autocomplete() {
                 let rect = e.target.getBoundingClientRect();
                 
                 setVisible(true);
-                setPosition({x: rect.x, y: e.target.parentNode.offsetTop + rect.height - 2});
+                setPosition({x: rect.x, y: e.target.offsetTop + rect.height - 2});
                 setSelected(0);
 
                 let temp = search(str);
