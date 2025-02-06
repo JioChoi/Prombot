@@ -2,6 +2,7 @@ import ModuleTitle from '@/components/elements/ModuleTitle';
 import ModuleBody from '@/components/elements/ModuleBody';
 
 import Dropdown from '@/components/elements/Dropdown';
+import Slider from '@/components/elements/Slider';
 
 
 export default function Dev() {
@@ -14,6 +15,8 @@ export default function Dev() {
                     { value: 'nai-diffusion-3', label: 'NAI Diffusion V3' },
                     { value: 'nai-diffusion-4-curated-preview', label: 'NAI Diffusion V4 Preview' },
                 ]} />
+
+                <Slider label="Strengthen Limit: " configKey="DEV_STRENGTHEN_LIMIT" min={0.2} max={1} step={0.01} />
             </ModuleBody>
         </div>
     )

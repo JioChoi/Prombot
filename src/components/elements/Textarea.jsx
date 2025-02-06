@@ -11,9 +11,10 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
     return (
         <div>
             <Label htmlFor={configKey}>{label}</Label>
-            <_Textarea id={configKey} className={`h-${height} min-h-20`} placeholder={placeholder} autocomplete={autocomplete}
+            <_Textarea id={configKey} className={`min-h-20`} placeholder={placeholder} autocomplete={autocomplete}
                 onChange={(e) => dispatch(configSlice.setValue({ key: configKey, value: e.target.value }))}
                 value={config[configKey]}
+                style={{height: height}}
             />
         </div>
     )

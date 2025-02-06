@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 import Icon from "@/components/ui/icon";
+import Autocomplete from "./Autocomplete";
 
 export default function Characters() {
     const [copyright, dispatchCopyright] = useState(-1);
@@ -231,6 +232,7 @@ export default function Characters() {
                             scroll.current.scrollTop = 0; 
                         }}
                         value={search}
+                        autocomplete="on"
                     ></input>
                     }
                 </div>
@@ -246,7 +248,8 @@ export default function Characters() {
                         <Label htmlFor="faceFocus" className="m-0 hover:cursor-pointer">Focus on Face</Label>
                     </div>
                 </div>
-                    
+                <Autocomplete />
+
 
                 </div>
             </form>

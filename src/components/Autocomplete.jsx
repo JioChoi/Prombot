@@ -121,6 +121,10 @@ export default function Autocomplete() {
                 
                 str = str.substring(last + 1);
                 str = str.trim();
+                if(str[0] == '~') {
+                    str = str.substring(1);
+                    last++;
+                }
 
                 element.current = e.target;
                 setRange({start: last + 1, end: start});

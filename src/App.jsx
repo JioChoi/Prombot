@@ -96,7 +96,7 @@ function App() {
 				<div className="bg-zinc-900 w-full h-full relative top-0">
 					{data.datasets_loaded ? <Characters /> : ""}
 				</div>
-			</div>			
+			</div>
 		</ThemeProvider>
 	)
 }

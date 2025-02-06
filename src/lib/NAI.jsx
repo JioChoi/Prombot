@@ -123,6 +123,7 @@ export const config = {
     strengthen_ornament: false,
 
     DEV_MODEL: "nai-diffusion-3",
+    DEV_STRENGTHEN_LIMIT: 0.5
 }
 
 /**
@@ -557,7 +558,8 @@ async function processPrompt(config, onProgress) {
         for (let data of characterData) {
             for (let tag of data.tags) {
                 if (datasets.characteristic.includes(tag[0])) {
-                    characteristics.push(tag[0]);
+                    if (tag[1] >= config.DEV_STRENGTHEN_LIMIT)
+                        characteristics.push(tag[0]);
                 }
             }
         }
@@ -571,7 +573,8 @@ async function processPrompt(config, onProgress) {
         for (let data of characterData) {
             for (let tag of data.tags) {
                 if (datasets.clothes.includes(tag[0])) {
-                    characteristics.push(tag[0]);
+                    if (tag[1] >= config.DEV_STRENGTHEN_LIMIT)
+                        characteristics.push(tag[0]);
                 }
             }
         }
@@ -592,7 +595,8 @@ async function processPrompt(config, onProgress) {
         for (let data of characterData) {
             for (let tag of data.tags) {
                 if (datasets.ornament.includes(tag[0])) {
-                    characteristics.push(tag[0]);
+                    if (tag[1] >= config.DEV_STRENGTHEN_LIMIT)
+                        characteristics.push(tag[0]);
                 }
             }
         }

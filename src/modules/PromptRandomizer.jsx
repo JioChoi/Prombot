@@ -10,8 +10,8 @@ export default function PromptRandomizer() {
             <ModuleTitle label="Prompt Randomizer" />
 
             <ModuleBody>
-                <Textarea configKey="prompt_beg" label="Begining Prompt" placeholder="Tags to put at the beginning" autocomplete="on" height="20"/>
-                <Textarea configKey="prompt_search" label="Search Tags" placeholder="Tags to search for the prompt randomization" autocomplete="on" height="28"/>
+                <Textarea configKey="prompt_beg" label="Begining Prompt" placeholder="Tags to put at the beginning" autocomplete="on" height="112px"/>
+                <Textarea configKey="prompt_search" label="Search Tags" placeholder="Tags to search for the prompt randomization" autocomplete="on" height="80px"/>
                 
                 <Toggles items={[
                     { key: "remove_artist", icon: "paint-brush-fill", x: true, label: "Remove\nArtist" },
@@ -29,8 +29,8 @@ export default function PromptRandomizer() {
                     { key: "remove_ornament", icon: "diamond_2_line", x: true, label: "Remove\nOrnament" }
                 ]}/>
 
-                <Textarea configKey="prompt_end" label="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="20"/>
-                <Textarea configKey="negative" label="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="28"/>
+                <Textarea configKey="prompt_end" label="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="80px"/>
+                <Textarea configKey="negative" label="Negative Prompt" placeholder="Tags to exclude" autocomplete="on" height="112px"/>
             </ModuleBody>
         </div>
     );
