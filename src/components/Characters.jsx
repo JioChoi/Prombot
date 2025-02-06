@@ -6,6 +6,16 @@ import { Label } from "@/components/ui/label";
 import Icon from "@/components/ui/icon";
 import Autocomplete from "./Autocomplete";
 
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+import { Button } from "./ui/button";
+
 export default function Characters() {
     const [copyright, dispatchCopyright] = useState(-1);
     const [search, dispatchSearch] = useState("");
@@ -22,6 +32,8 @@ export default function Characters() {
     const scroll = useRef(null);
 
     const buffer = 100;
+
+    const [selectedCharacter, setSelectedCharacter] = useState("");
 
     function updateElementsHeight() {
         let width = window.innerWidth - 10;
@@ -78,6 +90,15 @@ export default function Characters() {
             imgStyle = "object-cover object-top";
         }
 
+        let favorite = localStorage.getItem("favorite");
+
+        if (favorite == undefined) {
+            favorite = [];
+        }
+        else {
+            favorite = favorite.split(",");
+        }
+
         let temp = [...Array(bf).keys()].map((i) => {
             let temp = data[start + i];
             if (temp == undefined) {
@@ -86,7 +107,7 @@ export default function Characters() {
             let folder = Math.floor(temp.img / 10000);
 
             return (
-                <div key={i} className={`relative rounded-lg aspect-square bg-zinc-800 overflow-hidden hover:cursor-pointer hover:brightness-90
+                <div key={start + i} className={`relative rounded-lg aspect-square bg-zinc-800 overflow-hidden hover:cursor-pointer hover:brightness-90
                 `}
                     onClick={() => {
                         if (temp.type == "copyright") {
@@ -94,14 +115,17 @@ export default function Characters() {
                             dispatchCopyright(temp.id);
                         }
                         else {
-                            // Save to clipboard
-                            navigator.clipboard.writeText(temp.name);
+                            setSelectedCharacter(temp.name);
                         }
                     }}
                 >
                     {
                         temp.type == "character" ?
                         <div className="absolute top-1 left-1 w-[28px] h-[28px] bg-black flex align-middle justify-center rounded-full"><Icon name="user-3-fill" className="text-lg text-white"/></div> : ""
+                    }
+                    {
+                        favorite.includes(temp.name) ?
+                        <div className="absolute top-1 right-1 w-[28px] h-[28px] bg-black flex align-middle justify-center rounded-full"><Icon name="star-fill" className="text-lg text-yellow-400"/></div> : ""
                     }
                     <img className={"w-full h-full pointer-events-none " + imgStyle} loading="lazy"
                         src={`https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/${folder}/${temp.img}.webp`}
@@ -249,8 +273,6 @@ export default function Characters() {
                     </div>
                 </div>
                 <Autocomplete />
-
-
                 </div>
             </form>
 
@@ -268,6 +290,37 @@ export default function Characters() {
                     {elements}
                 </div>
             </div>
+
+
+            <Dialog open={selectedCharacter != ""} onOpenChange={(e) => {setSelectedCharacter("")}}>
+            <DialogContent className="z-50 w-[300px] h-[230px]">
+                <DialogHeader>
+                <DialogTitle>{selectedCharacter}</DialogTitle>
+                <DialogDescription className="flex flex-col gap-2 pt-7 text-zinc-300">
+                    <Button variant="outline" onClick={(e) => {navigator.clipboard.writeText(selectedCharacter); setSelectedCharacter("")}}>Copy to Clipboard</Button>
+                    <Button variant="outline" onClick={(e) => {
+                        let temp = localStorage.getItem("favorite");
+
+                        if (temp == undefined || temp == "") {
+                            temp = selectedCharacter;
+                        }
+                        else {
+                            if (temp.split(",").includes(selectedCharacter)) {
+                                temp = temp.split(",").filter((temp) => temp != selectedCharacter).join(",");
+                            }
+                            else {
+                                temp += "," + selectedCharacter;
+                            }
+                        }
+                        localStorage.setItem("favorite", temp);
+                        updateToScroll(true);
+                        setSelectedCharacter("");
+                    }}>{localStorage.getItem("favorite") != undefined && localStorage.getItem("favorite").split(",").includes(selectedCharacter) ? "Remove from Favorite" : "Add to Favorite"}</Button>
+                    <Button variant="outline" onClick={(e) => {setSelectedCharacter("")}}>Close</Button>
+                </DialogDescription>
+                </DialogHeader>
+            </DialogContent>
+            </Dialog>
         </>
     )
 }

@@ -123,7 +123,7 @@ export const config = {
     strengthen_ornament: false,
 
     DEV_MODEL: "nai-diffusion-3",
-    DEV_STRENGTHEN_LIMIT: 0.5
+    DEV_CHARACTER_STRENGTH: 0.4
 }
 
 /**
@@ -231,6 +231,7 @@ export async function downloadDatasets(onProgress, onFinish) {
             res[i] = res[i].split(',');
         }
         datasets.whitelist = res;
+        datasets.whitelist.push(['__FAVORITE__', 0]);
 
         downloaded++;
     });
@@ -533,6 +534,30 @@ async function processPrompt(config, onProgress) {
         randomPrompt = removeArray(randomPrompt, datasets.censor);
     }
 
+    // Favorite
+    if (prompt_beg.includes('__FAVORITE__') || prompt_end.includes('__FAVORITE__')) {
+        let favorite = localStorage.getItem('favorite');
+        if (favorite == undefined || favorite == null) {
+            favorite = [''];
+        }
+        else {
+            favorite = favorite.split(',');
+        }
+
+        let chosen = favorite[Math.floor(Math.random() * favorite.length)];
+        let index = prompt_beg.indexOf('__FAVORITE__');
+        if (index != -1) {
+            prompt_beg[index] = chosen;
+        }
+        else {
+            index = prompt_end.indexOf('__FAVORITE__');
+            if (index != -1) {
+                prompt_end[index] = chosen;
+            }
+        }
+    }
+
+
     randomPrompt = removeArray(randomPrompt, ["rating:g", "rating:q", "rating:e", "rating:s"]);
 
     // Character Data
@@ -552,13 +577,16 @@ async function processPrompt(config, onProgress) {
         prompt_beg = prompt_beg.concat(copyrights);
     }
 
+    let characterStrength = ((1 - config.DEV_CHARACTER_STRENGTH) * 0.8 + 0.2).toFixed(2);
+    console.log("CHARACTER STRENGTH: " + characterStrength);
+
     // Strengthen Characteristics
     if (config.strengthen_characteristic) {
         let characteristics = [];
         for (let data of characterData) {
             for (let tag of data.tags) {
                 if (datasets.characteristic.includes(tag[0])) {
-                    if (tag[1] >= config.DEV_STRENGTHEN_LIMIT)
+                    if (tag[1] >= characterStrength)
                         characteristics.push(tag[0]);
                 }
             }
@@ -573,7 +601,7 @@ async function processPrompt(config, onProgress) {
         for (let data of characterData) {
             for (let tag of data.tags) {
                 if (datasets.clothes.includes(tag[0])) {
-                    if (tag[1] >= config.DEV_STRENGTHEN_LIMIT)
+                    if (tag[1] >= characterStrength)
                         characteristics.push(tag[0]);
                 }
             }
@@ -595,7 +623,7 @@ async function processPrompt(config, onProgress) {
         for (let data of characterData) {
             for (let tag of data.tags) {
                 if (datasets.ornament.includes(tag[0])) {
-                    if (tag[1] >= config.DEV_STRENGTHEN_LIMIT)
+                    if (tag[1] >= characterStrength)
                         characteristics.push(tag[0]);
                 }
             }

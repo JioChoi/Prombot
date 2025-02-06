@@ -16,7 +16,7 @@ export default function Dev() {
                     { value: 'nai-diffusion-4-curated-preview', label: 'NAI Diffusion V4 Preview' },
                 ]} />
 
-                <Slider label="Strengthen Limit: " configKey="DEV_STRENGTHEN_LIMIT" min={0.2} max={1} step={0.01} />
+                <Slider label="Character Strength: " configKey="DEV_CHARACTER_STRENGTH" min={0} max={1} step={0.01} />
             </ModuleBody>
         </div>
     )
