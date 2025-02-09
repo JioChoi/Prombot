@@ -27,6 +27,7 @@ export default function TagPopup() {
 
     const element = useRef(null);
     const clientPosition = useRef({ x: 0, y: 0 });
+    const prvSelection = useRef({ start: 0, end: 0 });
 
     function setTextareaValue(val) {
         const valueSetter = Object.getOwnPropertyDescriptor(element.current, 'value').set;
@@ -44,6 +45,8 @@ export default function TagPopup() {
     function changeWeight(amt) {
         let start = element.current.selectionStart;
         let end = element.current.selectionEnd;
+        start = prvSelection.current.start;
+        end = prvSelection.current.end;
 
         let range = getRange(element.current, element.current.value, start, end);
         if (!range) {
@@ -83,7 +86,6 @@ export default function TagPopup() {
         let previousElement = null;
         let cursor = { x: 0, y: 0 };
         let on = false;
-        let prvSelection = { start: 0, end: 0 };
 
         function scrollFunction(e) {
             on = false;
@@ -99,7 +101,7 @@ export default function TagPopup() {
                 let start = e.target.selectionStart;
                 let end = e.target.selectionEnd;
 
-                prvSelection = { start, end };
+                prvSelection.current = { start, end };
 
                 element.current = e.target;
                 let rect = getRangeRect(e.target, value, start, end);

@@ -70,7 +70,7 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
                         fontKerning: "auto",
                         fontOpticalSizing: "auto",
                         fontSizeAdjust: "none",
-                        fontStretch: "100%",
+                        fontStretch: "99%",
                         fontStyle: "normal",
                         fontVariant: "normal",
                         letterSpacing: "normal",
