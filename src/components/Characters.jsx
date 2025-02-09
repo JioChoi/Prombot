@@ -211,8 +211,8 @@ export default function Characters() {
     }, [copyright, search]);
 
     useEffect(() => {
-        updateToScroll(true);
         updateScrollHeight();
+        updateToScroll(true);
 
         if (copyright != -1) {
             scroll.current.scrollTop = 0;

@@ -137,17 +137,20 @@ export default function TagPopup() {
             //     setVisible(false);
             // }
         }
+        function touchMoveFunction(e) {
+            cursor = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
 
         document.addEventListener('selectionchange', selectionChangeFn);
         document.addEventListener("blur", blurFunction, true);
         document.addEventListener("mousemove", mouseMoveFunction);
-        document.addEventListener("touchmove", mouseMoveFunction);
+        document.addEventListener("touchmove", touchMoveFunction);
 
         return () => {
             document.removeEventListener('selectionchange', selectionChangeFn);
             document.removeEventListener("blur", blurFunction, true);
             document.removeEventListener("mousemove", mouseMoveFunction);
-            document.removeEventListener("touchmove", mouseMoveFunction);
+            document.removeEventListener("touchmove", touchMoveFunction);
         }
     }, []);
 
@@ -188,42 +191,52 @@ export default function TagPopup() {
 }
 
 function getRange(element, value, begin, end, includeWeight=false) {
-    let val = value.substring(begin, end);
+    begin--;
+    // Extract comma L
+    let l = Math.max(
+        value.lastIndexOf(",", begin) != -1 ? value.lastIndexOf(",", begin) + 1 : 0,
+        value.lastIndexOf("\n", begin) != -1 ? value.lastIndexOf("\n", begin) + 1 : 0,
+        value.lastIndexOf("|", begin) != -1 ? value.lastIndexOf("|", begin) + 1 : 0,
+    );
+    // Extract comma R
+    let r = Math.min(
+        value.indexOf(",", end) != -1 ? value.indexOf(",", end) : value.length,
+        value.indexOf("\n", end) != -1 ? value.indexOf("\n", end) : value.length,
+        value.indexOf("|", end) != -1 ? value.indexOf("|", end) : value.length,
+    );
 
-    if (begin == end) {
-        begin = Math.max(
-            0,
-            value.lastIndexOf(",", begin) + 1,
-            value.lastIndexOf("\n", begin) + 1,
-            value.lastIndexOf("<", begin) + 1,
-            value.lastIndexOf("|", begin) + 1,
-            !includeWeight ? value.lastIndexOf("{", begin) + 1 : 0,
-            !includeWeight ? value.lastIndexOf("[", begin) + 1 : 0,
+    if (!includeWeight) {
+        // Extract weight L
+        l = Math.max(
+            value.lastIndexOf("{", r) != -1 ? value.lastIndexOf("{", r) + 1 : l,
+            value.lastIndexOf("[", r) != -1 ? value.lastIndexOf("[", r) + 1 : l,
+            l
+        )
+        // Extract weight R
+        r = Math.min(
+            value.indexOf("}", l) != -1 ? value.indexOf("}", l) : r,
+            value.indexOf("]", l) != -1 ? value.indexOf("]", l) : r,
+            r
         );
-
-        end = Math.min(
-            value.indexOf(",", end) != -1 ? value.indexOf(",", end) : value.length,
-            value.indexOf("\n", end) != -1 ? value.indexOf("\n", end) : value.length,
-            value.indexOf(">", end) != -1 ? value.indexOf(">", end) : value.length,
-            value.indexOf("|", end) != -1 ? value.indexOf("|", end) : value.length,
-            !includeWeight ? value.indexOf("}", end) != -1 ? value.indexOf("}", end) : value.length : value.length,
-            !includeWeight ? value.indexOf("]", end) != -1 ? value.indexOf("]", end) : value.length : value.length,
-        );
-
-        val = value.substring(begin, end);
     }
 
-    if (val.trim() == "") {
+    // Trim Left
+    while (l < r && value.charAt(l) == " ") {
+        l++;
+    }
+    // Trim Right
+    while (r > l && value.charAt(r - 1) == " ") {
+        r--;
+    }
+    
+    if (l >= r) {
         return null;
     }
 
-    begin += val.length - val.trimStart().length;
-    end -= val.length - val.trimEnd().length;
-
     return {
-        begin: begin,
-        end: end,
-    }
+        begin: l,
+        end: r
+    };
 }
 
 function removeStyles(element) {
