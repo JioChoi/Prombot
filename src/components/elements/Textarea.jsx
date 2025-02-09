@@ -28,8 +28,10 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
             }
         }
         function addChar(char) {
-            ele.push(<span>{char}</span>);
-        }
+            ele.push(
+                <span>{char}</span>
+            );
+       }
 
         for (let i = 0; i < config[configKey].length; i++) {
             let char = config[configKey][i];
@@ -59,11 +61,24 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
                     style={{height: height}}
                     onScroll={(e) => setScroll(e.target.scrollTop)}
                 />
-                <div className="fakeTextarea absolute top-0 min-h-[60px] w-full border border-transparent bg-transparent px-3 py-2 text-base md:text-sm scroll pointer-events-none whitespace-pre-wrap break-words overflow-y-scroll"
+                <div className="fakeTextarea absolute top-0 left-0 min-h-[60px] w-full border border-transparent bg-transparent px-3 py-2 text-base md:text-sm scroll pointer-events-none whitespace-pre-wrap break-words overflow-y-scroll"
                     style={{
                         height: observer.height ? observer.height + 18 : 0,
-                        //color: "transparent",
-                        // visibility: "hidden"
+                        color: "transparent",
+                        color: "rgba(255, 0, 255, 0.5)",
+
+                        fontKerning: "auto",
+                        fontOpticalSizing: "auto",
+                        fontSizeAdjust: "none",
+                        fontStretch: "100%",
+                        fontStyle: "normal",
+                        fontVariant: "normal",
+                        letterSpacing: "normal",
+                        textAlign: "start",
+                        textIndent: "0px",
+                        textShadow: "none",
+                        textTransform: "none",
+                        wordSpacing: "0px"
                     }}
                     ref={ref}
                 >

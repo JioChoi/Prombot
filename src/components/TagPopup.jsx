@@ -83,6 +83,7 @@ export default function TagPopup() {
         let previousElement = null;
         let cursor = { x: 0, y: 0 };
         let on = false;
+        let prvSelection = { start: 0, end: 0 };
 
         function scrollFunction(e) {
             on = false;
@@ -92,9 +93,13 @@ export default function TagPopup() {
 
         function selectionChangeFn(e) {
             if (e.target.tagName == "TEXTAREA" && e.target.getAttribute("autocomplete") == "on") {
+                console.log("SELECTION CHANGE", e.target.selectionStart, e.target.selectionEnd);
+    
                 let value = e.target.value;
                 let start = e.target.selectionStart;
                 let end = e.target.selectionEnd;
+
+                prvSelection = { start, end };
 
                 element.current = e.target;
                 let rect = getRangeRect(e.target, value, start, end);
@@ -121,13 +126,22 @@ export default function TagPopup() {
         }
 
         function blurFunction(e) {
+            console.log("BLUR");
+
             if (!checkParent(document.elementFromPoint(cursor.x, cursor.y), "tagPopup")) {
                 on = false;
                 setVisible(false);
                 removeStyles(element.current);
             }
             else {
-                e.target.focus();
+                // document.activeElement.blur();
+                // setTimeout(() => {
+                //     e.target.focus();
+                //     e.target.selectionStart = prvSelection.start;
+                //     e.target.selectionEnd = prvSelection.end;
+                // }, 10);
+                console.log(e.target);
+
             }
         }
         function mouseMoveFunction(e) {
@@ -146,6 +160,12 @@ export default function TagPopup() {
         document.addEventListener("mousemove", mouseMoveFunction);
         document.addEventListener("touchmove", touchMoveFunction);
 
+        document.addEventListener("keydown", (e) => {
+            if(e.ctrlKey) {
+                document.getElementById("prompt_beg").focus();
+            }
+        });
+
         return () => {
             document.removeEventListener('selectionchange', selectionChangeFn);
             document.removeEventListener("blur", blurFunction, true);
@@ -160,7 +180,7 @@ export default function TagPopup() {
     return (
         <>
         <div id="tagPopup" className='absolute top-0 left-0 w-auto h-[30px] z-[70] bg-zinc-800 shadow-xl rounded-lg border-2 border-zinc-600 hover:cursor-pointer pointer-events-auto
-            flex flex-row
+            flex flex-row select-none
         '
             style={{
                 top: position.y - 30 + "px",
@@ -240,11 +260,11 @@ function getRange(element, value, begin, end, includeWeight=false) {
 }
 
 function removeStyles(element) {
-    let fakeTextarea = element.parentNode.querySelector(".fakeTextarea").querySelectorAll("span");
+    // let fakeTextarea = element.parentNode.querySelector(".fakeTextarea").querySelectorAll("span");
 
-    for (let i = 0; i < fakeTextarea.length; i++) {
-        fakeTextarea[i].style.color = "transparent";
-    }
+    // for (let i = 0; i < fakeTextarea.length; i++) {
+    //     fakeTextarea[i].style.color = "transparent";
+    // }
 }
 
 function getRangeRect(element, value, begin, end) {
@@ -258,9 +278,9 @@ function getRangeRect(element, value, begin, end) {
     let fakeTextarea = element.parentNode.querySelector(".fakeTextarea").querySelectorAll("span");
 
     removeStyles(element);
-    for (let i = begin; i < range.end; i++) {
-        fakeTextarea[i].style.color = "#cffafe";
-    }
+    // for (let i = begin; i < range.end; i++) {
+    //     fakeTextarea[i].style.color = "#cffafe";
+    // }
 
     let rect = fakeTextarea[begin].getBoundingClientRect();
     let eleY = element.parentNode.getBoundingClientRect().y;

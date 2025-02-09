@@ -25,6 +25,7 @@ export default function Sidebar() {
                 </div>
 
                 <div className="bg-zinc-800 overflow-y-auto w-auto h-[calc(100%-40px)] lg:h-full relative">
+                    <TagPopup />
                     <Autocomplete />
                     <SidebarItems />
                 </div>
