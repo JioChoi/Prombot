@@ -65,7 +65,7 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
                     style={{
                         height: observer.height ? observer.height + 18 : 0,
                         color: "transparent",
-                        color: "rgba(255, 0, 255, 0.5)",
+                        // color: "rgba(255, 0, 255, 0.5)",
 
                         fontKerning: "auto",
                         fontOpticalSizing: "auto",
