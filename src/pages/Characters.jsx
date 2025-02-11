@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 
 import Icon from "@/components/ui/icon";
 import Autocomplete from "@/components/Autocomplete";
+import { decompressFile } from "@/lib/utils";
 
 import {
     Dialog,
@@ -32,13 +33,15 @@ export default function Characters() {
         let temp = {};
 
         /* Characters/Characters.json */
-        downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/characters.json').then((res) => {
+        downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/characters.zip', 'blob').then(async (res) => {
+            res = await decompressFile(res);
             res = JSON.parse(res);
             temp.characters = res;
             count++;
         });
         /* Characters/Copyright.json */
-        downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/copyright.json').then((res) => {
+        downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/copyright.zip', 'blob').then(async (res) => {
+            res = await decompressFile(res);
             res = JSON.parse(res);
             temp.copyright = res;
             count++;
