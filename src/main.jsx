@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Main } from '@/pages/Main.jsx'
 import Characters from '@/pages/Characters.jsx'
@@ -9,9 +9,11 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Utils } from './lib/utils'
 
 createRoot(document.getElementById('root')).render(
 	<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+		<Utils />
 		<BrowserRouter>
 			<Routes>
 				<Route path='/' element={

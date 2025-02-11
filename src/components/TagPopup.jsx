@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Icon from "./ui/icon";
+import { BROWSER } from "@/lib/utils";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
@@ -142,8 +143,11 @@ export default function TagPopup() {
                 //     e.target.selectionStart = prvSelection.start;
                 //     e.target.selectionEnd = prvSelection.end;
                 // }, 10);
-                console.log(e.target);
 
+                if (BROWSER != "safari") {
+                    e.target.focus();
+                }
+                console.log(e.target);
             }
         }
         function mouseMoveFunction(e) {

@@ -17,3 +17,28 @@ export async function downloadFile(url) {
       return await downloadFile(url);
   }
 }
+
+export let BROWSER = "";
+
+export function Utils() {
+  if (typeof window !== "undefined") {
+    if (navigator.userAgent.includes("Firefox")) {
+      BROWSER = "firefox";
+    }
+    else if (navigator.userAgent.includes("Chrome")) {
+      BROWSER = "chrome";
+    }
+    else if (navigator.userAgent.includes("Safari")) {
+      BROWSER = "safari";
+    }
+    else if (navigator.userAgent.includes("Edge")) {
+      BROWSER = "edge";
+    }
+    else if (navigator.userAgent.includes("Opera")) {
+      BROWSER = "opera";
+    }
+    else {
+      BROWSER = "unknown";
+    }
+  }
+}
