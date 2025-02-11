@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "./ui/button"
 
-import { Data } from "@/App"
+import { Data } from "@/pages/Main"
 import { useRef, useState } from "react"
 
 import { login, loadAnlas, loadPresets } from "@/lib/NAI"

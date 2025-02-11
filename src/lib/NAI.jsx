@@ -4,6 +4,7 @@ import { Buffer } from 'buffer';
 import argon2 from 'argon2-browser/dist/argon2-bundled.min.js';
 import { unzip } from 'unzipit';
 import { sha256 } from 'js-sha256';
+import { downloadFile } from '@/lib/utils';
 
 export const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
@@ -127,7 +128,7 @@ export const config = {
 }
 
 /**
-DATASETS (17)
+DATASETS (15)
 - key: Dictionary of tags and their positions
 - artist: List of artists
 - character: List of characters
@@ -136,8 +137,6 @@ DATASETS (17)
 - censor: List of censored tags
 - meme: List of meme tags
 - whitelist: List of tags and their weights
-- characters_characters: JSON of characters and their tags
-- characters_copyright: JSON of characters and their copyright
 - bad: List of bad tags
 - count: List of tags and their counts
 - quality: List of quality tags
@@ -149,7 +148,7 @@ export let datasets = {};
 export async function downloadDatasets(onProgress, onFinish) {
     let progress = 0;
 
-    const numfiles = 17;
+    const numfiles = 15;
     let downloaded = 0;
 
     /* KEY.DAT */
@@ -235,21 +234,6 @@ export async function downloadDatasets(onProgress, onFinish) {
 
         downloaded++;
     });
-
-    /* Characters/Characters.json */
-    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/characters.json').then((res) => {
-        res = JSON.parse(res);
-        datasets.characters_characters = res;
-
-        downloaded++;
-    });
-    /* Characters/Copyright.json */
-    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/copyright.json').then((res) => {
-        res = JSON.parse(res);
-        datasets.characters_copyright = res;
-
-        downloaded++;
-    });
     /* Bad list */
     downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/bad.dat').then((res) => {
         res = res.split('\n');
@@ -310,18 +294,6 @@ export async function downloadDatasets(onProgress, onFinish) {
             }
         }, 100);
     });
-}
-
-async function downloadFile(url) {
-    try {
-        let res = await axios.get(url, {
-            responseType: 'text'
-        });
-        return res.data;
-    }
-    catch (e) {
-        return await downloadFile(url);
-    }
 }
 
 async function getCharacterTags(name) {

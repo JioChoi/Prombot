@@ -157,10 +157,12 @@ export default function TagPopup() {
             cursor = { x: e.touches[0].clientX, y: e.touches[0].clientY };
         }
 
-        document.addEventListener('selectionchange', selectionChangeFn);
-        document.addEventListener("blur", blurFunction, true);
-        document.addEventListener("mousemove", mouseMoveFunction);
-        document.addEventListener("touchmove", touchMoveFunction);
+        setTimeout(() => {
+            document.addEventListener('selectionchange', selectionChangeFn);
+            document.addEventListener("blur", blurFunction, true);
+            document.addEventListener("mousemove", mouseMoveFunction);
+            document.addEventListener("touchmove", touchMoveFunction);
+        }, 1000);
 
         document.addEventListener("keydown", (e) => {
             if(e.ctrlKey) {
