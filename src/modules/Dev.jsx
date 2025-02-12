@@ -3,6 +3,7 @@ import ModuleBody from '@/components/elements/ModuleBody';
 
 import Dropdown from '@/components/elements/Dropdown';
 import Slider from '@/components/elements/Slider';
+import { Button } from '@/components/ui/button';
 
 
 export default function Dev() {
@@ -17,6 +18,17 @@ export default function Dev() {
                 ]} />
 
                 <Slider label="Character Strength: " configKey="DEV_CHARACTER_STRENGTH" min={0} max={1} step={0.01} />
+
+                <Button onClick={() => {
+                    navigator.clipboard.writeText(JSON.stringify(localStorage.getItem('data')));
+                    alert('Config copied to clipboard!');
+                }}>Copy Config</Button>
+
+                <Button onClick={() => {
+                    let config = prompt('Paste your config here:');
+                    localStorage.setItem('data', JSON.parse(config));
+                    window.location.reload();
+                }}>Load Config</Button>
             </ModuleBody>
         </div>
     )
