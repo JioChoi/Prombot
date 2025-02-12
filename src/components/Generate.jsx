@@ -5,20 +5,24 @@ import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
 import * as dataSlice from "@/slices/dataSlice";
 import { useEffect } from "react";
+import { applyPostProcessing } from "@/lib/utils";
 
 export default function Generate() {
     const dispatch = useDispatch();
     const data = useSelector((state) => state.data);
     const config = useSelector((state) => state.config);
 
-    async function startGeneration() {        
+    async function startGeneration() {
         let url = await generate(data.token, config, (message) => {
             dispatch(dataSlice.setValue({ key: "generate_button_text", value: message }));
         }, () => {
             dispatch(dataSlice.setValue({ key: "generating", value: true }));
         });
 
-        dispatch(dataSlice.setValue({ key: "current_image", value: url }));
+        dispatch(dataSlice.setValue({ key: "result_image", value: url }));
+        dispatch(dataSlice.setValue({ key: "current_image", value: await applyPostProcessing(url, config, false) }));
+        
+
         dispatch(dataSlice.setValue({ key: "generate_button_text", value: "" }));
         dispatch(dataSlice.setValue({ key: "generating", value: false }));
         

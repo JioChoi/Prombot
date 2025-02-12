@@ -8,7 +8,7 @@ import Dropdown from '@/components/elements/Dropdown';
 
 export default function TEMPLATE() {
     return (
-        <>
+        <div>
             <ModuleTitle label="TEMPLATE" />
 
             <ModuleBody>
@@ -28,6 +28,6 @@ export default function TEMPLATE() {
                     <Checkbox configKey="b" label="TESTB" />
                 </CheckboxGroup>
             </ModuleBody>
-        </>
+        </div>
     )
 };

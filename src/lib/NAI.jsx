@@ -123,6 +123,16 @@ export const config = {
     strengthen_attire: false,
     strengthen_ornament: false,
 
+    // Post Processing
+    brightness: 0,
+    exposure: 0,
+    contrast: 0,
+    saturation: 0,
+    temperature: 0,
+    tint: 0,
+    shadows: 0,
+    highlights: 0,
+
     DEV_MODEL: "nai-diffusion-3",
     DEV_CHARACTER_STRENGTH: 0.4
 }

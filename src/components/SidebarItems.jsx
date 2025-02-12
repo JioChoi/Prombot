@@ -3,6 +3,7 @@ import Options from '../modules/Options';
 import Automation from '../modules/Automation';
 import Extras from '@/modules/Extras';
 import Dev from '@/modules/Dev';
+import PostProcessing from '@/modules/PostProcessing';
 
 function SidebarItems(data) {
     return (

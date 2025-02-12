@@ -8,7 +8,10 @@ const dataSlice = createSlice({
         generate_button_text: "",
         datasets_loaded: false,
         anlas: 0,
+
+        result_image: "",
         current_image: "",
+
         generating: false,
         delay: -1,
         uid: "",
