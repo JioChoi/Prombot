@@ -7,7 +7,7 @@ import * as configSlice from "@/slices/configSlice";
 
 import { Button } from "../ui/button";
 
-export default function Slider({label, configKey, min, max, step, unit="", reset=false, changeOnDrag=true}) {
+export default function Slider({label, configKey, min, max, step, unit="", reset=false, changeOnDrag=true, onValueCommit=null}) {
     const config = useSelector((state) => state.config);
     const dispatch = useDispatch();
     const id = useId();
@@ -19,6 +19,11 @@ export default function Slider({label, configKey, min, max, step, unit="", reset
             setSliderValue(config[configKey]);
     }, [config[configKey]]);
 
+    useEffect(() => {
+        if (sliderValue !== config[configKey] && changeOnDrag)
+            dispatch(configSlice.setValue({ key: configKey, value: sliderValue }));
+    }, [sliderValue]);
+
     return (
         <>
             <div className="hover:cursor-pointer">
@@ -28,13 +33,13 @@ export default function Slider({label, configKey, min, max, step, unit="", reset
                         value={[sliderValue]}
                         onValueChange={(value)=>{
                             setSliderValue(value[0]);
-                            if (changeOnDrag) {
-                                dispatch(configSlice.setValue({ key: configKey, value: sliderValue }));
-                            }
                         }}
                         onValueCommit={(value)=>{
+                            if (onValueCommit) {
+                                onValueCommit(value[0]);
+                            }
                             if (!changeOnDrag) {
-                                dispatch(configSlice.setValue({ key: configKey, value: sliderValue }));
+                                dispatch(configSlice.setValue({ key: configKey, value: value[0] }));
                             }
                         }}
                     />

@@ -10,6 +10,7 @@ function SidebarItems(data) {
         <div className="m-6 space-y-14">
             <PromptRandomizer />
             <Options />
+            <PostProcessing />
             <Automation />
             <Extras />
             <Dev />

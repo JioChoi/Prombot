@@ -134,7 +134,8 @@ export const config = {
     highlights: 0,
 
     DEV_MODEL: "nai-diffusion-3",
-    DEV_CHARACTER_STRENGTH: 0.4
+    DEV_CHARACTER_STRENGTH: 0.4,
+    DEV_START_WITH_PLACEHOLDER: false,
 }
 
 /**

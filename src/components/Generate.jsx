@@ -13,15 +13,18 @@ export default function Generate() {
     const config = useSelector((state) => state.config);
 
     async function startGeneration() {
-        let url = await generate(data.token, config, (message) => {
+        let _config = config;
+        let url = await generate(data.token, _config, (message) => {
             dispatch(dataSlice.setValue({ key: "generate_button_text", value: message }));
         }, () => {
             dispatch(dataSlice.setValue({ key: "generating", value: true }));
         });
 
         dispatch(dataSlice.setValue({ key: "result_image", value: url }));
-        dispatch(dataSlice.setValue({ key: "current_image", value: await applyPostProcessing(url, config, false) }));
-        
+        url = await applyPostProcessing(url, _config, false);
+        dispatch(dataSlice.setValue({ key: "current_image", value: url }));
+        dispatch(dataSlice.setValue({ key: "width", value: _config.width }));
+        dispatch(dataSlice.setValue({ key: "height", value: _config.height }));
 
         dispatch(dataSlice.setValue({ key: "generate_button_text", value: "" }));
         dispatch(dataSlice.setValue({ key: "generating", value: false }));

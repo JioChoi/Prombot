@@ -8,9 +8,6 @@ import placeholder from "@/assets/img.png"
 
 const editpix = new EditPix();
 
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
-
 export function cn(...inputs) {
 	return twMerge(clsx(inputs));
 }
@@ -60,42 +57,91 @@ export async function decompressFile(data) {
 	return file.text();
 }
 
-export async function applyPostProcessing(url, filter) {
+function applyFilter(filter) {
+	ctx.filter =
+		`
+		brightness(${filter.brightness + 100}%)
+		contrast(${filter.contrast + 100}%)
+		saturate(${filter.saturation + 100}%)
+		`;
+}
+
+export async function applyPostProcessing(url, filter, fast, abortController=null, dispatch=null) {
 	if (url == "") {
 		return "";
 	}
+
+	return new Promise(async (resolve, reject) => {		
+		let timeout = null;
+
+		abortController && abortController.signal.addEventListener("abort", () => {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+			reject("Aborted");
+		}, { once: true });
+		
+		let image;
+
+		// Preview
+		if (fast) {
+			image = await resizeImage(url, -90);										if (abortController && abortController.signal.aborted) return;
+
+			image = await editpix.changeBrightness(image, filter.brightness);			if (abortController && abortController.signal.aborted) return;
+			image = await editpix.changeExposure(image, filter.exposure);				if (abortController && abortController.signal.aborted) return;
+			image = await changeContrast(image, filter.contrast);						if (abortController && abortController.signal.aborted) return;
+			image = await editpix.changeSaturation(image, filter.saturation);			if (abortController && abortController.signal.aborted) return;
+			image = await editpix.changeTemperature(image, filter.temperature);			if (abortController && abortController.signal.aborted) return;
+			image = await editpix.changeTint(image, filter.tint);						if (abortController && abortController.signal.aborted) return;
+			image = await editpix.changeShadows(image, filter.shadows);					if (abortController && abortController.signal.aborted) return;
+			image = await editpix.changeHighlights(image, filter.highlights);			if (abortController && abortController.signal.aborted) return;
 	
-	return new Promise(async (resolve, reject) => {
-		let image = new Image();
+			dispatch && dispatch(image.src);														if (abortController && abortController.signal.aborted) return;
+		}
+		//await new Promise((resolve, reject) => { timeout = setTimeout(resolve, 500); });
+
+
+		// Real
+		image = new Image();
 		image.src = url;
 
-		image.onload = async () => {
-			image = await changeBrightness(image, filter.brightness + 100);
-			// image = await editpix.changeExposure(image, filter.exposure);
-			// image = await editpix.changeContrast(image, filter.contrast);
-			// image = await editpix.changeSaturation(image, filter.saturation);
-			// image = await editpix.changeTemperature(image, filter.temperature);
-			// image = await editpix.changeTint(image, filter.tint);
-			// image = await editpix.changeShadows(image, filter.shadows);
-			// image = await editpix.changeHighlights(image, filter.highlights);
-			console.log(image);
-			resolve(image);
-		};
+		await new Promise((resolve, reject) => { image.onload = resolve; });
+
+		image = await editpix.changeBrightness(image, filter.brightness);			if (abortController && abortController.signal.aborted) return;
+		image = await editpix.changeExposure(image, filter.exposure);				if (abortController && abortController.signal.aborted) return;
+		image = await changeContrast(image, filter.contrast);						if (abortController && abortController.signal.aborted) return;
+		image = await editpix.changeSaturation(image, filter.saturation);			if (abortController && abortController.signal.aborted) return;
+		image = await editpix.changeTemperature(image, filter.temperature);			if (abortController && abortController.signal.aborted) return;
+		image = await editpix.changeTint(image, filter.tint);						if (abortController && abortController.signal.aborted) return;
+		image = await editpix.changeShadows(image, filter.shadows);					if (abortController && abortController.signal.aborted) return;
+		image = await editpix.changeHighlights(image, filter.highlights);			if (abortController && abortController.signal.aborted) return;
+		dispatch && dispatch(image.src);														if (abortController && abortController.signal.aborted) return;
+
+		resolve(image.src);
 	});
 }
 
-async function changeBrightness(img, value) {
-	canvas.width = img.width / 4;
-	canvas.height = img.height / 4;
-	ctx.filter = `brightness(${value}%)`;
-	ctx.drawImage(img, 0, 0, img.width / 4, img.height / 4);
+async function changeContrast(image, value) {
+	let canvas = document.createElement("canvas");
+	let ctx = canvas.getContext("2d");
 
-	// Return url
-	return new Promise((resolve, reject) => {
+	canvas.width = image.width;
+	canvas.height = image.height;
+
+	ctx.filter = `contrast(${value + 100}%)`;
+	ctx.drawImage(image, 0, 0);
+
+	let blob = await new Promise((resolve, reject) => {
 		canvas.toBlob((blob) => {
-			resolve(URL.createObjectURL(blob));
+			resolve(blob);
 		});
 	});
+
+	image.src = URL.createObjectURL(blob);
+
+	await new Promise((resolve, reject) => { image.onload = resolve; });
+
+	return image;
 }
 
 export async function createBlob() {
@@ -111,7 +157,7 @@ export async function resizeImage(url, percentage) {
 	return new Promise((resolve, reject) => {
 		image.onload = async () => {
 			let result = await editpix.resizeByPercentage(image, percentage);
-			resolve(result.src);
+			resolve(result);
 		};
 	});
 }
