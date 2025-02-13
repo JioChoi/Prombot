@@ -14,8 +14,8 @@ function Result() {
         lg:w-[calc(100%-450px)] lg:h-[100%] lg:mb-0 lg:static ${animation}
         `}>
             { data.current_image != "" &&
-                <div className={`${data.width > data.height ? "w-full" : "h-full"} max-w-[85%] max-h-[85%]`}>
-                    <img className="w-full h-full" src={data.current_image}
+                <div className={`w-[85%] h-[85%] flex items-center justify-center`}>
+                    <img className={data.width > data.height ? "w-full" : "h-full"} src={data.current_image}
                         style={{
                             imageRendering: data.pixelated ? "pixelated" : "auto",
                         }}

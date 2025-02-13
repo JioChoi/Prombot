@@ -18,31 +18,17 @@ export default function PostProcessing() {
     const data = useSelector((state) => state.data);
     const edited = useRef("");
 
-    const abortController = useRef(new AbortController());
-
     async function applyEffect(fast) {
-        {
-            abortController.current.abort();
-            abortController.current = new AbortController();
+        let result = await applyPostProcessing(data.result_image, config);
+        if (!result) return;
 
-            try {
-                dispatch(dataSlice.setValue({ key: "pixelated", value: true }));
-
-                let url = await applyPostProcessing(data.result_image, config, fast, abortController.current, (url) => {
-                    dispatch(dataSlice.setValue({ key: "current_image", value: url }));
-                });
-
-                dispatch(dataSlice.setValue({ key: "pixelated", value: false }));
-                edited.current = url;
-            } catch(e) {
-                return;
-            }
-        }
+        dispatch(dataSlice.setValue({ key: "current_image", value: result }));
+        edited.current = result;
     }
 
     useEffect(() => {
-        applyEffect(true);
-    }, [config.brightness, config.exposure, config.contrast, config.saturation, config.temperature, config.tint, config.shadows, config.highlights]);
+        applyEffect(false);
+    }, [config.brightness, config.exposure, config.contrast, config.saturation, config.temperature, config.tint, config.shadows, config.highlights, config.sharpness]);
 
     return (
         <div>
@@ -70,14 +56,15 @@ export default function PostProcessing() {
             
 
             <ModuleBody>
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Brightness: " configKey="brightness" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Exposure: " configKey="exposure" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Contrast: " configKey="contrast" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Saturation: " configKey="saturation" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Temperature: " configKey="temperature" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Tint: " configKey="tint" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Shadows: " configKey="shadows" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
-                <Slider onValueCommit={() => {applyEffect(false)}} label="Highlights: " configKey="highlights" min={-30} max={30} step={0.01} reset={true} changeOnDrag={true} />
+                <Slider label="Brightness: " configKey="brightness" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Exposure: " configKey="exposure" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Contrast: " configKey="contrast" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Saturation: " configKey="saturation" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Temperature: " configKey="temperature" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Tint: " configKey="tint" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Shadows: " configKey="shadows" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Highlights: " configKey="highlights" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
+                <Slider label="Sharpness: " configKey="sharpness" min={-5} max={5} step={0.01} reset={true} changeOnDrag={true} />
             </ModuleBody>
         </div>
     )

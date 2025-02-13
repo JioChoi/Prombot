@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "editpix": "^1.0.2",
+    "g.js": "^0.1.17",
     "js-sha256": "^0.11.0",
     "lucide-react": "^0.469.0",
     "mingcute_icon": "^2.9.6",

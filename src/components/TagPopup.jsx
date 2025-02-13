@@ -168,12 +168,6 @@ export default function TagPopup() {
             document.addEventListener("touchmove", touchMoveFunction);
         }, 1000);
 
-        document.addEventListener("keydown", (e) => {
-            if(e.ctrlKey) {
-                document.getElementById("prompt_beg").focus();
-            }
-        });
-
         return () => {
             document.removeEventListener('selectionchange', selectionChangeFn);
             document.removeEventListener("blur", blurFunction, true);

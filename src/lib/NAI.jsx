@@ -132,6 +132,7 @@ export const config = {
     tint: 0,
     shadows: 0,
     highlights: 0,
+    sharpness: 0,
 
     DEV_MODEL: "nai-diffusion-3",
     DEV_CHARACTER_STRENGTH: 0.4,
