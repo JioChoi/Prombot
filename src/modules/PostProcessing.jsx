@@ -42,6 +42,7 @@ export default function PostProcessing() {
                     onTouchStart={() => {
                         edited.current = data.current_image;
                         dispatch(dataSlice.setValue({ key: "current_image", value: data.result_image }));
+                        dispatch(dataSlice.setValue({ key: "changing_parameter", value: "Original" }));
                     }}
 
                     onMouseUp={() => {
@@ -49,22 +50,23 @@ export default function PostProcessing() {
                     }}
                     onTouchEnd={() => {
                         dispatch(dataSlice.setValue({ key: "current_image", value: edited.current }));
+                        dispatch(dataSlice.setValue({ key: "changing_parameter", value: "" }));
                     }}
-                    variant="outline" className="w-20 h-8 mt-[24px] bg-transparent"
+                    variant="outline" className="w-20 h-8 mt-[24px] bg-transparent select-none"
                 >Original</Button>
             </div>
             
 
             <ModuleBody>
-                <Slider label="Brightness: " configKey="brightness" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Exposure: " configKey="exposure" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Contrast: " configKey="contrast" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Saturation: " configKey="saturation" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Temperature: " configKey="temperature" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Tint: " configKey="tint" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Shadows: " configKey="shadows" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Highlights: " configKey="highlights" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} />
-                <Slider label="Sharpness: " configKey="sharpness" min={-5} max={5} step={0.01} reset={true} changeOnDrag={true} />
+                <Slider label="Brightness: " configKey="brightness" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true}/>
+                <Slider label="Exposure: " configKey="exposure" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Contrast: " configKey="contrast" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Saturation: " configKey="saturation" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Temperature: " configKey="temperature" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Tint: " configKey="tint" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Shadows: " configKey="shadows" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Highlights: " configKey="highlights" min={-30} max={30} step={0.5} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
+                <Slider label="Sharpness: " configKey="sharpness" min={-5} max={5} step={0.01} reset={true} changeOnDrag={true} showResultWhileChanging={true} />
             </ModuleBody>
         </div>
     )

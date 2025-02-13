@@ -15,7 +15,8 @@ function Result() {
         `}>
             { data.current_image != "" &&
                 <div className={`w-[85%] h-[85%] flex items-center justify-center`}>
-                    <img className={data.width > data.height ? "w-full" : "h-full"} src={data.current_image}
+                    {/* <img className={data.width > data.height ? "w-full" : "h-full"} src={data.current_image} */}
+                    <img className="w-full h-full object-contain" src={data.current_image}
                         style={{
                             imageRendering: data.pixelated ? "pixelated" : "auto",
                         }}

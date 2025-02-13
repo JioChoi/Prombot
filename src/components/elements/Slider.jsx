@@ -4,10 +4,11 @@ import { useContext, useEffect, useId, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
+import * as dataSlice from "@/slices/dataSlice";
 
 import { Button } from "../ui/button";
 
-export default function Slider({label, configKey, min, max, step, unit="", reset=false, changeOnDrag=true, onValueCommit=null}) {
+export default function Slider({label, configKey, min, max, step, unit="", reset=false, changeOnDrag=true, onValueCommit=null, showResultWhileChanging=false}) {
     const config = useSelector((state) => state.config);
     const dispatch = useDispatch();
     const id = useId();
@@ -26,7 +27,7 @@ export default function Slider({label, configKey, min, max, step, unit="", reset
 
     return (
         <>
-            <div className="hover:cursor-pointer">
+            <div className="hover:cursor-pointer" id={configKey}>
                 <Label htmlFor={id}>{label}{sliderValue} {unit}</Label>
                 <div className="flex items-center space-x-3">
                     <_Slider min={min} max={max} step={step} id={id}
@@ -41,6 +42,14 @@ export default function Slider({label, configKey, min, max, step, unit="", reset
                             if (!changeOnDrag) {
                                 dispatch(configSlice.setValue({ key: configKey, value: value[0] }));
                             }
+                        }}
+                        onTouchStart={() => {
+                            if (showResultWhileChanging)
+                                dispatch(dataSlice.setValue({ key: "changing_parameter", value: configKey }));
+                        }}
+                        onTouchEnd={() => {
+                            if (showResultWhileChanging)
+                                dispatch(dataSlice.setValue({ key: "changing_parameter", value: "" }));
                         }}
                     />
 

@@ -11,7 +11,7 @@ const dataSlice = createSlice({
 
         result_image: "",
         current_image: "",
-        pixelated: false,
+        changing_parameter: "",
         width: 0,
         height: 0,
 

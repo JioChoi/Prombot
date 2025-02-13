@@ -7,7 +7,7 @@ import PostProcessing from '@/modules/PostProcessing';
 
 function SidebarItems(data) {
     return (
-        <div className="m-6 space-y-14">
+        <div className="m-6 space-y-14" id="sidebar-items">
             <PromptRandomizer />
             <Options />
             <PostProcessing />
