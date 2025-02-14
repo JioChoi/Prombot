@@ -9,6 +9,14 @@ import { downloadFile } from '@/lib/utils';
 export const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
 
+
+/* TODO
+1girl, rating:explicit, ~monochrome, ~cum, ~penis, pov hands, ~sex toy  a 
+not working. */
+
+
+
+
 /* MAIN GENERATION LOGIC */
 export async function generate(token, config, onProgress, onGenerate) {
     onProgress('Processing prompt...');
@@ -169,7 +177,7 @@ export async function downloadDatasets(onProgress, onFinish) {
         datasets.key = {};
         // convert to dictionary
         for (let i = 0; i < res.length; i++) {
-            res[i] = res[i].split('|');
+            res[i] = [res[i].substring(0, res[i].lastIndexOf('|')), res[i].substring(res[i].lastIndexOf('|')+1)];
         }
 
         for (let i = 0; i < res.length - 1; i++) {
