@@ -19,6 +19,7 @@ not working. */
 
 /* MAIN GENERATION LOGIC */
 export async function generate(token, config, onProgress, onGenerate) {
+    gtag('event', 'BETA_Generate', {});
     onProgress('Processing prompt...');
     let prompt = await processPrompt(config, onProgress);
     console.log(prompt);
