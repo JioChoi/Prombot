@@ -12,6 +12,8 @@ import * as dataSlice from '@/slices/dataSlice';
 import { applyPostProcessing } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
+import { setHistoryItem } from '@/lib/utils';
+
 export default function PostProcessing() {
     const dispatch = useDispatch();
     const config = useSelector((state) => state.config);
@@ -23,6 +25,7 @@ export default function PostProcessing() {
         if (!result) return;
 
         dispatch(dataSlice.setValue({ key: "current_image", value: result }));
+        setHistoryItem(dispatch, result, config, 0);
         edited.current = result;
     }
 

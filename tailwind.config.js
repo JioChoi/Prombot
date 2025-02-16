@@ -6,7 +6,8 @@ export default {
   	extend: {
 		transitionProperty: {
 			'height': 'height',
-			'left': 'left'
+			'left': 'left',
+			'margin': 'margin',
 		},
 		transitionDuration: {
 			'400': '400ms'

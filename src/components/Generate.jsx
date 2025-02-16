@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
 import * as dataSlice from "@/slices/dataSlice";
 import { useEffect } from "react";
-import { applyPostProcessing } from "@/lib/utils";
+import { applyPostProcessing, addHistoryItem, getDateString } from "@/lib/utils";
+import { saveAs } from "file-saver";
 
 export default function Generate() {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function Generate() {
 
         dispatch(dataSlice.setValue({ key: "result_image", value: url }));
         url = await applyPostProcessing(url, _config, false);
+        addHistoryItem(dispatch, url, _config);
         dispatch(dataSlice.setValue({ key: "current_image", value: url }));
         dispatch(dataSlice.setValue({ key: "width", value: _config.width }));
         dispatch(dataSlice.setValue({ key: "height", value: _config.height }));
@@ -32,19 +34,7 @@ export default function Generate() {
         console.log(config);
 
         if (config.automatically_download) {
-            let date = new Date();
-            date =  (date.getFullYear() % 2000).toString() + 
-                    (date.getMonth() < 10 ? '0' : '') + date.getMonth().toString() +
-                    (date.getDate() < 10 ? '0' : '') + date.getDate().toString() +
-                    '_' +
-                    (date.getHours() < 10 ? '0' : '') + date.getHours().toString() +
-                    (date.getMinutes() < 10 ? '0' : '') + date.getMinutes().toString() +
-                    (date.getSeconds() < 10 ? '0' : '') + date.getSeconds().toString();
-
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = `${date}.png`;
-            a.click();
+            saveAs(url, getDateString() + ".png");
         }
 
         if (config.enable_automation) {

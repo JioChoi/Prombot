@@ -1,4 +1,3 @@
-
 import Result from '../components/Result'
 import Sidebar from '../components/Sidebar'
 import Popup from '../components/Popup'
@@ -6,6 +5,7 @@ import Error  from "../components/Error"
 import Tab from "@/components/ui/tab"
 import Presets from "../components/Presets"
 import { Link } from "react-router-dom"
+import History from "../pages/History"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
 
@@ -22,6 +22,20 @@ function Main() {
 	const dispatch = useDispatch();
 	const data = useSelector((state) => state.data);
 	const [tab, setTab] = useState(0);
+
+	useEffect(() => {
+		function beforeUnloadFunction(e) {
+			if (data.current_image != "" || data.generating || data.generate_button_text != "") {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		}
+		window.addEventListener('beforeunload', beforeUnloadFunction);
+
+		return () => {
+			window.removeEventListener('beforeunload', beforeUnloadFunction);
+		}
+	}, [data.current_image, data.generating, data.generate_button_text]);
 
 	// On load
     useEffect(() => {
@@ -92,9 +106,7 @@ function Main() {
 			</div>
 
 			<div style={{display: tab != 1 ? "none" : "block"}} className="w-full h-full">
-				<div className="bg-zinc-900 w-full h-full">
-
-				</div>
+				<History />
 			</div>
 		</>
 	)

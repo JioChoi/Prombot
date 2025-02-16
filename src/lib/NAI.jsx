@@ -5,17 +5,10 @@ import argon2 from 'argon2-browser/dist/argon2-bundled.min.js';
 import { unzip } from 'unzipit';
 import { sha256 } from 'js-sha256';
 import { downloadFile } from '@/lib/utils';
+import { addExif } from '@/lib/utils';
 
 export const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
-
-
-/* TODO
-1girl, rating:explicit, ~monochrome, ~cum, ~penis, pov hands, ~sex toy  a 
-not working. */
-
-
-
 
 /* MAIN GENERATION LOGIC */
 export async function generate(token, config, onProgress, onGenerate) {
@@ -89,6 +82,7 @@ export async function generate(token, config, onProgress, onGenerate) {
     }
 
     let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params);
+    res = await addExif(res, res, config);
     return res;
 }
 
