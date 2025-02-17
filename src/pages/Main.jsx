@@ -8,6 +8,8 @@ import { Link } from "react-router-dom"
 import History from "../pages/History"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
+import { applyPostProcessing, addHistoryItem, getDateString } from "@/lib/utils";
+import { saveAs } from "file-saver";
 
 import * as NAI from "@/lib/NAI";
 
@@ -21,7 +23,40 @@ const Data = createContext(null);
 function Main() {
 	const dispatch = useDispatch();
 	const data = useSelector((state) => state.data);
+	const config = useSelector((state) => state.config);
 	const [tab, setTab] = useState(0);
+
+	async function startGeneration() {
+		let _config = config;
+		NAI.generate(data.token, _config, (message) => {
+			dispatch(dataSlice.setValue({ key: "generate_button_text", value: message }));
+		}, () => {
+			dispatch(dataSlice.setValue({ key: "generating", value: true }));
+		}, async (url) => {
+			dispatch(dataSlice.setValue({ key: "result_image", value: url }));
+			url = await applyPostProcessing(url, _config, false);
+			addHistoryItem(dispatch, url, _config);
+			dispatch(dataSlice.setValue({ key: "current_image", value: url }));
+			dispatch(dataSlice.setValue({ key: "width", value: _config.width }));
+			dispatch(dataSlice.setValue({ key: "height", value: _config.height }));
+
+			dispatch(dataSlice.setValue({ key: "generate_button_text", value: "" }));
+			dispatch(dataSlice.setValue({ key: "generating", value: false }));
+			
+			console.log(config);
+
+			let anlas = await NAI.loadAnlas(data.token);
+			dispatch(dataSlice.setValue({key: "anlas", value: anlas}));
+
+			if (config.automatically_download) {
+				saveAs(url, getDateString() + ".png");
+			}
+
+			if (config.enable_automation) {
+				dispatch(dataSlice.setValue({ key: "delay", value: config.delay * 1000 }));
+			}
+		});
+	}
 
 	useEffect(() => {
 		function beforeUnloadFunction(e) {
@@ -36,6 +71,27 @@ function Main() {
 			window.removeEventListener('beforeunload', beforeUnloadFunction);
 		}
 	}, [data.current_image, data.generating, data.generate_button_text]);
+
+	useEffect(() => {
+		if (data.delay > 0) {
+			setTimeout(() => {
+				if (!config.enable_automation) {
+					dispatch(dataSlice.setValue({ key: "delay", value: -1 }));
+					dispatch(dataSlice.setValue({ key: "generate_button_text", value: "" }));
+				}
+				else {
+					dispatch(dataSlice.setValue({ key: "generate_button_text", value: `Waiting... (${data.delay / 1000}s)` }));
+					dispatch(dataSlice.setValue({ key: "delay", value: data.delay - 100 }));
+				}                
+			}, 100);
+		}
+
+		if (data.delay == 0) {
+			dispatch(dataSlice.setValue({ key: "delay", value: -1 }));
+			dispatch(dataSlice.setValue({ key: "generate_button_text", value: "" }));
+			startGeneration();
+		}
+	}, [data.delay]);
 
 	// On load
     useEffect(() => {
@@ -100,7 +156,7 @@ function Main() {
 					lg:flex-row
 					h-[calc(100%-32px)]
 				">
-					<Sidebar />
+					<Sidebar generationFunction={startGeneration} />
 					<Result />
 				</div>
 			</div>

@@ -57,9 +57,11 @@ export default function History() {
         }
     }, [selected, data.history]);
 
+    let animation = data.generating ? "generating" : "";
+
     return (
         <div className="bg-zinc-900 w-full h-[calc(100%-32px)] flex flex-row">
-        <div className="w-full h-full flex items-center justify-center lg:w-[calc(100%-168px)]">
+        <div className={`w-full h-full flex items-center justify-center lg:w-[calc(100%-168px)] ${animation}`}>
             {data.history.length != 0 && 
             <div className="relative shadow-lg lg:flex" style={{width: size.width + 'px', height: size.height + 'px'}}>
                 <img src={data.history[selected].img} className="w-full h-full hover:cursor-pointer lg:hover:cursor-auto lg:w-auto" alt="History Item" 

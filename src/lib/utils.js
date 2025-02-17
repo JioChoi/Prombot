@@ -19,14 +19,6 @@ let generateWorker = null;
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
 
-export function generate() {
-	if (generateWorker)
-		generateWorker.terminate();
-	generateWorker = new Worker('/worker/generate.js', { type: 'module' });
-
-	generateWorker.postMessage({ type: "generate" });
-}
-
 export function cn(...inputs) {
 	return twMerge(clsx(inputs));
 }

@@ -11,20 +11,13 @@ export const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
 
 /* MAIN GENERATION LOGIC */
-export async function generate(token, config, onProgress, onGenerate) {
+export async function generate(token, config, onProgress, onGenerate, onGenerateFinish) {
     gtag('event', 'BETA_Generate', {});
     onProgress('Processing prompt...');
     let prompt = await processPrompt(config, onProgress);
     console.log(prompt);
 
     onGenerate();
-    // await new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //         resolve();
-    //     }, 10000);
-    // });
-
-    // return;
 
     onProgress('Generating image...');
     let seed = config.seed;
@@ -83,7 +76,8 @@ export async function generate(token, config, onProgress, onGenerate) {
 
     let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params);
     res = await addExif(res, res, config);
-    return res;
+    
+    onGenerateFinish(res);
 }
 
 export const config = {

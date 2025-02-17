@@ -25,7 +25,7 @@ function getElements() {
     return temp;
 }
 
-export default function Sidebar() {
+export default function Sidebar({generationFunction}) {
     const data = useSelector((state) => state.data);
     const dispatch = useDispatch();
 
@@ -72,7 +72,7 @@ export default function Sidebar() {
                 </div>
             </div>
             
-            <Generate />
+            <Generate generationFunction={generationFunction} />
         </div>
     );
 }
