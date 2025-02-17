@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { generate, loadAnlas } from "@/lib/NAI"
+import { loadAnlas } from "@/lib/NAI"
+import { generate } from "@/lib/utils"
 
 import { useDispatch, useSelector } from "react-redux";
-import * as configSlice from "@/slices/configSlice";
 import * as dataSlice from "@/slices/dataSlice";
 import { useEffect } from "react";
 import { applyPostProcessing, addHistoryItem, getDateString } from "@/lib/utils";
@@ -20,6 +20,8 @@ export default function Generate() {
         }, () => {
             dispatch(dataSlice.setValue({ key: "generating", value: true }));
         });
+
+        return;
 
         dispatch(dataSlice.setValue({ key: "result_image", value: url }));
         url = await applyPostProcessing(url, _config, false);

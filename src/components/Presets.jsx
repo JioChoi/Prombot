@@ -54,6 +54,7 @@ export default function Presets() {
                     });
                 }}
                 className="lg:left-[450px]"
+                buttonClassName="lg:left-[450px]"
                 icon="settings-2-line"
             />
         </>

@@ -8,24 +8,23 @@ import { addMetadata } from "meta-png";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
-import PostProcessingWorker from "@/lib/PostProcessing";
-
 import placeholder from "@/assets/img.png"
 import editedplaceholder from "@/assets/edited.png"
 import landscapeplaceholder from "@/assets/landscape.png"
 import { useSelector } from 'react-redux';
 
 let postProcessingWorker = null;
+let generateWorker = null;
 
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
 
-class WebWorker {
-	constructor(worker) {
-		const code = worker.toString();
-		const blob = new Blob([`(${code})()`]);
-		return new Worker(URL.createObjectURL(blob));
-	}
+export function generate() {
+	if (generateWorker)
+		generateWorker.terminate();
+	generateWorker = new Worker('/worker/generate.js', { type: 'module' });
+
+	generateWorker.postMessage({ type: "generate" });
 }
 
 export function cn(...inputs) {
@@ -95,7 +94,7 @@ export async function applyPostProcessing(url, filter) {
 
 	if (postProcessingWorker)
 		postProcessingWorker.terminate();
-	postProcessingWorker = new WebWorker(PostProcessingWorker);
+	postProcessingWorker = new Worker('/worker/postProcessing.js', { type: 'module' });
 
 	let image = new Image();
 	image.src = url;
