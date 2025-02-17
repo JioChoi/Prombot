@@ -184,7 +184,6 @@ export async function addExif(original, target, config, filterOnly=false) {
 	let exif = await extractExif(original, true);
 	let comment = JSON.parse(exif.Comment);
 
-	console.log(exif);
 	let array = await fetch(target).then(r => r.arrayBuffer());
 	array = new Uint8Array(array);
 
