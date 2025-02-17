@@ -74,7 +74,7 @@ export async function createBlob(landscape=false) {
 		res = await fetch(landscapeplaceholder);
 	}
 	else {
-		res = await fetch(editedplaceholder);
+		res = await fetch(placeholder);
 	}
 
 	let blob = await res.blob();
@@ -181,31 +181,39 @@ export async function extractExif(url, metadata=false) {
 }
 
 export async function addExif(original, target, config, filterOnly=false) {
-	let exif = await extractExif(original, false);
+	let exif = await extractExif(original, true);
+	let comment = JSON.parse(exif.Comment);
+
+	console.log(exif);
 	let array = await fetch(target).then(r => r.arrayBuffer());
 	array = new Uint8Array(array);
 
 	if (filterOnly) {
-		if (exif.config == undefined) {
-			exif = {...exif, config: config};
+		if (comment.config == undefined) {
+			comment = {...comment, config: config};
 		}
 		else {
-			exif.config.brightness = config.brightness;
-			exif.config.exposure = config.exposure;
-			exif.config.contrast = config.contrast;
-			exif.config.saturation = config.saturation;
-			exif.config.temperature = config.temperature;
-			exif.config.tint = config.tint;
-			exif.config.shadows = config.shadows;
-			exif.config.highlights = config.highlights;
-			exif.config.sharpness = config.sharpness;
+			comment.config.brightness = config.brightness;
+			comment.config.exposure = config.exposure;
+			comment.config.contrast = config.contrast;
+			comment.config.saturation = config.saturation;
+			comment.config.temperature = config.temperature;
+			comment.config.tint = config.tint;
+			comment.config.shadows = config.shadows;
+			comment.config.highlights = config.highlights;
+			comment.config.sharpness = config.sharpness;
 		}
 	}
 	else {
-		exif = {...exif, config: config};
+		comment = {...comment, config: config};
 	}
 
-	let result = await addMetadata(array, "Comment", JSON.stringify(exif));
+	let result = await addMetadata(array, "Comment", JSON.stringify(comment));
+	result = await addMetadata(result, "Description", exif.Description);
+	result = await addMetadata(result, "Title", exif.Title);
+	result = await addMetadata(result, "Software", exif.Software);
+	result = await addMetadata(result, "Generation_time", exif.Generation_time);
+	result = await addMetadata(result, "Source", exif.Source);
 
 	let blob = new Blob([result], {type: "image/png"});
 	return URL.createObjectURL(blob);

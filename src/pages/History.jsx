@@ -61,7 +61,7 @@ export default function History() {
         if (data.history.length == 0 || selected == 0) {
             return;
         }
-        setSelected(selected - 1);
+        setSelected(selected + 1);
     }, [data.history]);
 
     let animation = data.generating ? "generating" : "";
