@@ -45,7 +45,7 @@ export default function Dev() {
                 <Dropdown label="Model " configKey="DEV_MODEL" items={[
                     { value: 'nai-diffusion-3', label: 'NAI Diffusion V3' },
                     { value: 'nai-diffusion-4-curated-preview', label: 'NAI Diffusion V4 Preview' },
-                    { value: 'nai-diffusion-3-inpainting', label: 'NAI Diffusion V4' },
+                    { value: 'nai-diffusion-4-curated-preview-2', label: 'NAI Diffusion V4' },
                 ]} />
                 
                 <Button variant="outline" className="bg-transparent" onClick={() => {

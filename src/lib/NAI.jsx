@@ -83,7 +83,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
 export const config = {
     // Prompt Randomizer
     prompt_beg: "1girl, {{kirisame marisa}}, [fu-ta], {{gsusart}}",
-    prompt_search: "1girl, ~speech bubble, ~blood, ~gun, ~guro, ~bdsm, ~shibari, ~butt plug, ~object insertion, ~pregnant",
+    prompt_search: "1girl, ~speech bubble",
     prompt_end: "{{{volumetric lighting, depth of field, best quality, amazing quality, very aesthetic, highres, incredibly absurdres}}}",
     negative: "{{{worst quality, bad quality}}}, text, error, extra digit, fewer digits, jpeg artifacts, signature, watermark, username, reference, unfinished, unclear fingertips, twist, Squiggly, Grumpy, incomplete, {{Imperfect Fingers}}, Cheesy, very displeasing}}, {{mess}}, {{Approximate}}, {{Sloppiness}}, Glazed eyes, watermark, username, text, signature, fat, sagged breasts",
     remove_artist: true,

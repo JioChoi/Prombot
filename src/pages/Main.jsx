@@ -2,10 +2,10 @@ import Result from '../components/Result'
 import Sidebar from '../components/Sidebar'
 import Popup from '../components/Popup'
 import Error  from "../components/Error"
-import Tab from "@/components/ui/tab"
 import Presets from "../components/Presets"
-import { Link } from "react-router-dom"
 import History from "../pages/History"
+import Upscale from "../pages/Upscale"
+import Tabs from "@/pages/Tabs"
 
 import { useState, useEffect, useReducer, createContext, useRef } from 'react'
 import { applyPostProcessing, addHistoryItem, getDateString } from "@/lib/utils";
@@ -140,13 +140,7 @@ function Main() {
 			<Popup />
 			<Error />
 
-			<div className="w-full h-8 bg-neutral-950 z-40 relative flex flex-row">
-				<Tab title="Generator" selected={tab == 0} brighter={true} onClick={() => {setTab(0)}}/>
-				<Tab title="History" selected={tab == 1} brighter={false} onClick={() => {setTab(1)}}/>
-				<Tab title="Characters" selected={tab == 2} brighter={true} onClick={() => {
-					window.location.href = "/characters";
-				}}/>
-			</div>
+			<Tabs tab={tab} setTab={setTab} />
 
 			<div style={{display: tab != 0 ? "none" : "block"}} className="w-full h-full">
 				<Presets />
@@ -163,6 +157,10 @@ function Main() {
 
 			<div style={{display: tab != 1 ? "none" : "block"}} className="w-full h-full">
 				<History />
+			</div>
+
+			<div style={{display: tab != 3 ? "none" : "block"}} className="w-full h-full">
+				<Upscale />
 			</div>
 		</>
 	)

@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import Gallery from "@/components/elements/Gallery";
 import { downloadFile } from "@/lib/utils";
 import Tab from "@/components/ui/tab";
+import Tabs from "./Tabs";
 
 
 export default function Characters() {
@@ -160,15 +161,7 @@ export default function Characters() {
         <>
         <div className="w-full h-full">
             <div className="bg-zinc-900 w-full h-full relative top-0">
-                <div className="w-full h-8 bg-neutral-950 z-40 relative flex flex-row">
-                    <Tab title="Generator" selected={false} brighter={true} onClick={() => {
-                        window.location.href = "/";
-                    }}/>
-                    <Tab title="History" selected={false} brighter={false} onClick={() => {
-                        window.location.href = "/?tab=1";
-                    }}/>
-                    <Tab title="Characters" selected={true} brighter={true}/>
-                </div>
+                <Tabs tab={2} setTab={null} singlePage={true}/>
                 
                 <form onSubmit={(e) => {
                     e.preventDefault();
