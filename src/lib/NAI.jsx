@@ -1050,6 +1050,16 @@ export async function login(id, pw) {
     }
 }   
 
+export async function testAccessToken(token) {
+    let res = await axios.get(`${host}/api/user/information`, {
+        headers: {
+            Authorization: token
+        }
+    });
+
+    return res.data;
+}
+
 async function getAccessToken(id, pw) {
     let key = await getAccessKey(id, pw);
     let token = await axios.post(`${host}/api/user/login`, {
@@ -1059,16 +1069,6 @@ async function getAccessToken(id, pw) {
     });
 
     return token;
-}
-
-export async function testAccessToken(token) {
-    let res = await axios.get(`${host}/api/user/information`, {
-        headers: {
-            Authorization: token
-        }
-    });
-
-    return res.data;
 }
 
 async function getAccessKey(id, pw) {
