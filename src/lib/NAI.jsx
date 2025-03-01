@@ -56,10 +56,10 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         reference_information_extracted_multiple: [],
         reference_strength_multiple: [],
         deliberate_euler_ancestral_bug: false,
-        prefer_brownian: true
+        prefer_brownian: true,
     }
 
-    if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview') {
+    if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview' || config.DEV_MODEL == 'nai-diffusion-4-full') {
         params.v4_negative_prompt = {
             caption: {
                 base_caption: config.negative,
