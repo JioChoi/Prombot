@@ -93,6 +93,7 @@ export const config = {
     remove_nsfw: true,
     remove_copyright: true,
     remove_ornament: true,
+    remove_emotion: false,
 
     // Options
     width: 832,
@@ -137,7 +138,7 @@ export const config = {
 }
 
 /**
-DATASETS (15)
+DATASETS (16)
 - key: Dictionary of tags and their positions
 - artist: List of artists
 - character: List of characters
@@ -152,12 +153,13 @@ DATASETS (15)
 - character_data_index: index of JSON of character data
 - ornament: List of ornaments
 - clothes_actions_json: json categorization of clothes actions
+- emotions: List of emotions
  */
 export let datasets = {};
 export async function downloadDatasets(onProgress, onFinish) {
     let progress = 0;
 
-    const numfiles = 15;
+    const numfiles = 16;
     let downloaded = 0;
 
     /* KEY.DAT */
@@ -287,6 +289,13 @@ export async function downloadDatasets(onProgress, onFinish) {
     downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/clothes_actions.json').then((res) => {
         res = JSON.parse(res);
         datasets.clothes_actions_json = res;
+
+        downloaded++;
+    });
+
+    downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/emotions.dat').then((res) => {
+        res = res.split('\n');
+        datasets.emotions = res;
 
         downloaded++;
     });
@@ -498,6 +507,11 @@ async function processPrompt(config, onProgress) {
     // Remove ornament
     if (config.remove_ornament) {
         randomPrompt = removeArray(randomPrompt, datasets.ornament);
+    }
+
+    // Remove emotion
+    if (config.remove_emotion) {
+        randomPrompt = removeArray(randomPrompt, datasets.emotions);
     }
 
     // Remove bad tags
