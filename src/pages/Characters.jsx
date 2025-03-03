@@ -78,12 +78,12 @@ export default function Characters() {
     const data = useMemo(() => {
         if (datasets) {
             if (showFavorite) {
-                let favorite = localStorage.getItem("favorite");
+                let favorite = localStorage.getItem("__FAVORITE__");
                 if (favorite == undefined) {
                     favorite = [];
                 }
                 else {
-                    favorite = favorite.split(",");
+                    favorite = favorite.split("\n");
                 }
 
                 let copyright_list = [];
@@ -231,7 +231,7 @@ export default function Characters() {
                         }
                     }
                     imgStyle={faceFocus ? "object-cover object-top" : "object-contain"}
-                    favoriteButton={showFavorite || window.location.hash.substring(1) != "" ? true : false}
+                    favoriteButton={showFavorite}
                 />
                 }
 
@@ -242,23 +242,23 @@ export default function Characters() {
                     <DialogDescription className="flex flex-col gap-2 pt-7 text-zinc-300">
                         <Button variant="outline" onClick={(e) => {navigator.clipboard.writeText(selectedCharacter); setSelectedCharacter("")}}>Copy to Clipboard</Button>
                         <Button variant="outline" onClick={(e) => {
-                            let temp = localStorage.getItem("favorite");
+                            let temp = localStorage.getItem("__FAVORITE__");
 
                             if (temp == undefined || temp == "") {
                                 temp = selectedCharacter;
                             }
                             else {
-                                if (temp.split(",").includes(selectedCharacter)) {
-                                    temp = temp.split(",").filter((temp) => temp != selectedCharacter).join(",");
+                                if (temp.split("\n").includes(selectedCharacter)) {
+                                    temp = temp.split("\n").filter((temp) => temp != selectedCharacter).join("\n");
                                 }
                                 else {
-                                    temp += "," + selectedCharacter;
+                                    temp += "\n" + selectedCharacter;
                                 }
                             }
-                            localStorage.setItem("favorite", temp);
+                            localStorage.setItem("__FAVORITE__", temp);
                             updateToScroll(true);
                             setSelectedCharacter("");
-                        }}>{localStorage.getItem("favorite") != undefined && localStorage.getItem("favorite").split(",").includes(selectedCharacter) ? "Remove from Favorite" : "Add to Favorite"}</Button>
+                        }}>{localStorage.getItem("__FAVORITE__") != undefined && localStorage.getItem("__FAVORITE__").split("\n").includes(selectedCharacter) ? "Remove from Favorite" : "Add to Favorite"}</Button>
                         <Button variant="outline" onClick={(e) => {setSelectedCharacter("")}}>Close</Button>
                     </DialogDescription>
                     </DialogHeader>

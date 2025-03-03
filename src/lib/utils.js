@@ -241,3 +241,24 @@ export function getDateString() {
 	let date = new Date();
 	return `${date.getFullYear() % 2000}${date.getMonth() < 10 ? '0' : ''}${date.getMonth()}${date.getDate() < 10 ? '0' : ''}${date.getDate()}_${date.getHours() < 10 ? '0' : ''}${date.getHours()}${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}${date.getSeconds() < 10 ? '0' : ''}${date.getSeconds()}`;
 }
+
+export async function extractList(original, extractList, justcmp = false) {
+    let extracted = [];
+    let removed = [];
+    for (let i = 0; i < original.length; i++) {
+        if (justcmp && extractList.includes(original[i]) || extractList.includes(original[i][1])) {
+            extracted.push(original[i]);
+        }
+        else {
+            removed.push(original[i]);
+        }
+    }
+
+    return [extracted, removed];
+}
+
+export function removeArray(arr, remove) {
+    return arr.filter((el) => {
+        return !remove.includes(el);
+    });
+}

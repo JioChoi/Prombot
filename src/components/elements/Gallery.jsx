@@ -69,12 +69,12 @@ export default function Gallery({data, onClick, imgStyle, favoriteButton}) {
             return;
         }
 
-        let favorites = localStorage.getItem("favorite");
+        let favorites = localStorage.getItem("__FAVORITE__");
         if (favorites == undefined) {
             favorites = [];
         }
         else {
-            favorites = favorites.split(",");
+            favorites = favorites.split("\n");
         }
 
         let temp = [...Array(bf).keys()].map((i) => {
@@ -88,7 +88,7 @@ export default function Gallery({data, onClick, imgStyle, favoriteButton}) {
                 <GalleryItem 
                     key={temp.id + temp.name}
                     onClick={() => {
-                        if (!favoriteButton) {
+                        if (temp.type != "character") {
                             window.location.hash = temp.id;
                             prvScrollY.current = scroll.current.scrollTop;
                         }
@@ -96,12 +96,12 @@ export default function Gallery({data, onClick, imgStyle, favoriteButton}) {
                             onClick(temp);
                         }
                     }}
-                    favoriteButton={favoriteButton}
+                    favoriteButton={temp.type == "character"}
                     src={`https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/characters/${folder}/${temp.img}.webp`}
                     label={temp.name}
                     imgStyle={imgStyle}
                     favoriteState={favorites.includes(temp.name)}
-                    hoverText={!favoriteButton ? "" : "Click to Copy"}
+                    hoverText={temp.type != "character" ? "" : "Click to Copy"}
                 />
             )
         });

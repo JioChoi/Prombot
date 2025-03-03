@@ -11,12 +11,12 @@ export default function GalleryItem({onClick, favoriteButton, src, label, imgSty
         temp.push(
             <div key={"fav_btn"} className="absolute top-1 right-1 w-[28px] h-[28px] bg-black flex align-middle justify-center rounded-full hover:cursor-pointer hover:brightness-90"
                 onClick={() => {
-                    let fav = localStorage.getItem("favorite");
+                    let fav = localStorage.getItem("__FAVORITE__");
                     if (fav == undefined) {
                         fav = [];
                     }
                     else {
-                        fav = fav.split(",");
+                        fav = fav.split("\n");
                     }
                     if (fav.includes(label)) {
                         fav = fav.filter((temp) => temp != label);
@@ -26,7 +26,7 @@ export default function GalleryItem({onClick, favoriteButton, src, label, imgSty
                         fav.push(label);
                         setFavorite(true);
                     }
-                    localStorage.setItem("favorite", fav.join(","));
+                    localStorage.setItem("__FAVORITE__", fav.join("\n"));
                 }}
             ><Icon name="star-fill" className={`text-lg ${favorite ? "text-yellow-400" : "text-zinc-200"}`}/></div>
         )

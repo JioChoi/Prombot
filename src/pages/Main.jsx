@@ -60,7 +60,7 @@ function Main() {
 
 	useEffect(() => {
 		function beforeUnloadFunction(e) {
-			if (data.current_image != "" || data.generating || data.generate_button_text != "") {
+			if (process.env.NODE_ENV != "development" && (data.current_image != "" || data.generating || data.generate_button_text != "")) {
 				e.preventDefault();
 				e.returnValue = '';
 			}
