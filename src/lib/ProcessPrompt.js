@@ -40,7 +40,7 @@ export async function processPrompt(config, onProgress) {
     if (config.naistandard) {
         result.naistandard();
     }
-    
+
     return result.toString();
 }
 
@@ -236,6 +236,10 @@ class Tokenizer {
         this.#tokens = [];
         if (str != undefined)
             this.tokenize(str);
+
+        this.#tokens = this.#tokens.filter((el) => {
+            return el.str.trim() != "";
+        });
     }
 
     add(str, strength) {
@@ -675,7 +679,11 @@ async function getPositionsOfTag(tag) {
 }
 
 async function processCharacterData(prompt_beg, randomPrompt, prompt_end) {
-    let characters = (await extractList(prompt_beg.concat(randomPrompt, prompt_end), datasets.character, true))[0];
+    let list = prompt_beg.concat(randomPrompt, prompt_end);
+    list = list.filter((el) => {
+        return el.trim() != "";
+    });
+    let characters = (await extractList(list, datasets.character, true))[0];
     let result = [];
 
     for (let character of characters) {
