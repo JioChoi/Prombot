@@ -525,6 +525,10 @@ function processDynamicPrompt(prompt) {
 async function getRandomPrompt(searchPrompt, onProgress) {
     let search = [];
 
+    searchPrompt = searchPrompt.filter((el) => {
+        return el.trim() != "";
+    });
+
     // Get search tags
     for (let i = 0; i < searchPrompt.size(); i++) {
         search.push(searchPrompt.get(i).str);
