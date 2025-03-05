@@ -54,9 +54,30 @@ function search(str) {
         temp.push(exact);
     }
 
+    let includingSearch = false;
+
+    if (str.includes(' ')) {
+        includingSearch = true;
+    }
+
+
     for (let i = 0; i < datasets.whitelist.length; i++) {
-        if (datasets.whitelist[i][0].includes(str) && datasets.whitelist[i][0] != str) {
-            temp.push(datasets.whitelist[i]);
+        const target = datasets.whitelist[i][0];
+        if (target != str) {
+            const words = target.split(' ');
+            if (includingSearch) {
+                if (target.includes(str)) {
+                    temp.push(datasets.whitelist[i]);
+                }
+            }
+            else {
+                for (let j = 0; j < words.length; j++) {
+                    if (words[j].startsWith(str)) {
+                        temp.push(datasets.whitelist[i]);
+                        break;
+                    }
+                }
+            }
             if (temp.length >= 5) {
                 break;
             }
@@ -91,6 +112,9 @@ export default function Autocomplete() {
 
     function putValue(sel) {
         let str = value[sel][0] + ", ";
+        if (value[sel][1] == null) {
+            str = value[sel][0];   
+        }
         let start = range.start;
         let end = range.end;
         
@@ -124,6 +148,11 @@ export default function Autocomplete() {
                 if(str[0] == '~') {
                     str = str.substring(1);
                     last++;
+                }
+                if(str.includes('#')) {
+                    let index = str.indexOf('#');
+                    str = str.substring(index + 1);
+                    last = last + index + 1;
                 }
 
                 element.current = e.target;
@@ -205,7 +234,7 @@ export default function Autocomplete() {
                                 setVisible(false);
                             }
                         }>
-                            <div key={i} className={`w-[calc(100%-30px)] text-sm`}>{v[0]}</div>
+                            <div key={i} className={`w-[calc(100%-30px)] text-sm ${v[1] == null && "text-yellow-200"}`}>{v[0]}</div>
                             <div className={`text-[10px] w-[30px] align-middle text-right ${unitColor[shorten.unit]}`}>{shorten.text}</div>
                         </div>
                     );

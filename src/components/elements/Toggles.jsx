@@ -25,7 +25,7 @@ export default function Toggles({items}) {
         >
             {items.map((item, i) => (
                 <ToggleGroupItem
-                    className={`w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent hover:!border-ring duration-0 select-none ${item.visible === false ? "opacity-0 pointer-events-none" : ""}`}
+                    className={`w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent lg:hover:!border-ring duration-0 select-none ${item.visible === false ? "opacity-0 pointer-events-none" : ""}`}
                     value={item.key} variant="outline" key={i}>
                         <div className="flex flex-col items-center gap-1">
                             <Icon className="text-5xl" name={item.icon} x={item.x} sel={config[item.key]}/>

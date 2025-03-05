@@ -114,6 +114,9 @@ class Prompt {
     }
 
     processRandomPrompt(config) {
+        // keep only whitelist
+        this.randomPrompt.keepWhitelist();
+
         if (config.remove_artist) {
             this.randomPrompt.remove(datasets.artist);
         }
@@ -260,6 +263,12 @@ class Tokenizer {
 
     size() {
         return this.#tokens.length;
+    }
+
+    keepWhitelist() {
+        this.#tokens = this.#tokens.filter((el) => {
+            return datasets.whitelist.includes(el.str);
+        });
     }
 
     toString() {

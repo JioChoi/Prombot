@@ -257,7 +257,13 @@ export async function downloadDatasets(onProgress, onFinish) {
             res[i] = res[i].split(',');
         }
         datasets.whitelist = res;
-        datasets.whitelist.push(['__FAVORITE__', 0]);
+        datasets.whitelist.unshift(['__FAVORITE__', null]);
+
+        // Add special tags
+        datasets.whitelist.unshift(['source#', null]);
+        datasets.whitelist.unshift(['mutual#', null]);
+        datasets.whitelist.unshift(['target#', null]);
+
 
         downloaded++;
     });
