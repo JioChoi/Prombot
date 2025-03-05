@@ -48,7 +48,7 @@ export default function CharacterPrompt({id}) {
                         }}
                     />
                 </div>
-                <div className="w-[calc(100%-94px-14px)]">
+                <div className={config.use_coords ? `w-[calc(100%-94px-15px)]` : `w-[calc(100%-17px)]`}>
                     <Textarea configKey="character_prompt" label={null} placeholder={positive ? "Positive Prompt" : "Negative Prompt"} autocomplete="on" height="90px" index={id} resize={false}
                         className={`rounded-s-none`}
                         set={(value) => {
@@ -70,6 +70,8 @@ export default function CharacterPrompt({id}) {
                     />
                 </div>
 
+                {
+                config.use_coords &&
                 <div className="grid grid-cols-5 gap-[1px]">
                     {Array(25).fill(0).map((_, index) => {
                         const x = index % 5;
@@ -85,6 +87,7 @@ export default function CharacterPrompt({id}) {
                         ></div>
                     })}
                 </div>
+                }
             </div>
         </div>
     </>)
