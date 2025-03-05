@@ -37,12 +37,12 @@ export default function CharacterPrompt({id}) {
 
             <div className="w-full flex flex-row justify-between">
                 <div className="w-[14px]">
-                    <Icon name="add_fill" className={`text-sm h-[45px] flex justify-center items-center hover:cursor-pointer rounded-sm ${positive ? "bg-zinc-700" : "bg-zinc-800 hover:brightness-125"}`}
+                    <Icon name="add_fill" className={`w-[17px] text-sm h-[45px] flex justify-start p-[1px] items-center hover:cursor-pointer rounded-sm rounded-e-none rounded-bl-none text-zinc-300 ${positive ? "bg-input" : "bg-zinc-800 hover:brightness-125"}`}
                         onClick={() => {
                             setPositive(true);
                         }}
                     />
-                    <Icon name="minimize_fill" className={`text-sm h-[45px] flex justify-center items-center hover:cursor-pointer rounded-sm ${positive ? "bg-zinc-800 hover:brightness-125" : "bg-zinc-700"}`}
+                    <Icon name="minimize_fill" className={`w-[17px] text-sm h-[45px] flex justify-start p-[1px] items-center hover:cursor-pointer rounded-sm rounded-e-none rounded-tl-none text-zinc-300 ${positive ? "bg-zinc-800 hover:brightness-125" : "bg-input"}`}
                         onClick={() => {
                             setPositive(false);
                         }}
@@ -50,6 +50,7 @@ export default function CharacterPrompt({id}) {
                 </div>
                 <div className="w-[calc(100%-94px-14px)]">
                     <Textarea configKey="character_prompt" label={null} placeholder={positive ? "Positive Prompt" : "Negative Prompt"} autocomplete="on" height="90px" index={id} resize={false}
+                        className={`rounded-s-none`}
                         set={(value) => {
                             if (positive) {
                                 dispatch(configSlice.setCharacterPrompt({id: id, key: "prompt", value: value }));

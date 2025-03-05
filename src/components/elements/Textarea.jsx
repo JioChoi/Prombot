@@ -5,7 +5,7 @@ import * as configSlice from "@/slices/configSlice";
 import { useMemo, useRef, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 
-export default function Textarea({label=null, configKey, placeholder, autocomplete, height, width="100%", set=null, get=null, index=0, resize=true, disableMinHeight=false}) {
+export default function Textarea({label=null, configKey, placeholder, autocomplete, height, width="100%", set=null, get=null, index=0, resize=true, disableMinHeight=false, className=""}) {
     const dispatch = useDispatch();
     const config = useSelector((state) => state.config);
 
@@ -57,7 +57,7 @@ export default function Textarea({label=null, configKey, placeholder, autocomple
             {label != null && <Label htmlFor={configKey + index}>{label}</Label>}
 
             <div className={`relative block`} style={{width: width, minWidth: width}}>
-                <_Textarea ref={observer.ref} id={configKey + index} className={`${disableMinHeight ? "" : "min-h-20"} ${!resize && "resize-none"}`} placeholder={placeholder} autocomplete={autocomplete}
+                <_Textarea ref={observer.ref} id={configKey + index} className={`${disableMinHeight ? "" : "min-h-20"} ${!resize && "resize-none"} ${className}`} placeholder={placeholder} autocomplete={autocomplete}
                     onChange={(e) => set != null ? set(e.target.value) : dispatch(configSlice.setValue({ key: configKey, value: e.target.value }))}
                     value={get != null ? get() : config[configKey]}
                     style={{height: height}}
