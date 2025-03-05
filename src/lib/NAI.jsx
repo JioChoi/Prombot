@@ -56,20 +56,35 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         reference_strength_multiple: [],
         deliberate_euler_ancestral_bug: false,
         prefer_brownian: true,
+        use_coords: config.use_coords,
     }
 
     if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview' || config.DEV_MODEL == 'nai-diffusion-4-full') {
+        params.characterPrompts = config.character_prompts;
+
         params.v4_negative_prompt = {
             caption: {
                 base_caption: config.negative,
-                char_captions: []
+                char_captions: config.character_prompts.map((el) => {
+                    return {
+                        char_caption: el.uc,
+                        centers: [{x: el.center.x, y: el.center.y}],
+                    }
+                })
             }
         };
         params.v4_prompt = {
             caption: {
                 base_caption: prompt,
-                char_captions: []
-            }
+                char_captions: config.character_prompts.map((el) => {
+                    return {
+                        char_caption: el.prompt,
+                        centers: [{x: el.center.x, y: el.center.y}],
+                    }
+                })
+            },
+            use_coords: config.use_coords,
+            use_order: true,
         }
     }
 
@@ -93,6 +108,8 @@ export const config = {
     remove_copyright: true,
     remove_ornament: true,
     remove_emotion: false,
+    character_prompts: [],
+    use_coords: false,
 
     // Options
     width: 832,

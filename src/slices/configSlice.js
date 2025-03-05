@@ -1,5 +1,6 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import * as NAI from "@/lib/NAI";
+import { remove } from 'jszip';
 
 function _savePreset(data) {
     localStorage.setItem('data', JSON.stringify(data));
@@ -45,7 +46,9 @@ const configSlice = createSlice({
 
             let preset = JSON.parse(string);
 
+            console.log(NAI.config);
             for (let key in NAI.config) {
+                console.log(key, NAI.config[key]);
                 state[key] = NAI.config[key];
             }
 
@@ -81,9 +84,27 @@ const configSlice = createSlice({
         },
         savePreset: state => {
             _savePreset(state);
+        },
+        addCharacterPrompt: (state, action) => {
+            state.character_prompts.push({prompt: action.payload.prompt, uc: action.payload.uc, center: {x: action.payload.x, y: action.payload.y}});
+            _savePreset(state);
+        },
+        setCharacterPrompt: (state, action) => {
+            state.character_prompts[action.payload.id][action.payload.key] = action.payload.value;
+            _savePreset(state);
+        },
+        swapCharacterPrompt: (state, action) => {
+            let temp = state.character_prompts[action.payload.a];
+            state.character_prompts[action.payload.a] = state.character_prompts[action.payload.b];
+            state.character_prompts[action.payload.b] = temp;
+            _savePreset(state);
+        },
+        removeCharacterPrompt: (state, action) => {
+            state.character_prompts.splice(action.payload, 1);
+            _savePreset(state);
         }
     },
 });
 
-export const { setValue, setToggle, loadPreset, savePreset, loadFromString } = configSlice.actions;
+export const { setValue, setToggle, loadPreset, savePreset, loadFromString, addCharacterPrompt, swapCharacterPrompt, removeCharacterPrompt, setCharacterPrompt } = configSlice.actions;
 export const reducer = configSlice.reducer;

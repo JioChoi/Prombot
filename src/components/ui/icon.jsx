@@ -2,7 +2,7 @@ import 'mingcute_icon/font/Mingcute.css'
 import ximg from '@/assets/x.png'
 import x_sel_img from '@/assets/x-sel.png'
 
-export default function Icon({name, className, x=false, sel=false}) {
+export default function Icon({name, className, x=false, sel=false, onClick=null}) {
     name = `mgc_${name.replaceAll('-', '_')}`;
 
     if (x) {
@@ -19,6 +19,6 @@ export default function Icon({name, className, x=false, sel=false}) {
     }
     
     return (
-        <span className={`${className} ${name}`}></span>
+        <span className={`${className} ${name}`} onClick={onClick}></span>
     );
 }

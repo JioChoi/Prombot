@@ -4,14 +4,16 @@ import Automation from '../modules/Automation';
 import Extras from '@/modules/Extras';
 import Dev from '@/modules/Dev';
 import PostProcessing from '@/modules/PostProcessing';
+import CharacterPrompts from '@/modules/CharacterPrompts';
 
 function SidebarItems(data) {
     return (
         <div className="m-6 space-y-14" id="sidebar-items">
             <PromptRandomizer />
+            <CharacterPrompts />
             <Options />
-            <PostProcessing />
             <Automation />
+            <PostProcessing />
             <Extras />
             <Dev />
         </div>

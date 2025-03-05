@@ -5,7 +5,7 @@ import * as configSlice from "@/slices/configSlice";
 import { useMemo, useRef, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 
-export default function Textarea({label, configKey, placeholder, autocomplete, height}) {
+export default function Textarea({label=null, configKey, placeholder, autocomplete, height, width="100%", set=null, get=null, index=0, resize=true, disableMinHeight=false}) {
     const dispatch = useDispatch();
     const config = useSelector((state) => state.config);
 
@@ -31,10 +31,12 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
             ele.push(
                 <span>{char}</span>
             );
-       }
+        }
 
-        for (let i = 0; i < config[configKey].length; i++) {
-            let char = config[configKey][i];
+        const value = get != null ? get() : config[configKey];
+
+        for (let i = 0; i < value.length; i++) {
+            let char = value[i];
 
             if (char != '\n') {
                 addChar(char);
@@ -48,22 +50,24 @@ export default function Textarea({label, configKey, placeholder, autocomplete, h
 
 
         return ele;
-    }, [config[configKey]]);
+    }, [get != null ? get() : config[configKey]]);
 
     return (
         <div>
-            <Label htmlFor={configKey}>{label}</Label>
+            {label != null && <Label htmlFor={configKey + index}>{label}</Label>}
 
-            <div className="relative block w-full">
-                <_Textarea ref={observer.ref} id={configKey} className={`min-h-20`} placeholder={placeholder} autocomplete={autocomplete}
-                    onChange={(e) => dispatch(configSlice.setValue({ key: configKey, value: e.target.value }))}
-                    value={config[configKey]}
+            <div className={`relative block`} style={{width: width, minWidth: width}}>
+                <_Textarea ref={observer.ref} id={configKey + index} className={`${disableMinHeight ? "" : "min-h-20"} ${!resize && "resize-none"}`} placeholder={placeholder} autocomplete={autocomplete}
+                    onChange={(e) => set != null ? set(e.target.value) : dispatch(configSlice.setValue({ key: configKey, value: e.target.value }))}
+                    value={get != null ? get() : config[configKey]}
                     style={{height: height}}
                     onScroll={(e) => setScroll(e.target.scrollTop)}
                 />
-                <div className="fakeTextarea absolute top-0 left-0 min-h-[60px] w-full border border-transparent bg-transparent px-3 py-2 text-base md:text-sm scroll pointer-events-none whitespace-pre-wrap break-words overflow-y-scroll"
+                <div className={`fakeTextarea absolute top-0 left-0 min-h-[60px] border border-transparent bg-transparent px-3 py-2 text-base md:text-sm scroll pointer-events-none whitespace-pre-wrap break-words overflow-y-scroll`}
                     style={{
                         height: observer.height ? observer.height + 18 : 0,
+                        width: width,
+                        minWidth: width,
                         color: "transparent",
                         // color: "rgba(255, 0, 255, 0.5)",
 
