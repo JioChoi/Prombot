@@ -17,17 +17,17 @@ export default function CharacterPrompt({id}) {
             <div className="mb-[1px] flex justify-between content-center">
                 <div className="flex items-center space-x-2">
                     <h1 className="text-md font-semibold">{`Character ${id + 1}`}</h1>
-                    <Icon name="delete_2_line" className="text-lg hover:cursor-pointer hover:brightness-75" onClick={() => {
+                    <Icon name="delete_2_line" className="text-lg hover:cursor-pointer lg:hover:brightness-75" onClick={() => {
                         dispatch(configSlice.removeCharacterPrompt(id));
                     }}/>
                 </div>
                 <div className="flex items-center">
-                    <Icon name="up_line" className={`text-xl ${id > 0 ? "hover:bg-zinc-700 hover:cursor-pointer" : "brightness-50"}`} onClick={() => {
+                    <Icon name="up_line" className={`text-xl ${id > 0 ? "lg:hover:bg-zinc-700 hover:cursor-pointer" : "brightness-50"}`} onClick={() => {
                         if (id > 0) {
                             dispatch(configSlice.swapCharacterPrompt({a: id, b: id - 1}));
                         }
                     }}/>
-                    <Icon name="down_line" className={`text-xl ${id < config.character_prompts.length - 1 ? "hover:bg-zinc-700 hover:cursor-pointer" : "brightness-50"}`} onClick={() => {
+                    <Icon name="down_line" className={`text-xl ${id < config.character_prompts.length - 1 ? "lg:hover:bg-zinc-700 hover:cursor-pointer" : "brightness-50"}`} onClick={() => {
                         if (id < config.character_prompts.length - 1) {
                             dispatch(configSlice.swapCharacterPrompt({a: id, b: id + 1}));
                         }
@@ -37,12 +37,12 @@ export default function CharacterPrompt({id}) {
 
             <div className="w-full flex flex-row justify-between">
                 <div className="w-[14px]">
-                    <Icon name="add_fill" className={`w-[17px] text-sm h-[45px] flex justify-start p-[1px] items-center hover:cursor-pointer rounded-sm rounded-e-none rounded-bl-none text-zinc-300 ${positive ? "bg-input" : "bg-zinc-800 hover:brightness-125"}`}
+                    <Icon name="add_fill" className={`w-[17px] text-sm h-[45px] flex justify-start p-[1px] items-center hover:cursor-pointer rounded-sm rounded-e-none rounded-bl-none text-zinc-300 ${positive ? "bg-input" : "bg-zinc-800 lg:hover:brightness-125"}`}
                         onClick={() => {
                             setPositive(true);
                         }}
                     />
-                    <Icon name="minimize_fill" className={`w-[17px] text-sm h-[45px] flex justify-start p-[1px] items-center hover:cursor-pointer rounded-sm rounded-e-none rounded-tl-none text-zinc-300 ${positive ? "bg-zinc-800 hover:brightness-125" : "bg-input"}`}
+                    <Icon name="minimize_fill" className={`w-[17px] text-sm h-[45px] flex justify-start p-[1px] items-center hover:cursor-pointer rounded-sm rounded-e-none rounded-tl-none text-zinc-300 ${positive ? "bg-zinc-800 lg:hover:brightness-125" : "bg-input"}`}
                         onClick={() => {
                             setPositive(false);
                         }}
@@ -78,7 +78,7 @@ export default function CharacterPrompt({id}) {
                         const xpos = Number((0.2 * (x + 1) - 0.1).toFixed(1));
                         const ypos = Number((0.2 * (y + 1) - 0.1).toFixed(1));
                         
-                        return <div key={index} className={`w-[17px] h-[17px] border-[1px] rounded-sm ${position.x == xpos && position.y == ypos ? "bg-zinc-600 border-zinc-600" : "bg-zinc-800 border-zinc-700 hover:cursor-pointer hover:bg-zinc-700"}`}
+                        return <div key={index} className={`w-[17px] h-[17px] border-[1px] rounded-sm ${position.x == xpos && position.y == ypos ? "bg-zinc-600 border-zinc-600" : "bg-zinc-800 border-zinc-700 hover:cursor-pointer lg:hover:bg-zinc-700"}`}
                             onClick={() => {
                                 dispatch(configSlice.setCharacterPrompt({id: id, key: "center", value: {x: xpos, y: ypos} }));
                             }}

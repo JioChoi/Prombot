@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import * as configSlice from '@/slices/configSlice';
 import CharacterPrompt from '@/components/elements/CharacterPrompt';
+import ToggleButton from '@/components/ui/toggleButton';
 
 
 export default function CharacterPrompts() {
@@ -16,7 +17,10 @@ export default function CharacterPrompts() {
 
     return (
         <div>
-            <ModuleTitle label="Character Prompts" />
+            <div className="flex justify-between items-center mb-2 mt-6">
+                <h1 className="text-2xl text-primary font-bold module-title">Character Prompts</h1>
+                <ToggleButton configKey="use_coords">AI's Choice</ToggleButton>
+            </div>
 
             <ModuleBody>
                 <div className="space-y-2">

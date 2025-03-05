@@ -36,7 +36,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         sampler: config.sampler,
         steps: config.steps,
         n_samples: 1,
-        ucPreset: 3,
+        ucPreset: 0,
         qualityToggle: false,
         sm: config.SMEA,
         sm_dyn: config.DYN,
