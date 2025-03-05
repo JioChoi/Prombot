@@ -87,6 +87,7 @@ export default function TagPopup() {
         let previousElement = null;
         let cursor = { x: 0, y: 0 };
         let on = false;
+        let focused = false;
 
         function scrollFunction(e) {
             on = false;
@@ -95,7 +96,7 @@ export default function TagPopup() {
         }
 
         function selectionChangeFn(e) {
-            if (e.target.tagName == "TEXTAREA" && e.target.getAttribute("autocomplete") == "on") {
+            if (e.target.tagName == "TEXTAREA" && e.target.getAttribute("autocomplete") == "on" && focused) {
                 console.log("SELECTION CHANGE", e.target.selectionStart, e.target.selectionEnd);
     
                 let value = e.target.value;
@@ -132,6 +133,7 @@ export default function TagPopup() {
             console.log("BLUR");
 
             if (!checkParent(document.elementFromPoint(cursor.x, cursor.y), "tagPopup")) {
+                focused = false;
                 on = false;
                 setVisible(false);
                 removeStyles(element.current);
@@ -161,14 +163,19 @@ export default function TagPopup() {
             cursor = { x: e.touches[0].clientX, y: e.touches[0].clientY };
         }
 
-        setTimeout(() => {
-            document.addEventListener('selectionchange', selectionChangeFn);
-            document.addEventListener("blur", blurFunction, true);
-            document.addEventListener("mousemove", mouseMoveFunction);
-            document.addEventListener("touchmove", touchMoveFunction);
-        }, 1000);
+        function focusFunction(e) {
+            console.log("Focus");
+            focused = true;
+        }
+
+        document.addEventListener("focusin", focusFunction);
+        document.addEventListener('selectionchange', selectionChangeFn);
+        document.addEventListener("blur", blurFunction, true);
+        document.addEventListener("mousemove", mouseMoveFunction);
+        document.addEventListener("touchmove", touchMoveFunction);
 
         return () => {
+            document.removeEventListener("focusin", focusFunction);
             document.removeEventListener('selectionchange', selectionChangeFn);
             document.removeEventListener("blur", blurFunction, true);
             document.removeEventListener("mousemove", mouseMoveFunction);
