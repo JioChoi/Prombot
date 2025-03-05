@@ -19,7 +19,7 @@ export default function CharacterPrompts() {
         <div>
             <div className="flex justify-between items-center mb-2 mt-6">
                 <h1 className="text-2xl text-primary font-bold module-title">Character Prompts</h1>
-                <ToggleButton configKey="use_coords">AI's Choice</ToggleButton>
+                <ToggleButton configKey="use_coords" invert={true}>AI's Choice</ToggleButton>
             </div>
 
             <ModuleBody>
