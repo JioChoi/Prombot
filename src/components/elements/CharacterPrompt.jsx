@@ -77,7 +77,7 @@ export default function CharacterPrompt({id}) {
                         const xpos = Number((0.2 * (x + 1) - 0.1).toFixed(1));
                         const ypos = Number((0.2 * (y + 1) - 0.1).toFixed(1));
                         
-                        return <div key={index} className={`w-[17px] h-[17px] bg-zinc-800 border-[1px] rounded-sm ${position.x == xpos && position.y == ypos ? "bg-zinc-600 border-zinc-600" : "border-zinc-700 hover:cursor-pointer hover:bg-zinc-700"}`}
+                        return <div key={index} className={`w-[17px] h-[17px] border-[1px] rounded-sm ${position.x == xpos && position.y == ypos ? "bg-zinc-600 border-zinc-600" : "bg-zinc-800 border-zinc-700 hover:cursor-pointer hover:bg-zinc-700"}`}
                             onClick={() => {
                                 dispatch(configSlice.setCharacterPrompt({id: id, key: "center", value: {x: xpos, y: ypos} }));
                             }}
