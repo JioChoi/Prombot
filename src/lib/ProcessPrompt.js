@@ -54,15 +54,16 @@ class Prompt {
     }
 
     formatPrompt(config) {
+        // Process Search Prompt
+        if (config.remove_nsfw && this.search.trim() != "") {
+            this.search += ', rating:g';
+        }
+
         this.beg = formatPrompt(this.beg);
         this.search = formatPrompt(this.search);
         this.end = formatPrompt(this.end);
         this.negative = formatPrompt(this.negative);
 
-        // Process Search Prompt
-        if (config.remove_nsfw && this.search != "") {
-            this.search += 'rating:g,';
-        }
 
         this.search = this.search.replaceAll('rating:general', 'rating:g');
         this.search = this.search.replaceAll('rating:questionable', 'rating:q');
@@ -556,9 +557,6 @@ async function getRandomPrompt(searchPrompt, onProgress) {
     // Remove duplicates of including and excluding
     including = Array.from(new Set(including));
     excluding = Array.from(new Set(excluding));
-
-    console.log(including.length, including);
-    console.log(excluding.length, excluding);
 
     // Check if including and excluding tags are empty
     if (including.length == 0 && excluding.length == 0) {
