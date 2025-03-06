@@ -62,17 +62,17 @@ function search(str) {
 
 
     for (let i = 0; i < datasets.whitelist.length; i++) {
-        const target = datasets.whitelist[i][0];
+        let target = datasets.whitelist[i][0];
         if (target != str) {
             const words = target.split(' ');
             if (includingSearch) {
-                if (target.includes(str)) {
+                if (target.toLowerCase().includes(str.toLowerCase())) {
                     temp.push(datasets.whitelist[i]);
                 }
             }
             else {
                 for (let j = 0; j < words.length; j++) {
-                    if (words[j].startsWith(str)) {
+                    if (words[j].toLowerCase().startsWith(str.toLowerCase())) {
                         temp.push(datasets.whitelist[i]);
                         break;
                     }
@@ -153,6 +153,11 @@ export default function Autocomplete() {
                     let index = str.indexOf('#');
                     str = str.substring(index + 1);
                     last = last + index + 1;
+                }
+                if(str.includes('artist:')) {
+                    let index = str.indexOf('artist:');
+                    str = str.substring(index + 7);
+                    last = last + index + 7;
                 }
 
                 element.current = e.target;

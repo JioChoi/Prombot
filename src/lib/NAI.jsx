@@ -263,7 +263,11 @@ export async function downloadDatasets(onProgress, onFinish) {
         datasets.whitelist.unshift(['source#', null]);
         datasets.whitelist.unshift(['mutual#', null]);
         datasets.whitelist.unshift(['target#', null]);
-
+        datasets.whitelist.unshift(['girl', null]);
+        datasets.whitelist.unshift(['boy', null]);
+        datasets.whitelist.unshift(['other', null]);
+        datasets.whitelist.unshift(['artist:', null]);
+        datasets.whitelist.unshift(['Text: ', null]);
 
         downloaded++;
     });
