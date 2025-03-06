@@ -557,6 +557,9 @@ async function getRandomPrompt(searchPrompt, onProgress) {
     including = Array.from(new Set(including));
     excluding = Array.from(new Set(excluding));
 
+    console.log(including.length, including);
+    console.log(excluding.length, excluding);
+
     // Check if including and excluding tags are empty
     if (including.length == 0 && excluding.length == 0) {
         return "";
