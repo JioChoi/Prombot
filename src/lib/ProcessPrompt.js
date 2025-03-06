@@ -267,7 +267,9 @@ class Tokenizer {
 
     keepWhitelist() {
         this.#tokens = this.#tokens.filter((el) => {
-            return datasets.whitelist.includes(el.str);
+            return datasets.whitelist.find((t) => {
+                return t[0] == el.str.trim();
+            });
         });
     }
 
