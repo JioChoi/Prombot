@@ -50,7 +50,7 @@ export default function Options() {
                             { value: "", label: "NORMAL" },
                             { value: "832x1216", label: "Portrait (832x1216)" },
                             { value: "1216x832", label: "Landscape (1216x832)" },
-                            { value: "832x832", label: "Square (1024x1024)" },
+                            { value: "1024x1024", label: "Square (1024x1024)" },
 
                             { value: "", label: "LARGE" },
                             { value: "1024x1536", label: "Portrait (1024x1536)" },
