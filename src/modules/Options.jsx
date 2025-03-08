@@ -26,7 +26,7 @@ export default function Options() {
     }
     function getResolution() {
         const reslist = [
-            "832x1216", "1216x832", "832x832",
+            "832x1216", "1216x832", "1024x1024",
             "1024x1536", "1536x1024", "1472x1472",
             "1088x1920", "1920x1088",
             "512x768", "768x512", "640x640"
