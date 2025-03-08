@@ -10,7 +10,14 @@ export default function CharacterPrompt({id}) {
 
     const [positive, setPositive] = useState(true);
 
-    let position = config.character_prompts[id].center;
+    let positions = config.character_prompts[id].centers;
+
+    function searchPosition(x, y) {
+        if (positions) {
+            return positions.find((v) => {return v.x === x && v.y === y});
+        }
+        return false
+    }
 
     return (<>
         <div className="w-full">
@@ -80,9 +87,14 @@ export default function CharacterPrompt({id}) {
                         const xpos = Number((0.2 * (x + 1) - 0.1).toFixed(1));
                         const ypos = Number((0.2 * (y + 1) - 0.1).toFixed(1));
                         
-                        return <div key={index} className={`w-[17px] h-[17px] border-[1px] rounded-sm ${position.x == xpos && position.y == ypos ? "bg-zinc-600 border-zinc-600" : "bg-zinc-800 border-zinc-700 hover:cursor-pointer lg:hover:bg-zinc-700"}`}
+                        return <div key={index} className={`w-[17px] h-[17px] border-[1px] rounded-sm ${searchPosition(xpos, ypos) ? "bg-zinc-600 border-zinc-600 hover:cursor-pointer lg:hover:brightness-90" : "bg-zinc-800 border-zinc-700 hover:cursor-pointer lg:hover:bg-zinc-700"}`}
                             onClick={() => {
-                                dispatch(configSlice.setCharacterPrompt({id: id, key: "center", value: {x: xpos, y: ypos} }));
+                                if (searchPosition(xpos, ypos)) {
+                                    dispatch(configSlice.removeCharacterPromptCenter({id: id, center: {x: xpos, y: ypos}}));
+                                }
+                                else {
+                                    dispatch(configSlice.addCharacterPromptCenter({id: id, center: {x: xpos, y: ypos}}));
+                                }
                             }}
                         ></div>
                     })}

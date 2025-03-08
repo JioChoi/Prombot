@@ -68,7 +68,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
                 char_captions: config.character_prompts.map((el) => {
                     return {
                         char_caption: el.uc,
-                        centers: [{x: el.center.x, y: el.center.y}],
+                        centers: el.centers
                     }
                 })
             }
@@ -79,7 +79,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
                 char_captions: config.character_prompts.map((el) => {
                     return {
                         char_caption: el.prompt,
-                        centers: [{x: el.center.x, y: el.center.y}],
+                        centers: el.centers
                     }
                 })
             },

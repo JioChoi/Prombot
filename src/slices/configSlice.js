@@ -68,6 +68,13 @@ const configSlice = createSlice({
             state["delay"] = Number(state["delay"]);
             state["reorder"] = state["reorderTags"];
 
+            for (let i = 0; i < state.character_prompts.length; i++) {
+                if (state.character_prompts[i].center) {
+                    state.character_prompts[i].centers = [state.character_prompts[i].center];
+                    delete state.character_prompts[i].center;
+                }
+            }
+
             _savePreset(state);
         },
         loadPreset: state => {
@@ -86,11 +93,27 @@ const configSlice = createSlice({
             _savePreset(state);
         },
         addCharacterPrompt: (state, action) => {
-            state.character_prompts.push({prompt: action.payload.prompt, uc: action.payload.uc, center: {x: action.payload.x, y: action.payload.y}});
+            state.character_prompts.push({prompt: action.payload.prompt, uc: action.payload.uc, centers: [{x: action.payload.x, y: action.payload.y}]});
             _savePreset(state);
         },
         setCharacterPrompt: (state, action) => {
             state.character_prompts[action.payload.id][action.payload.key] = action.payload.value;
+            _savePreset(state);
+        },
+        addCharacterPromptCenter: (state, action) => {
+            if (state.character_prompts[action.payload.id].centers == undefined) {
+                state.character_prompts[action.payload.id].centers = [];
+            }
+            state.character_prompts[action.payload.id].centers.push(action.payload.center);
+            _savePreset(state);
+        },
+        removeCharacterPromptCenter: (state, action) => {
+            if (state.character_prompts[action.payload.id].centers == undefined) {
+                state.character_prompts[action.payload.id].centers = [];
+            }
+            let center = action.payload.center;
+            let index = state.character_prompts[action.payload.id].centers.findIndex((v) => v.x == center.x && v.y == center.y);
+            state.character_prompts[action.payload.id].centers.splice(index, 1);
             _savePreset(state);
         },
         swapCharacterPrompt: (state, action) => {
@@ -106,5 +129,17 @@ const configSlice = createSlice({
     },
 });
 
-export const { setValue, setToggle, loadPreset, savePreset, loadFromString, addCharacterPrompt, swapCharacterPrompt, removeCharacterPrompt, setCharacterPrompt } = configSlice.actions;
+export const {
+    setValue,
+    setToggle, 
+    loadPreset, 
+    savePreset, 
+    loadFromString, 
+    addCharacterPrompt, 
+    swapCharacterPrompt, 
+    removeCharacterPrompt, 
+    setCharacterPrompt,
+    addCharacterPromptCenter,
+    removeCharacterPromptCenter
+ } = configSlice.actions;
 export const reducer = configSlice.reducer;
