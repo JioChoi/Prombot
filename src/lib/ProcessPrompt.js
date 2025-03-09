@@ -139,9 +139,8 @@ class Prompt {
         if (config.remove_emotion) {
             this.randomPrompt.remove(datasets.emotions);
         }
-        if (config.remove_ratings) {
-            this.randomPrompt.remove(['rating:general', 'rating:questionable', 'rating:explicit', 'rating:sensitive']);
-        }
+        
+        this.randomPrompt.remove(['rating:general', 'rating:questionable', 'rating:explicit', 'rating:sensitive']);
 
         // Remove bad tags
         this.randomPrompt.remove(datasets.bad);
