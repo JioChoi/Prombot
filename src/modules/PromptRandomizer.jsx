@@ -28,7 +28,7 @@ export default function PromptRandomizer() {
                 <Toggles items={[
                     { key: "remove_ornament", icon: "diamond_2_line", x: true, label: "Remove\nOrnament" },
                     { key: "remove_emotion", icon: "happy_line", x: true, label: "Remove\nEmotion" },
-                    { key: "placeholder", icon: "happy_line", x: true, label: "", visible: false }
+                    { key: "remove_ratings", icon: "alert_line", x: true, label: "Remove\nRatings" },
                 ]}/>
 
                 <Textarea configKey="prompt_end" label="End Prompt" placeholder="Tags to put at the end" autocomplete="on" height="80px"/>

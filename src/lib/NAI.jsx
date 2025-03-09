@@ -108,6 +108,7 @@ export const config = {
     remove_copyright: true,
     remove_ornament: true,
     remove_emotion: false,
+    remove_ratings: false,
     character_prompts: [],
     use_coords: false,
 

@@ -139,6 +139,9 @@ class Prompt {
         if (config.remove_emotion) {
             this.randomPrompt.remove(datasets.emotions);
         }
+        if (config.remove_ratings) {
+            this.randomPrompt.remove(['rating:general', 'rating:questionable', 'rating:explicit', 'rating:sensitive']);
+        }
 
         // Remove bad tags
         this.randomPrompt.remove(datasets.bad);
@@ -350,7 +353,7 @@ class Tokenizer {
         result.concat(this.extract(datasets.count, true));
         result.concat(this.extract(datasets.character, true));
         result.concat(this.extract(datasets.copyright, true));
-        result.concat(this.extract(datasets.artist, true));
+        result.concat(this.extract(datasets.artist, true, "artist:"));
         let quality = this.extract(datasets.quality, true);
         result.concat(this);
         result.concat(quality);
@@ -403,12 +406,13 @@ class Tokenizer {
         this.#tokens = this.#tokens.concat(other.getTokens());
     }
 
-    extract(list, removeExtracted=false) {
+    extract(list, removeExtracted=false, prefix="") {
         let temp = new Tokenizer();
 
         for(let item of list) {
             for (let i = 0; i < this.size(); i++) {
-                if (this.get(i).str == item) {
+                let str = this.get(i).str.replace(prefix, '');
+                if (str == item) {
                     temp.add(this.get(i).str, this.get(i).strength);
                     if (removeExtracted) {
                         this.#tokens.splice(i, 1);
