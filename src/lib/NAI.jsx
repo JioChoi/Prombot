@@ -96,19 +96,18 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
 
 export const config = {
     // Prompt Randomizer
-    prompt_beg: "1girl, {{kirisame marisa}}, [fu-ta], {{gsusart}}",
-    prompt_search: "1girl, ~speech bubble",
-    prompt_end: "{{{volumetric lighting, depth of field, best quality, amazing quality, very aesthetic, highres, incredibly absurdres}}}",
-    negative: "{{{worst quality, bad quality}}}, text, error, extra digit, fewer digits, jpeg artifacts, signature, watermark, username, reference, unfinished, unclear fingertips, twist, Squiggly, Grumpy, incomplete, {{Imperfect Fingers}}, Cheesy, very displeasing}}, {{mess}}, {{Approximate}}, {{Sloppiness}}, Glazed eyes, watermark, username, text, signature, fat, sagged breasts",
+    prompt_beg: "1girl, kirisame marisa, [[artist:maccha (mochancc)]]",
+    prompt_search: "1girl, outdoors, ~speech bubble",
+    prompt_end: "no text, best quality, very aesthetic, absurdres, skindentation, depth of field, volumetric lighting",
+    negative: "blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, too many watermarks, blank page, white blank page",
     remove_artist: true,
     remove_character: true,
     remove_characteristic: true,
     remove_attire: false,
     remove_nsfw: true,
     remove_copyright: true,
-    remove_ornament: true,
+    remove_ornament: false,
     remove_emotion: false,
-    remove_ratings: false,
     character_prompts: [],
     use_coords: false,
 
@@ -120,7 +119,7 @@ export const config = {
     prompt_guidance_rescale: 0,
     seed: -1,
     sampler: "k_euler_ancestral",
-    SMEA: true,
+    SMEA: false,
     DYN: false,
     variety: false,
     decrisp: false,
@@ -149,7 +148,7 @@ export const config = {
     highlights: 0,
     sharpness: 0,
 
-    DEV_MODEL: "nai-diffusion-3",
+    DEV_MODEL: "nai-diffusion-4-full",
     DEV_CHARACTER_STRENGTH: 0.4,
     DEV_START_WITH_PLACEHOLDER: false,
 }
