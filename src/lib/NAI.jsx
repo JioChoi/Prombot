@@ -6,7 +6,7 @@ import { unzip } from 'unzipit';
 import { sha256 } from 'js-sha256';
 import { downloadFile, extractList } from '@/lib/utils';
 import { addExif } from '@/lib/utils';
-import { processPrompt } from '@/lib/ProcessPrompt';
+import { processPrompt, processCharacterPrompts } from '@/lib/ProcessPrompt';
 
 export const host = 'https://jio7-prombot.hf.space';
 const model = 'nai-diffusion-3';
@@ -16,6 +16,8 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
     gtag('event', 'BETA_Generate', {});
     onProgress('Processing prompt...');
     let prompt = await processPrompt(config, onProgress);
+    console.log(prompt);
+    let characterPrompts = await processCharacterPrompts(config);
     onGenerate();
 
     onProgress('Generating image...');
@@ -60,12 +62,12 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
     }
 
     if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview' || config.DEV_MODEL == 'nai-diffusion-4-full') {
-        params.characterPrompts = config.character_prompts;
+        params.characterPrompts = characterPrompts;
 
         params.v4_negative_prompt = {
             caption: {
                 base_caption: config.negative,
-                char_captions: config.character_prompts.map((el) => {
+                char_captions: characterPrompts.map((el) => {
                     return {
                         char_caption: el.uc,
                         centers: el.centers
@@ -76,7 +78,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         params.v4_prompt = {
             caption: {
                 base_caption: prompt,
-                char_captions: config.character_prompts.map((el) => {
+                char_captions: characterPrompts.map((el) => {
                     return {
                         char_caption: el.prompt,
                         centers: el.centers
@@ -136,6 +138,7 @@ export const config = {
     auto_copyright: true,
     strengthen_attire: false,
     strengthen_ornament: false,
+    ignore_errors: false,
 
     // Post Processing
     brightness: 0,

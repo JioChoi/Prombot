@@ -44,6 +44,41 @@ export async function processPrompt(config, onProgress) {
     return result.toString();
 }
 
+export async function processCharacterPrompts(config) {
+    let characterPrompts = JSON.parse(JSON.stringify(config.character_prompts));
+
+    for (let i = 0; i < characterPrompts.length; i++) {
+        characterPrompts[i].prompt = await processCharacterPrompt(characterPrompts[i], config);
+    }
+
+    return characterPrompts;
+}
+
+async function processCharacterPrompt(data, config) {
+    let prompt = data.prompt;
+    prompt = formatPrompt(prompt);
+    prompt = processDynamicPrompt(prompt);
+    prompt = processWildcard(prompt);
+    prompt = new Tokenizer(prompt);
+    
+    let characterData = await processCharacterData(prompt.toArray(), [], []);
+    let strengthPrompt = await strengthenCharacter(config, characterData);
+    for (let tag of strengthPrompt) {
+        prompt.add(tag, 0);
+    }
+
+    prompt.removeDuplicates();
+
+    if (config.reorder) {
+        prompt.reorder();
+    }
+    if (config.naistandard) {
+        prompt.naistandard();
+    }
+
+    return prompt.toString();
+}
+
 class Prompt {
     constructor(beg, search, end, negative) {
         this.beg = beg;
@@ -153,56 +188,10 @@ class Prompt {
 
     async strengthenCharacter(config) {
         let characterData = await processCharacterData(this.beg.toArray(), this.randomPrompt.toArray(), this.end.toArray());
+        let strengthPrompt = await strengthenCharacter(config, characterData);
 
-        // Add copyright
-        if (config.auto_copyright) {
-            for (let data of characterData) {
-                for (let copyright of data.copyright) {
-                    if (datasets.copyright.includes(copyright[0])) {
-                        this.beg.add(copyright[0], 0);
-                    }
-                }
-            }
-        }
-
-        let characterStrength = ((1 - config.DEV_CHARACTER_STRENGTH) * 0.8 + 0.2).toFixed(2);
-        console.log("CHARACTER STRENGTH: " + characterStrength);
-
-        // Strengthen Characteristics
-        if (config.strengthen_characteristic) {
-            for (let data of characterData) {
-                for (let tag of data.tags) {
-                    if (datasets.characteristic.includes(tag[0])) {
-                        if (tag[1] >= characterStrength)
-                            this.beg.add(tag[0], 0);
-                    }
-                }
-            }
-        }
-
-        // Strengthen Attire
-        if (config.strengthen_attire) {
-            for (let data of characterData) {
-                for (let tag of data.tags) {
-                    if (datasets.clothes.includes(tag[0])) {
-                        if (tag[1] >= characterStrength)
-                            if (!tag[0].includes("panties") && !tag[0].includes("bra") && !tag[0].includes("panty") && !tag[0].includes("underwear"))
-                                this.beg.add(tag[0], 0);
-                    }
-                }
-            }
-        }
-
-        // Strengthen Ornament
-        if (config.strengthen_ornament) {
-            for (let data of characterData) {
-                for (let tag of data.tags) {
-                    if (datasets.ornament.includes(tag[0])) {
-                        if (tag[1] >= characterStrength)
-                            this.beg.add(tag[0], 0);
-                    }
-                }
-            }
+        for (let tag of strengthPrompt) {
+            this.end.prepend(tag, 0);
         }
 
         let res = await removeClothesActions(this.randomPrompt.toArray(), characterData, this.beg.toArray(), this.end.toArray());
@@ -228,6 +217,63 @@ class Prompt {
     }
 }
 
+async function strengthenCharacter(config, characterData) {
+    let prompts = [];
+
+    // Add copyright
+    if (config.auto_copyright) {
+        for (let data of characterData) {
+            for (let copyright of data.copyright) {
+                if (datasets.copyright.includes(copyright[0])) {
+                    prompts.push(copyright[0]);
+                }
+            }
+        }
+    }
+
+    let characterStrength = ((1 - config.DEV_CHARACTER_STRENGTH) * 0.8 + 0.2).toFixed(2);
+    console.log("CHARACTER STRENGTH: " + characterStrength);
+
+    // Strengthen Characteristics
+    if (config.strengthen_characteristic) {
+        for (let data of characterData) {
+            for (let tag of data.tags) {
+                if (datasets.characteristic.includes(tag[0])) {
+                    if (tag[1] >= characterStrength)
+                        prompts.push(tag[0]);
+                }
+            }
+        }
+    }
+
+    // Strengthen Attire
+    if (config.strengthen_attire) {
+        for (let data of characterData) {
+            for (let tag of data.tags) {
+                if (datasets.clothes.includes(tag[0])) {
+                    if (tag[1] >= characterStrength)
+                        if (!tag[0].includes("panties") && !tag[0].includes("bra") && !tag[0].includes("panty") && !tag[0].includes("underwear"))
+                            prompts.push(tag[0]);
+                }
+            }
+        }
+    }
+
+    // Strengthen Ornament
+    if (config.strengthen_ornament) {
+        for (let data of characterData) {
+            for (let tag of data.tags) {
+                if (datasets.ornament.includes(tag[0])) {
+                    if (tag[1] >= characterStrength)
+                        prompts.push(tag[0]);
+                }
+            }
+        }
+    }
+
+    return prompts;
+}
+
 class Token {
     constructor(str, strength) {
         this.str = str;
@@ -250,6 +296,10 @@ class Tokenizer {
 
     add(str, strength) {
         this.#tokens.push(new Token(str, strength));
+    }
+
+    prepend(str, strength) {
+        this.#tokens.unshift(new Token(str, strength));
     }
 
     get(i) {
