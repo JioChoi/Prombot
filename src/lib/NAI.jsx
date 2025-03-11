@@ -59,6 +59,8 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         deliberate_euler_ancestral_bug: false,
         prefer_brownian: true,
         use_coords: config.use_coords,
+        legacy_uc: config.legacy_uc,
+        autoSmea: config.imfeelinglucky
     }
 
     if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview' || config.DEV_MODEL == 'nai-diffusion-4-full') {
@@ -139,6 +141,8 @@ export const config = {
     strengthen_attire: false,
     strengthen_ornament: false,
     ignore_errors: false,
+    imfeelinglucky: false,
+    legacy_uc: false,
 
     // Post Processing
     brightness: 0,

@@ -30,6 +30,10 @@ export default function Extras() {
                     <Checkbox configKey="auto_copyright" label="Auto Copyright" />
                     <Checkbox configKey="ignore_errors" label="Ignore Errors" />
                 </CheckboxGroup>
+                <CheckboxGroup>
+                    <Checkbox configKey="legacy_uc" label="Legacy Prompt Conditioning" />
+                    <Checkbox configKey="imfeelinglucky" label="I'm feeling lucky!" />
+                </CheckboxGroup>
             </ModuleBody>
         </div>
     )
