@@ -18,7 +18,7 @@ export default function Dev() {
 
     useEffect(() => {
         if (config.DEV_START_WITH_PLACEHOLDER) {
-            createBlob().then((url) => {
+            createBlob(true).then((url) => {
                 dispatch(dataSlice.setValue({ key: "result_image", value: url }));
                 dispatch(dataSlice.setValue({ key: "current_image", value: url }));
                 dispatch(dataSlice.setValue({ key: "width", value: 832 }));
