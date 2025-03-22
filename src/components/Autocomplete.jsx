@@ -1,7 +1,7 @@
 import { datasets } from "@/lib/NAI";
 import { use } from "react";
 import { useState, useRef, useEffect } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
 
 /*
 0 : "none"
@@ -47,46 +47,6 @@ function shortenNumber(num) {
     return {text: (num / 1000000).toFixed(1) + "m", unit: 2};
 }
 
-function search(str) {
-    let temp = [];
-    let exact = datasets.whitelist.find((v) => v[0] === str);
-    if (exact) {
-        temp.push(exact);
-    }
-
-    let includingSearch = false;
-
-    if (str.includes(' ')) {
-        includingSearch = true;
-    }
-
-
-    for (let i = 0; i < datasets.whitelist.length; i++) {
-        let target = datasets.whitelist[i][0];
-        if (target != str) {
-            const words = target.split(' ');
-            if (includingSearch) {
-                if (target.toLowerCase().includes(str.toLowerCase())) {
-                    temp.push(datasets.whitelist[i]);
-                }
-            }
-            else {
-                for (let j = 0; j < words.length; j++) {
-                    if (words[j].toLowerCase().startsWith(str.toLowerCase())) {
-                        temp.push(datasets.whitelist[i]);
-                        break;
-                    }
-                }
-            }
-            if (temp.length >= 5) {
-                break;
-            }
-        }
-    }
-
-    return temp;
-}
-
 export default function Autocomplete() {
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState({x: 0, y: 0});
@@ -94,6 +54,51 @@ export default function Autocomplete() {
     const [selected, setSelected] = useState(0);
     const [range, setRange] = useState({start: 0, end: 0});
     const element = useRef(null);
+    const data = useSelector((state) => state.data);
+
+    function search(str) {
+        console.log(str);
+
+        let temp = [];
+        let list = data.wildcards.map((v) => [v.key, null]);
+        list = list.concat(datasets.whitelist);
+    
+        let exact = list.find((v) => v[0] === str);
+        if (exact) {
+            temp.push(exact);
+        }
+    
+        let includingSearch = false;
+    
+        if (str.includes(' ')) {
+            includingSearch = true;
+        }
+    
+        for (let i = 0; i < list.length; i++) {
+            let target = list[i][0];
+            if (target != str) {
+                const words = target.split(' ');
+                if (includingSearch) {
+                    if (target.includes(str.toLowerCase())) {
+                        temp.push(list[i]);
+                    }
+                }
+                else {
+                    for (let j = 0; j < words.length; j++) {
+                        if (words[j].startsWith(str.toLowerCase())) {
+                            temp.push(list[i]);
+                            break;
+                        }
+                    }
+                }
+                if (temp.length >= 5) {
+                    break;
+                }
+            }
+        }
+    
+        return temp;
+    }
 
     const cursorPos = useRef(0);
 

@@ -23,6 +23,7 @@ const dataSlice = createSlice({
         datasets: [],
 
         history: [],
+        wildcards: []
     },
     reducers: {
         setValue: (state, action) => {

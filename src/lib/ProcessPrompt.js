@@ -18,6 +18,7 @@ export async function processPrompt(config, onProgress) {
     prompt.formatPrompt(config);
     prompt.processDynamicPrompt();
     prompt.processWildcard();
+    prompt.processDynamicPrompt();
 
     prompt.tokenizePrompt();
     if (config.search_disabled) {

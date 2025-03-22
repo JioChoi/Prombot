@@ -5,6 +5,7 @@ import Extras from '@/modules/Extras';
 import Dev from '@/modules/Dev';
 import PostProcessing from '@/modules/PostProcessing';
 import CharacterPrompts from '@/modules/CharacterPrompts';
+import Wildcards from '@/modules/Wildcards';
 
 function SidebarItems(data) {
     return (
@@ -15,6 +16,7 @@ function SidebarItems(data) {
             <Automation />
             <PostProcessing />
             <Extras />
+            <Wildcards />
             <Dev />
         </div>
     );

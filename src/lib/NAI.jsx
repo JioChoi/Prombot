@@ -265,8 +265,7 @@ export async function downloadDatasets(onProgress, onFinish) {
             res[i] = res[i].split(',');
         }
         datasets.whitelist = res;
-        datasets.whitelist.unshift(['__FAVORITE__', null]);
-
+        
         // Add special tags
         datasets.whitelist.unshift(['source#', null]);
         datasets.whitelist.unshift(['mutual#', null]);
