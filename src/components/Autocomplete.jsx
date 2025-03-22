@@ -59,8 +59,6 @@ export default function Autocomplete({includeWildcards=true}) {
     }
 
     function search(str) {
-        console.log(str);
-
         let temp = [];
         let list;
         list = datasets.whitelist;
