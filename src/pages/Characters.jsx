@@ -20,6 +20,8 @@ import { downloadFile } from "@/lib/utils";
 import Tab from "@/components/ui/tab";
 import Tabs from "./Tabs";
 
+import * as NAI from "@/lib/NAI";
+
 
 export default function Characters() {
     const [copyright, setCopyright] = useState(-1);
@@ -47,9 +49,18 @@ export default function Characters() {
             temp.copyright = res;
             count++;
         });
+        /* WHITELIST.CSV */
+        downloadFile('https://huggingface.co/Jio7/NAI-Prompt-Randomizer/resolve/main/whitelist.csv').then((res) => {
+            res = res.split('\n');
+            for (let i = 0; i < res.length; i++) {
+                res[i] = res[i].split(',');
+            }
+            NAI.datasets.whitelist = res;
+            count++;
+        });
 
         const interval = setInterval(() => {
-            if (count == 2) {
+            if (count == 3) {
                 clearInterval(interval);
                 setDatasets(temp);
             }
@@ -213,7 +224,7 @@ export default function Characters() {
                             <Label htmlFor="showFavorite" className="m-0 hover:cursor-pointer">Only show favorite</Label>
                         </div>
                     </div>
-                    <Autocomplete />
+                    <Autocomplete includeWildcards={false} />
                     </div>
                 </form>
                 

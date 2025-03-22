@@ -1,5 +1,4 @@
 import { datasets } from "@/lib/NAI";
-import { use } from "react";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -47,22 +46,29 @@ function shortenNumber(num) {
     return {text: (num / 1000000).toFixed(1) + "m", unit: 2};
 }
 
-export default function Autocomplete() {
+export default function Autocomplete({includeWildcards=true}) {
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState({x: 0, y: 0});
     const [value, setValue] = useState([]);
     const [selected, setSelected] = useState(0);
     const [range, setRange] = useState({start: 0, end: 0});
     const element = useRef(null);
-    const data = useSelector((state) => state.data);
+    let data;
+    if (includeWildcards) {
+        data = useSelector((state) => state.data);
+    }
 
     function search(str) {
         console.log(str);
 
         let temp = [];
-        let list = data.wildcards.map((v) => [v.key, null]);
-        list = list.concat(datasets.whitelist);
-    
+        let list;
+        list = datasets.whitelist;
+        if (includeWildcards) {
+            list = data.wildcards.map((v) => [v.key, null]);
+            list = list.concat(datasets.whitelist);
+        }
+        
         let exact = list.find((v) => v[0] === str);
         if (exact) {
             temp.push(exact);
@@ -79,13 +85,13 @@ export default function Autocomplete() {
             if (target != str) {
                 const words = target.split(' ');
                 if (includingSearch) {
-                    if (target.includes(str.toLowerCase())) {
+                    if (target.includes(str)) {
                         temp.push(list[i]);
                     }
                 }
                 else {
                     for (let j = 0; j < words.length; j++) {
-                        if (words[j].startsWith(str.toLowerCase())) {
+                        if (words[j].startsWith(str)) {
                             temp.push(list[i]);
                             break;
                         }
