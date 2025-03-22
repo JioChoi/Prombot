@@ -49,6 +49,11 @@ export default function Dev() {
                 ]} />
                 
                 <Button variant="outline" className="bg-transparent" onClick={() => {
+                    navigator.clipboard.writeText(localStorage.getItem('uid'));
+                    alert('Config copied to clipboard!');
+                }}>Copy UUID (Not recommended to share)</Button>
+
+                <Button variant="outline" className="bg-transparent" onClick={() => {
                     navigator.clipboard.writeText(JSON.stringify(localStorage.getItem('data')));
                     alert('Config copied to clipboard!');
                 }}>Copy Config</Button>
