@@ -414,7 +414,7 @@ export async function loadPresets(uid) {
         uid: uid
     });
 
-    return res.data;
+    return res.data.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function toArray(tags) {
