@@ -20,6 +20,8 @@ import Anlas from "../components/Anlas"
 
 const Data = createContext(null);
 
+let last = 0;
+
 function Main() {
 	const dispatch = useDispatch();
 	const data = useSelector((state) => state.data);

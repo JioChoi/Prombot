@@ -10,6 +10,7 @@ import { store } from './store'
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Utils } from './lib/utils'
+import Exif from '@/pages/Exif.jsx'
 
 createRoot(document.getElementById('root')).render(
 	<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -23,6 +24,9 @@ createRoot(document.getElementById('root')).render(
 				}></Route>
 				<Route path='/characters' element={
 					<Characters />
+				}></Route>
+				<Route path='/exif' element={
+					<Exif />
 				}></Route>
 			</Routes>
 		</BrowserRouter>

@@ -4,7 +4,7 @@ import Icon from "@/components/ui/icon";
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
 
-export default function Toggles({items}) {
+export default function Toggles({items, disableKey=""}) {
     const config = useSelector((state) => state.config);
     const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ export default function Toggles({items}) {
             {items.map((item, i) => (
                 <ToggleGroupItem
                     className={`w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent lg:hover:!border-ring duration-0 select-none ${item.visible === false ? "opacity-0 pointer-events-none" : ""}`}
-                    value={item.key} variant="outline" key={i}>
+                    value={item.key} variant="outline" key={i} disabled={item.visible != false && disableKey != "" && config[disableKey]}>
                         <div className="flex flex-col items-center gap-1">
                             <Icon className="text-5xl" name={item.icon} x={item.x} sel={config[item.key]}/>
                             <div className="text-center flex flex-col">

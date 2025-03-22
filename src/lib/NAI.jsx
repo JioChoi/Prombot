@@ -102,6 +102,7 @@ export const config = {
     // Prompt Randomizer
     prompt_beg: "1girl, kirisame marisa, [[artist:maccha (mochancc)]]",
     prompt_search: "1girl, outdoors, ~speech bubble",
+    search_disabled: false,
     prompt_end: "no text, best quality, very aesthetic, absurdres, skindentation, depth of field, volumetric lighting",
     negative: "blurry, lowres, error, film grain, scan artifacts, worst quality, bad quality, jpeg artifacts, very displeasing, chromatic aberration, multiple views, logo, too many watermarks, blank page, white blank page",
     remove_artist: true,

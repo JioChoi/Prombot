@@ -20,9 +20,14 @@ export async function processPrompt(config, onProgress) {
     prompt.processWildcard();
 
     prompt.tokenizePrompt();
-    await prompt.getRandomPrompt(onProgress);
-    prompt.processRandomPrompt(config);
-
+    if (config.search_disabled) {
+        prompt.randomPrompt = new Tokenizer("");
+    }
+    else {
+        await prompt.getRandomPrompt(onProgress);
+        prompt.processRandomPrompt(config);
+    }
+    
     prompt.processPrompt();
     await prompt.strengthenCharacter(config);
 
