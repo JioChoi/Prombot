@@ -61,13 +61,14 @@ export default function Textarea({label=null, configKey, placeholder, autocomple
             </div>
 
             <div className={`relative block`} style={{width: width, minWidth: width}}>
+                {!(disableButton && config[disableKey]) &&
                 <_Textarea ref={observer.ref} id={configKey + index} className={`${disableMinHeight ? "" : "min-h-20"} ${!resize && "resize-none"} ${className}`} placeholder={placeholder} autocomplete={autocomplete}
                     onChange={(e) => set != null ? set(e.target.value) : dispatch(configSlice.setValue({ key: configKey, value: e.target.value }))}
                     value={get != null ? get() : config[configKey]}
                     style={{height: height}}
                     onScroll={(e) => setScroll(e.target.scrollTop)}
-                    disabled={disableButton && config[disableKey]}
                 />
+                }
                 <div className={`fakeTextarea absolute top-0 left-0 min-h-[60px] border border-transparent bg-transparent px-3 py-2 text-base md:text-sm scroll pointer-events-none whitespace-pre-wrap break-words overflow-y-scroll`}
                     style={{
                         height: observer.height ? observer.height + 18 : 0,

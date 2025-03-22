@@ -19,14 +19,15 @@ export default function Toggles({items, disableKey=""}) {
     }
 
     return (
-        <ToggleGroup type="multiple" className="justify-between"
+        <>
+        {!(disableKey != "" && config[disableKey]) && <ToggleGroup type="multiple" className="justify-between"
             onValueChange={(value) => dispatch(configSlice.setToggle({key: items.map(item => item.key), value: value}))}
             value={getToggleValue(items.map(item => item.key))}
         >
             {items.map((item, i) => (
                 <ToggleGroupItem
                     className={`w-[calc(33.33%-7px)] h-fit p-2 data-[state=on]:border-zinc-500 hover:bg-transparent lg:hover:!border-ring duration-0 select-none ${item.visible === false ? "opacity-0 pointer-events-none" : ""}`}
-                    value={item.key} variant="outline" key={i} disabled={item.visible != false && disableKey != "" && config[disableKey]}>
+                    value={item.key} variant="outline" key={i}>
                         <div className="flex flex-col items-center gap-1">
                             <Icon className="text-5xl" name={item.icon} x={item.x} sel={config[item.key]}/>
                             <div className="text-center flex flex-col">
@@ -37,6 +38,7 @@ export default function Toggles({items, disableKey=""}) {
                         </div>
                 </ToggleGroupItem>
             ))}
-        </ToggleGroup>
+        </ToggleGroup>}
+        </>
     )
 }
