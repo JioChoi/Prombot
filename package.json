@@ -34,6 +34,7 @@
     "lucide-react": "^0.469.0",
     "meta-png": "^1.0.6",
     "mingcute_icon": "^2.9.6",
+    "pako": "^2.1.0",
     "patch-package": "^8.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

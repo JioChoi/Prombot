@@ -7,11 +7,14 @@ import * as UPNG from "upng-js";
 import { addMetadata } from "meta-png";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import pako from "pako";
 
 import placeholder from "@/assets/img.png"
 import editedplaceholder from "@/assets/edited.png"
 import landscapeplaceholder from "@/assets/landscape.png"
 import { useSelector } from 'react-redux';
+
+import { host } from "@/lib/NAI";
 
 let postProcessingWorker = null;
 let generateWorker = null;
@@ -163,8 +166,9 @@ export async function setHistoryItem(dispatch, url, config, index) {
 }
 
 export async function extractExif(url, metadata=false) {
+	let arrayBuffer;
 	let res = await fetch(url);
-	let arrayBuffer = await res.arrayBuffer();
+	arrayBuffer = await res.arrayBuffer();
 
 	let decoded = UPNG.decode(arrayBuffer);
 	let exif = "";
@@ -178,6 +182,71 @@ export async function extractExif(url, metadata=false) {
 	}
 
 	return exif;
+}
+
+export async function extractStealthExif(src) {
+	let canvas = document.createElement('canvas');
+	let ctx = canvas.getContext('2d', { willReadFrequently: true, alpha: true });
+	let img = new Image();
+	img.src = src;
+
+	await img.decode();
+
+	canvas.width = img.width;
+	canvas.height = img.height;
+	ctx.drawImage(img, 0, 0);
+
+	let binary = '';
+	const signature = 'stealth_pngcomp';
+	let index = 0;
+	let reading = 'signature';
+	let length = 0;
+
+	for (let x = 0; x < img.width; x++) {
+		for (let y = 0; y < img.height; y++) {
+			let data = ctx.getImageData(x, y, 1, 1).data;
+			let a = data[3];
+			binary += String(a & 1);
+			index++;
+
+			if (reading == 'signature') {
+				if (index == signature.length * 8) {
+					let str = '';
+					for (let i = 0; i < binary.length / 8; i++) {
+						str += String.fromCharCode(parseInt(binary.substring(i * 8, i * 8 + 8), 2));
+					}
+
+					if (str == signature) {
+						reading = 'length';
+						binary = '';
+						index = 0;
+					} else {
+						return null;
+					}
+				}
+			} else if (reading == 'length') {
+				if (index == 32) {
+					length = parseInt(binary, 2);
+					reading = 'data';
+					binary = '';
+					index = 0;
+				}
+			} else if (reading == 'data') {
+				if (index == length) {
+					let array = new Uint8Array(length);
+					for (let i = 0; i < binary.length / 8; i++) {
+						array[i] = parseInt(binary.substring(i * 8, i * 8 + 8), 2);
+					}
+
+					let temp = pako.ungzip(array);
+					let prompt = new TextDecoder('utf-8').decode(temp);
+					return JSON.parse(prompt);
+				}
+			}
+		}
+	}
+
+	return null;
 }
 
 export async function addExif(original, target, config, filterOnly=false) {
@@ -261,4 +330,16 @@ export function removeArray(arr, remove) {
     return arr.filter((el) => {
         return !remove.includes(el);
     });
+}
+
+export function getExternalImage(url, responseType) {
+	return new Promise((resolve, reject) => {
+		axios.post(host + "/proxy", {url: url}, {responseType: responseType})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
 }
