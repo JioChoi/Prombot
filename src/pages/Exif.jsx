@@ -19,10 +19,23 @@ async function processItems(items) {
 export default function Exif() {
     const drag = useRef(null);
     const loading = useRef(null);
+    const file = useRef(null);
     const [image, setImage] = useState(null);
     const [exif, setExif] = useState(null);
 
     useEffect(() => {
+        async function getExif(url) {
+            setImage(url);
+            let exif = await extractExif(url, true);
+            if (exif == undefined || exif == null) {
+                exif = await extractStealthExif(url);
+            }
+            console.log(exif);
+            if (exif != null) {
+                setExif(exif);
+            }
+        }
+        
         if (drag.current != null) {
             function dragOver(e) {
                 e.preventDefault();
@@ -30,73 +43,86 @@ export default function Exif() {
             }
 
             async function drop(e) {
-                e.preventDefault();
-                drag.current.style.opacity = 0;
-                loading.current.style.opacity = 1;
-                let url = "";
-
-                setExif(null);
-                setImage(null);
-
-                if (e.dataTransfer.files.length > 0) {
-                    const file = e.dataTransfer.files[0];
-                    if (file.type == "image/png") {
-                        await (async () => {
-                            return new Promise((resolve, reject) => {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    const buffer = e.target.result;
-                                    const blob = new Blob([buffer], { type: file.type });
-                                    url = URL.createObjectURL(blob);
-                                    resolve();
-                                };
-                                reader.readAsArrayBuffer(file);
-                            });
-                        })();
-                    }
-                }
-                else {
-                    url = await processItems(e.dataTransfer.items);
-                }
-
-                if (url != "") {
-                    let blob = await getExternalImage(url, "blob");
-                    if (blob != null) {
-                        console.log("BLOB")
-                        url = URL.createObjectURL(blob);
-                        let exif = await extractExif(url, true);
-                        if (exif == undefined || exif == null) {
-                            exif = await extractStealthExif(url);
-                        }
-                        console.log(exif);
-                        if (exif != null) {
-                            setImage(url);
-                            setExif(exif);
+                try {
+                    e.preventDefault();
+                    drag.current.style.opacity = 0;
+                    let url = "";
+    
+                    setExif(null);
+                    setImage(null);
+                    
+                    if (e.dataTransfer.files.length > 0) {
+                        const file = e.dataTransfer.files[0];
+                        if (file.type == "image/png") {
+                            await (async () => {
+                                return new Promise((resolve, reject) => {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        const buffer = e.target.result;
+                                        const blob = new Blob([buffer], { type: file.type });
+                                        url = URL.createObjectURL(blob);
+                                        resolve();
+                                    };
+                                    reader.readAsArrayBuffer(file);
+                                });
+                            })();
                         }
                     }
                     else {
-                        setImage(url);
-                        setExif(null);
-                    }
-                }
+                        loading.current.style.opacity = 1;
+                        url = await processItems(e.dataTransfer.items);
 
+                        if(!url.startsWith("http") && !url.startsWith("https")) {
+                            loading.current.style.opacity = 0;
+                            return;
+                        }
+                        let blob = await getExternalImage(url, "blob");
+                        if (blob != null) {
+                            url = URL.createObjectURL(blob);
+                        }
+                    }
+    
+                    if (url != "") {
+                        await getExif(url);
+                    }
+                } catch(e) {
+                    console.log(e);
+                    loading.current.style.opacity = 0;
+                }
                 loading.current.style.opacity = 0;
             }
 
             function dragLeave(e) {
                 drag.current.style.opacity = 0;
             }
+
+            function upload(e) {
+                // Read image file
+                const data = e.target.files[0];
+                console.log(data);
+                document.getElementById("upload").reset();
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const buffer = e.target.result;
+                    const blob = new Blob([buffer], { type: data.type });
+                    const url = URL.createObjectURL(blob);
+                    getExif(url);
+                };
+                reader.readAsArrayBuffer(data);
+            }
     
             document.addEventListener("dragover", dragOver);
             document.addEventListener("dragenter", dragOver);
             document.addEventListener("dragleave", dragLeave);
             document.addEventListener("drop", drop);
+            file.current.addEventListener("change", upload);
     
             return () => {
                 document.removeEventListener("dragover", dragOver);
                 document.removeEventListener("dragenter", dragOver);
                 document.removeEventListener("dragleave", dragLeave);
                 document.removeEventListener("drop", drop);
+                file.current.removeEventListener("change", upload);
             }
         }
     }, [drag]);
@@ -182,13 +208,15 @@ export default function Exif() {
                     <p className="text-zinc-500">Drag an image here or upload...</p>
 
                     <div className="pt-3">
-                        <input type="file" accept="image/*" className="hidden" id="img"/>
+                        <form id="upload">
+                            <input ref={file} type="file" accept="image/*" className="hidden" id="img"/>
+                        </form>
                         <label htmlFor="img" className="bg-zinc-700 hover:brightness-90 hover:cursor-pointer text-zinc-200 text-sm font-medium py-1.5 px-2.5 rounded-md">Upload Image</label>
                     </div>
                 </div>
                     :
                 <div className="w-full h-full flex flex-col items-center space-y-1 overflow-y-scroll py-12">
-                    <img src={image} className="w-[80vw] h-[80vw] object-contain bg-zinc-800"/>
+                    <img src={image} className="w-[80vw] h-[80vw] max-w-80 max-h-80 object-contain bg-zinc-800"/>
                     {exif != null ? showExif() : "No EXIF data found."}
                 </div>}
             </div>
