@@ -46,8 +46,8 @@ export default function Dev() {
                     { value: 'nai-diffusion-3', label: 'NAI Diffusion V3' },
                     { value: 'nai-diffusion-4-curated-preview', label: 'NAI Diffusion V4 Preview' },
                     { value: 'nai-diffusion-4-full', label: 'NAI Diffusion V4' },
-                    { value: 'nai-diffusion-4.5-curated', label: 'NAI Diffusion V4.5 Curated' },
-                    { value: 'nai-diffusion-4.5', label: 'NAI Diffusion V4.5' },
+                    { value: 'nai-diffusion-4-5-curated', label: 'NAI Diffusion V4.5 Curated' },
+                    { value: 'nai-diffusion-4-5', label: 'NAI Diffusion V4.5' },
                 ]} />
                 
                 <Button variant="outline" className="bg-transparent" onClick={() => {
