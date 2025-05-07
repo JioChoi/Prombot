@@ -63,7 +63,11 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         autoSmea: config.imfeelinglucky
     }
 
-    if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview' || config.DEV_MODEL == 'nai-diffusion-4-full') {
+    if (config.DEV_MODEL == 'nai-diffusion-4-curated-preview' ||
+        config.DEV_MODEL == 'nai-diffusion-4-full' ||
+        config.DEV_MODEL == 'nai-diffusion-4-5-curated' ||
+        config.DEV_MODEL == 'nai-diffusion-4-5-full'
+    ) {
         params.characterPrompts = characterPrompts;
 
         params.v4_negative_prompt = {
