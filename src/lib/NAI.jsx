@@ -483,7 +483,7 @@ export async function login(id, pw) {
 }   
 
 export async function testAccessToken(token) {
-    let res = await axios.get(`${host}/api/user/information`, {
+    let res = await axios.get(`${host}/api/user/data`, {
         headers: {
             Authorization: token
         }
