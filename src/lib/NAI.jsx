@@ -405,8 +405,8 @@ function processPromptSearch(config) {
 
 export async function loadAnlas(token) {
     let res = await axios.get(`${host}/api/user/data`, {
-        headers: {
-            Authorization: token
+        params: {
+            authorization: token
         }
     });
 
@@ -443,12 +443,10 @@ async function generateImage(token, prompt, model, action, params) {
                 input: prompt,
                 model: model,
                 action: action,
-                parameters: params
+                parameters: params,
+                authorization: token
             },
             {
-            headers: {
-                Authorization: token
-            },
             responseType: 'blob'
         });
 
@@ -484,8 +482,8 @@ export async function login(id, pw) {
 
 export async function testAccessToken(token) {
     let res = await axios.get(`${host}/api/user/data`, {
-        headers: {
-            Authorization: token
+        params: {
+            authorization: token
         }
     });
 
