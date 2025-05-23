@@ -459,9 +459,10 @@ async function generateImage(token, prompt, model, action, params, override) {
         authorization: token
     };
 
-    override = JSON.parse(override);
-
-    request = Object_assign(request, override);
+    if (override.trim() != "") {
+        override = JSON.parse(override);
+        request = Object_assign(request, override);
+    }
 
     try {
         // Request
