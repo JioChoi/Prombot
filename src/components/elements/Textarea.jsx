@@ -2,11 +2,11 @@ import { Textarea as _Textarea }from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
 import * as configSlice from "@/slices/configSlice";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 import DisableButton from "@/components/ui/disableButton";
 
-export default function Textarea({label=null, configKey, placeholder, autocomplete, height, width="100%", set=null, get=null, index=0, resize=true, disableMinHeight=false, className="", disableButton=false, disableKey=""}) {
+export default function Textarea({label=null, configKey, placeholder, autocomplete, height, width="100%", set=null, get=null, index=0, resize=true, disableMinHeight=false, className="", disableButton=false, disableKey="", enableTab=false}) {
     const dispatch = useDispatch();
     const config = useSelector((state) => state.config);
 

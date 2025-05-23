@@ -12,6 +12,8 @@ import { useEffect } from 'react';
 import { createBlob } from '@/lib/utils';
 import Checkbox from '@/components/elements/Checkbox';
 
+import Textarea from '@/components/elements/Textarea';
+
 export default function Dev() {
     const dispatch = useDispatch();
     const config = useSelector((state) => state.config);
@@ -66,6 +68,8 @@ export default function Dev() {
                     window.location.reload();
                 }}>Load Config</Button>
 
+                
+                <Textarea configKey="override_request" label="Override Request" placeholder="Fields to override in JSON..." autocomplete="off" height="112px"/>
             </ModuleBody>
         </div>
     )

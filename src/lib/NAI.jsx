@@ -96,7 +96,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         }
     }
 
-    let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params);
+    let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params, config.override_request);
     res = await addExif(res, res, config);
     
     onGenerateFinish(res);
@@ -163,6 +163,7 @@ export const config = {
     DEV_MODEL: "nai-diffusion-4-full",
     DEV_CHARACTER_STRENGTH: 0.4,
     DEV_START_WITH_PLACEHOLDER: false,
+    override_request: "",
 }
 
 /**
@@ -435,17 +436,37 @@ function toArray(tags) {
     return tags;
 }
 
-async function generateImage(token, prompt, model, action, params) {
+function Object_assign (target, ...sources) {
+  sources.forEach(source => {
+    Object.keys(source).forEach(key => {
+      const s_val = source[key]
+      const t_val = target[key]
+      target[key] = t_val && s_val && typeof t_val === 'object' && typeof s_val === 'object'
+                  ? Object_assign(t_val, s_val)
+                  : s_val
+    })
+  })
+  return target
+}
+
+
+async function generateImage(token, prompt, model, action, params, override) {
+    let request = {
+        input: prompt,
+        model: model,
+        action: action,
+        parameters: params,
+        authorization: token
+    };
+
+    override = JSON.parse(override);
+
+    request = Object_assign(request, override);
+
     try {
         // Request
         let res = await axios.post(`${host}/generate-image`, 
-            {
-                input: prompt,
-                model: model,
-                action: action,
-                parameters: params,
-                authorization: token
-            },
+            request,
             {
             responseType: 'blob'
         });
