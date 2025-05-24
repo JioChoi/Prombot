@@ -69,7 +69,8 @@ export default function Dev() {
                 }}>Load Config</Button>
 
                 
-                <Textarea configKey="override_request" label="Override Request" placeholder="Fields to override in JSON..." autocomplete="off" height="112px"/>
+                <Textarea configKey="custom_script" label="Custom Script" placeholder="Custom script to execute before request..." autocomplete="off" height="112px" enableTab={true}/>
+                <Textarea configKey="override_request" label="Override Request" placeholder="Fields to override in JSON..." autocomplete="off" height="112px" enableTab={true}/>
             </ModuleBody>
         </div>
     )

@@ -67,6 +67,7 @@ export default function Textarea({label=null, configKey, placeholder, autocomple
                     value={get != null ? get() : config[configKey]}
                     style={{height: height}}
                     onScroll={(e) => setScroll(e.target.scrollTop)}
+                    enableTab={enableTab}
                 />
                 }
                 <div className={`fakeTextarea absolute top-0 left-0 min-h-[60px] border border-transparent bg-transparent px-3 py-2 text-base md:text-sm scroll pointer-events-none whitespace-pre-wrap break-words overflow-y-scroll`}

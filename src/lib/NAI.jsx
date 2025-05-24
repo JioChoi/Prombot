@@ -20,6 +20,52 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
     let characterPrompts = await processCharacterPrompts(config);
     onGenerate();
 
+    let prompts = [prompt];
+    let negatives = [config.negative];
+    let width = config.width;
+    let height = config.height;
+    for (let i = 0; i < characterPrompts.length; i++) {
+        prompts.push(characterPrompts[i].prompt);
+        negatives.push(characterPrompts[i].uc);
+    }
+
+    if (config.custom_script.trim() != "") {
+        try {
+            /*
+            function process(counter: number, prompts: string, negatives: string, width: number, height: number) {
+                // Custom script to process the prompt
+                return {
+                    prompt: prompt,
+                    negative: negative,
+                    width: width,
+                    height: height
+                };
+            }
+            */
+            if (globalThis.counter == undefined) {
+                globalThis.counter = 0;
+            }
+            else {
+                globalThis.counter++;
+            }
+            let res = eval(config.custom_script)(globalThis.counter, prompts, negatives, width, height);
+            if (res != undefined) {
+                prompts = res.prompts;
+                negatives = res.negatives;
+                width = res.width;
+                height = res.height;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    prompt = prompts[0];
+    for (let i = 1; i < prompts.length; i++) {
+        characterPrompts[i-1].prompt = prompts[i];
+        characterPrompts[i-1].uc = negatives[i];
+    }
+
     onProgress('Generating image...');
     let seed = config.seed;
     if (seed === -1) {
@@ -32,8 +78,8 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
 
     let params = {
         params_version: 3,
-        width: config.width,
-        height: config.height,
+        width: width,
+        height: height,
         scale: config.prompt_guidance,
         sampler: config.sampler,
         steps: config.steps,
@@ -52,7 +98,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         skip_cfg_above_sigma: skip_cfg_above_sigma,
         seed: seed,
         characterPrompts: [],
-        negative_prompt:  config.negative,
+        negative_prompt:  negatives[0],
         reference_image_multiple: [],
         reference_information_extracted_multiple: [],
         reference_strength_multiple: [],
@@ -72,7 +118,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
 
         params.v4_negative_prompt = {
             caption: {
-                base_caption: config.negative,
+                base_caption: negatives[0],
                 char_captions: characterPrompts.map((el) => {
                     return {
                         char_caption: el.uc,
@@ -96,7 +142,7 @@ export async function generate(token, config, onProgress, onGenerate, onGenerate
         }
     }
 
-    let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params, config.override_request);
+    let res = await generateImage(token, prompt, config.DEV_MODEL, 'generate', params, config.override_request, config.custom_script);
     res = await addExif(res, res, config);
     
     onGenerateFinish(res);
@@ -164,6 +210,7 @@ export const config = {
     DEV_CHARACTER_STRENGTH: 0.4,
     DEV_START_WITH_PLACEHOLDER: false,
     override_request: "",
+    custom_script: "((counter, prompts, negatives, w, h) => {\n\t// Code goes here\n\n\treturn {\n\t\tprompts: prompts,\n\t\tnegatives: negatives,\n\t\twidth: w,\n\t\theight: h\n\t}\n})",
 }
 
 /**
@@ -450,7 +497,7 @@ function Object_assign (target, ...sources) {
 }
 
 
-async function generateImage(token, prompt, model, action, params, override) {
+async function generateImage(token, prompt, model, action, params, override, custom_script) {
     let request = {
         input: prompt,
         model: model,
@@ -458,6 +505,11 @@ async function generateImage(token, prompt, model, action, params, override) {
         parameters: params,
         authorization: token
     };
+
+    // Custom script
+    if (custom_script.trim() != "") {
+        eval(custom_script);
+    }
 
     if (override.trim() != "") {
         override = JSON.parse(override);
